@@ -4,6 +4,7 @@
 # It defines the following variables
 find_package(OpenBLAS CONFIG REQUIRED)
 find_package(LAPACK CONFIG REQUIRED)
+find_package(ARPACK-NG CONFIG REQUIRED)
 
 if(@DETECT_HDF5@)
   find_package(hdf5 CONFIG REQUIRED)
