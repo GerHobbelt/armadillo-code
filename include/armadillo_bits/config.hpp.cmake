@@ -117,7 +117,7 @@
   #undef  ARMA_USE_HDF5
   #define ARMA_USE_HDF5
   
-  #define ARMA_HDF5_INCLUDE_DIR ${ARMA_HDF5_INCLUDE_DIR}/
+  #define ARMA_HDF5_INCLUDE_DIR 
 #endif
 
 #if !defined(ARMA_MAT_PREALLOC)
