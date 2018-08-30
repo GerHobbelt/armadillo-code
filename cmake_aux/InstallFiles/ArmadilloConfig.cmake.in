@@ -1,16 +1,16 @@
+@PACKAGE_INIT@
+
 # - Config file for the Armadillo package
 # It defines the following variables
-#  ARMADILLO_INCLUDE_DIRS - include directories for Armadillo
-#  ARMADILLO_LIBRARY_DIRS - library directories for Armadillo (normally not used!)
-#  ARMADILLO_LIBRARIES    - libraries to link against
+find_package(OpenBLAS CONFIG REQUIRED)
+find_package(LAPACK CONFIG REQUIRED)
 
-# Tell the user project where to find our headers and libraries
-set(ARMADILLO_INCLUDE_DIRS "@ARMADILLO_INCLUDE_DIRS@")
-set(ARMADILLO_LIBRARY_DIRS "@ARMADILLO_LIB_DIR@")
+if(@DETECT_HDF5@)
+  find_package(hdf5 CONFIG REQUIRED)
+  find_package(ZLIB CONFIG REQUIRED)
+  find_package(szip CONFIG REQUIRED)
+endif()
 
 # Our library dependencies (contains definitions for IMPORTED targets)
-include("@ARMADILLO_CMAKE_DIR@/ArmadilloLibraryDepends.cmake")
-
-# These are IMPORTED targets created by ArmadilloLibraryDepends.cmake
-set(ARMADILLO_LIBRARIES armadillo)
-
+include("${CMAKE_CURRENT_LIST_DIR}/armadilloTargets.cmake")
+check_required_components("@PROJECT_NAME@")
