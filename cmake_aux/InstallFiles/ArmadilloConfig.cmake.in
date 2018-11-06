@@ -3,7 +3,7 @@
 # - Config file for the Armadillo package
 # It defines the following variables
 find_package(OpenBLAS CONFIG REQUIRED)
-find_package(LAPACK CONFIG REQUIRED)
+# find_package(LAPACK CONFIG REQUIRED)
 find_package(ARPACK-NG CONFIG REQUIRED)
 
 if(@DETECT_HDF5@)
