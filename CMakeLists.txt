@@ -191,8 +191,8 @@ else()
   find_package(OpenBLAS CONFIG REQUIRED)
   # hunter_add_package( LAPACK )
   # find_package(LAPACK CONFIG REQUIRED)
-  set(BLAS_FOUND FALSE)
-  set(LAPACK_FOUND FALSE)
+  set(BLAS_FOUND NO)
+  set(LAPACK_FOUND NO)
   
   message(STATUS "     MKL_FOUND = ${MKL_FOUND}"     )
   message(STATUS "  ACMLMP_FOUND = ${ACMLMP_FOUND}"  )
@@ -262,6 +262,7 @@ else()
     if(OpenBLAS_FOUND)
       
       set(ARMA_USE_BLAS true)
+      set(ARMA_USE_LAPACK true)
       set(ARMA_LIBS ${ARMA_LIBS} OpenBLAS::OpenBLAS)
       
       message(STATUS "")
