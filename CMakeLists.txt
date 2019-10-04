@@ -21,8 +21,8 @@ cmake_minimum_required(VERSION 2.8.12 FATAL_ERROR)
 # hunter initialize 
 include ("cmake_aux/HunterGate.cmake")
 HunterGate(
-    URL "https://github.com/CHChang810716/hunter/archive/e9a9ee70340c3ce7dc6966807c2035dfe6c0e8f7.zip"
-    SHA1 "da045b6480334cdb25ed9a95b8407bdcf0f787d8"
+    URL "https://github.com/CHChang810716/hunter/archive/bf677915a6c0bf1d711ee83f16c7fbcc59675226.zip"
+    SHA1 "422b51a1034d8c7d432b6ba5a112210ebfbbc3ac"
 )
 # hunter initialize done
 
@@ -38,7 +38,7 @@ include(CheckLibraryExists)
 ## You will then need to link your programs with -lblas -llapack instead of -larmadillo
 ## If you're using OpenBLAS, link your programs with -lopenblas -llapack instead of -larmadillo
 
-set(ARMA_USE_WRAPPER true)
+set(ARMA_USE_WRAPPER false)
 
 
 # the settings below will be automatically configured by the rest of this script
@@ -124,12 +124,7 @@ if(INSTALL_BIN_DIR)
 endif()
 
 
-if(MSVC)
-  option(BUILD_SHARED_LIBS "build shared library" OFF)
-else()
-  option(BUILD_SHARED_LIBS "build shared library" ON)
-endif()
-
+option(BUILD_SHARED_LIBS "build shared library" OFF)
 option(DETECT_HDF5 "Detect HDF5 and include HDF5 support, if found" ON)
 
 
@@ -187,12 +182,15 @@ else()
   include(ARMA_FindACMLMP)
   include(ARMA_FindACML)
   include(ARMA_FindATLAS)
-  hunter_add_package( OpenBLAS )
-  find_package(OpenBLAS CONFIG REQUIRED)
-  # hunter_add_package( LAPACK )
-  # find_package(LAPACK CONFIG REQUIRED)
-  set(BLAS_FOUND NO)
-  set(LAPACK_FOUND NO)
+  # hunter_add_package( OpenBLAS )
+  # find_package(OpenBLAS CONFIG REQUIRED)
+  hunter_add_package( LAPACK )
+  find_package(LAPACK CONFIG REQUIRED)
+  # set(LAPACK_FOUND NO)
+  set(OpenBLAS_FOUND NO)
+  if(LAPACK_FOUND)
+    set(BLAS_FOUND 1)
+  endif()
   
   message(STATUS "     MKL_FOUND = ${MKL_FOUND}"     )
   message(STATUS "  ACMLMP_FOUND = ${ACMLMP_FOUND}"  )
@@ -285,14 +283,14 @@ else()
       
       if(BLAS_FOUND)
         set(ARMA_USE_BLAS true)
-        set(ARMA_LIBS ${ARMA_LIBS} ${BLAS_LIBRARIES})
+        set(ARMA_LIBS ${ARMA_LIBS} blas)
       endif()
       
     endif()
     
     if(LAPACK_FOUND)
       set(ARMA_USE_LAPACK true)
-      set(ARMA_LIBS ${ARMA_LIBS} ${LAPACK_LIBRARIES})
+      set(ARMA_LIBS ${ARMA_LIBS} lapack)
     endif()
       
   endif()
@@ -352,7 +350,7 @@ endif()
 
 hunter_add_package( ARPACK-NG )
 find_package(ARPACK-NG CONFIG REQUIRED)
-message(STATUS "ARPACK_FOUND = ${ARPACK_FOUND}")
+message(STATUS "ARPACK_FOUND = 1")
 set(ARMA_USE_ARPACK true)
 set(ARMA_LIBS ${ARMA_LIBS} arpack::arpack)
 
