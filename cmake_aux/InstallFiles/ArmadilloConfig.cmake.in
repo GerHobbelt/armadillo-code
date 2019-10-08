@@ -4,6 +4,7 @@
 # It defines the following variables
 if("@BLAS_LIB_USE@" STREQUAL "MKL")
   find_package(mkl CONFIG REQUIRED)
+  find_package(lapack CONFIG REQUIRED)
 elseif("@BLAS_LIB_USE@" STREQUAL "OpenBLAS")
   find_package(OpenBLAS CONFIG REQUIRED)
 else()

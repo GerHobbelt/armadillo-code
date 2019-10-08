@@ -237,7 +237,7 @@ else()
     message(STATUS "")
     
     if(MKL_FOUND)
-      set(ARMA_LIBS ${ARMA_LIBS} mkl::mkl lapack)
+      set(ARMA_LIBS ${ARMA_LIBS} lapack mkl::mkl)
       
       if(ACMLMP_FOUND OR ACML_FOUND)
         message(STATUS "*** Intel MKL as well as AMD ACML libraries were found.")
