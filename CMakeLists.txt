@@ -21,8 +21,8 @@ cmake_minimum_required(VERSION 2.8.12 FATAL_ERROR)
 # hunter initialize 
 include ("cmake_aux/HunterGate.cmake")
 HunterGate(
-    URL "https://github.com/CHChang810716/hunter/archive/bf677915a6c0bf1d711ee83f16c7fbcc59675226.zip"
-    SHA1 "422b51a1034d8c7d432b6ba5a112210ebfbbc3ac"
+    URL "https://github.com/CHChang810716/hunter/archive/170bdfbbe468a8cf7d58e6f83079f23298de1380.zip"
+    SHA1 "7a0445a0d209c65490abce324ad53f55b8082828"
 )
 # hunter initialize done
 
@@ -194,8 +194,8 @@ else()
   # include(ARMA_FindACML)
   # include(ARMA_FindATLAS)
   if(BLAS_LIB_USE STREQUAL "MKL")
-    hunter_add_package(mkl)
-    find_package(mkl REQUIRED)
+    hunter_add_package(mkl-cmake)
+    find_package(mkl CONFIG REQUIRED)
     set(MKL_FOUND 1)
   elseif(BLAS_LIB_USE STREQUAL "OpenBLAS")
     hunter_add_package( OpenBLAS )
