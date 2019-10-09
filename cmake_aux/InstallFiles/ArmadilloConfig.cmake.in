@@ -3,16 +3,14 @@
 # - Config file for the Armadillo package
 # It defines the following variables
 if("@BLAS_LIB_USE@" STREQUAL "MKL")
-  find_package(mkl CONFIG REQUIRED)
-  find_package(lapack CONFIG REQUIRED)
 elseif("@BLAS_LIB_USE@" STREQUAL "OpenBLAS")
   find_package(OpenBLAS CONFIG REQUIRED)
 else()
   find_package(LAPACK CONFIG REQUIRED)
 endif()
-if(NOT "@BLAS_LIB_USE@" STREQUAL "MKL")
-  find_package(ARPACK-NG CONFIG REQUIRED)
-endif()
+# if(NOT "@BLAS_LIB_USE@" STREQUAL "MKL")
+#   find_package(ARPACK-NG CONFIG REQUIRED)
+# endif()
 
 if(@DETECT_HDF5@)
   find_package(hdf5 CONFIG REQUIRED)
