@@ -149,7 +149,7 @@ hr.greyline
 <!--  -->
 <a class="noprint" style="display:scroll; position:fixed; bottom:5px; right:5px;" href="#top"><font size=-1>[top]</font></a>
 
-<big><b>API Documentation for Armadillo 7.960</b></big>
+<big><b>API Documentation for Armadillo 8.xxx</b></big>
 <br>
 <br>
 <br>
@@ -237,7 +237,7 @@ Conrad Sanderson and Ryan Curtin.
 <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
 <tr><td><a href="#Cube">Cube&lt;<i>type</i>&gt;, cube, cx_cube</a></td><td>&nbsp;</td><td>dense cube class ("3D matrix")</td></tr>
 <tr><td><a href="#field">field&lt;<i>object&nbsp;type</i>&gt;</a></td><td>&nbsp;</td><td>class for storing arbitrary objects in matrix-like or cube-like layouts</td></tr>
-<tr><td><a href="#SpMat">SpMat&lt;<i>type</i>&gt;, sp_mat, sp_cx_mat</a></td><td>&nbsp;</td><td>sparse matrix class</td></tr>
+<tr><td><a href="#SpMat">SpMat&lt;<i>type</i>&gt;, sp_mat, sp_cx_mat</a></td><td>&nbsp;</td><td>sparse matrix class (compressed sparse column format)</td></tr>
 <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
 <tr><td><a href="#operators">operators</a></td><td>&nbsp;</td><td><code><big>+</big>&nbsp; <big>-</big>&nbsp; <big>*</big>&nbsp; /&nbsp; %&nbsp; ==&nbsp; !=&nbsp; &lt;=&nbsp; &gt;=&nbsp; &lt;&nbsp; &gt;</code></td></tr>
 </tbody>
@@ -537,6 +537,10 @@ Conrad Sanderson and Ryan Curtin.
 <br><b>cx_mat</b>
 <ul>
 <li>
+Classes for dense matrices, with elements stored in <a href="https://en.wikipedia.org/wiki/Column_major">column-major ordering</a> (ie. column by column)
+</li>
+<br>
+<li>
 The root matrix class is <b>Mat&lt;</b><i>type</i><b>&gt;</b>, where <i>type</i> is one of:
 <ul>
 <li>
@@ -630,10 +634,6 @@ it is possible to use other types instead, eg. <i>fmat</i>
 <li>
 Functions which use LAPACK or ATLAS (generally matrix decompositions) are only valid for the following types:
 <i>mat</i>, <i>fmat</i>, <i>cx_mat</i>, <i>cx_fmat</i>
-</li>
-<br>
-<li>
-Elements are stored with <a href="https://en.wikipedia.org/wiki/Column_major">column-major ordering</a> (ie. column by column)
 </li>
 <br>
 <a name="constructors_mat"></a>
@@ -816,7 +816,7 @@ See also:
 <li><a href="#Col">Col class</a></li>
 <li><a href="#Row">Row class</a></li>
 <li><a href="#Cube">Cube class</a></li>
-<li><a href="#SpMat">SpMat class</a> (sparse matrix)</li>
+<li><a href="#SpMat">SpMat class</a> (sparse matrix with compressed sparse column format)</li>
 <li><a href="#config_hpp">config.hpp</a></li>
 </ul>
 </li>
@@ -829,7 +829,7 @@ See also:
 <br><b>cx_vec</b>
 <ul>
 <li>
-Classes for column vectors (matrices with one column)
+Classes for column vectors (dense matrices with one column)
 </li>
 <br>
 <li>The <b>Col&lt;</b><i>type</i><b>&gt;</b> class is derived from the <b>Mat&lt;</b><i>type</i><b>&gt;</b> class
@@ -1099,7 +1099,7 @@ vec a(5);  a.fill(123.0);
 <br><b>cx_rowvec</b>
 <ul>
 <li>
-Classes for row vectors (matrices with one row)
+Classes for row vectors (dense matrices with one row)
 </li>
 <br>
 <li>The template <b>Row&lt;</b><i>type</i><b>&gt;</b> class is derived from the <b>Mat&lt;</b><i>type</i><b>&gt;</b> class
@@ -1641,12 +1641,38 @@ F.save("mat_field");
 <br><b>sp_cx_mat</b>
 <ul>
 <li>
+Classes for sparse matrices, with elements stored in <a href="http://en.wikipedia.org/wiki/Sparse_matrix">compressed sparse column (CSC) format</a>
+</li>
+<br>
+<li>
+Specifically intended for large matrices where only a small minority of the elements are non-zero
+</li>
+<br>
+<li>
 The root sparse matrix class is <b>SpMat&lt;</b><i>type</i><b>&gt;</b>, where <i>type</i> is one of:
 <ul>
 <li>
 <i>float</i>, <i>double</i>, <i>std::complex&lt;float&gt;</i>, <i>std::complex&lt;double&gt;</i>,
 <i>short</i>, <i>int</i>, <i>long</i> and unsigned versions of <i>short</i>, <i>int</i>, <i>long</i>
 </li>
+</ul>
+</li>
+<br>
+<li>
+This class behaves in a similar manner to the <a href="#Mat">Mat</a> class;
+however, member functions which set all elements to non-zero values (and hence do not make sense for sparse matrices) have been deliberately omitted;
+examples of omitted functions: <a href="#fill">.fill()</a>, <a href="#ones_member">.ones()</a>, +=&nbsp;scalar, etc.
+</li>
+<br>
+<li>
+<b>NOTE:</b>
+<ul>
+<li>
+Armadillo 8.x is much faster than Armadillo 7.x for incrementally populating <i>SpMat</i> via <a href="#element_access">element access operators</a>
+</li>
+<li>
+In Armadillo 7.x and earlier, incrementally populating <i>SpMat</i> via <a href="#element_access">element access operators</a> is inefficient;
+use <a href="#batch_constructors_sp_mat">batch insertion constructors</a> instead</li>
 </ul>
 </li>
 <br>
@@ -1740,22 +1766,11 @@ Constructors:
 <br><code>sp_mat(size(<i>X</i>))</code>
 <br><code>sp_mat(sp_mat)</code>
 <br><code>sp_mat(mat)</code>
-<br><code>sp_mat(string)</code>
 <br><code>sp_cx_mat(sp_mat,sp_mat)</code> &nbsp; (for constructing a complex matrix out of two real matrices)
 </ul>
 <br>
 <li>
-Elements are stored in the  <a href="http://en.wikipedia.org/wiki/Sparse_matrix">compressed sparse column (CSC) format</a>
-</li>
-<br>
-<li>
 All elements are treated as zero by default (ie. the matrix is initialised to contain zeros)
-</li>
-<br>
-<li>
-This class behaves in a similar manner to the <a href="#Mat">Mat</a> class,
-however, member functions which set all elements to non-zero values (and hence do not make sense for sparse matrices) have been deliberately omitted;
-examples of omitted functions: <a href="#fill">.fill()</a>, <a href="#ones_member">.ones()</a>, +=&nbsp;scalar, etc.
 </li>
 <br>
 <li>
@@ -1768,10 +1783,6 @@ Batch insertion constructors:
 <li>form&nbsp;4: <code>sp_mat(<i>rowind</i>, <i>colptr</i>, <i>values</i>, <i>n_rows</i>, <i>n_cols</i>)</code></li>
 <br>
 <ul>
-<li>
-Using batch insertion constructors is generally much faster than consecutively inserting values using <a href="#element_access">element access operators</a>
-</li>
-<br>
 <li>
 For forms&nbsp;1,&nbsp;2,&nbsp;3,
 <i>locations</i> is a dense matrix of type <i>umat</i>, with a size of <i>2</i>&nbsp;x&nbsp;<i>N</i>, where <i>N</i> is the number of values to be inserted;
@@ -1820,10 +1831,10 @@ If <i>check_for_zeros</i> is set to <i>false</i>, the <i>values</i> vector is as
 <li>
 <b>Caveats:</b>
 <ul>
-<li>support for sparse matrices in this version is <b>preliminary</b></li>
-<li>the following subset of operations currently works with sparse matrices:
+<li>support for sparse matrices in this version is <b>preliminary</b>;
+<br>
+the following subset of operations currently works with sparse matrices:
 <ul>
-<li><a href="#element_access">element access</a></li>
 <li>fundamental arithmetic <a href="#operators">operations</a> (such as addition and multiplication)</li>
 <li><a href="#submat">submatrix views</a> (contiguous forms only)</li>
 <li><a href="#diag">diagonal views</a></li>
@@ -1846,18 +1857,14 @@ If <i>check_for_zeros</i> is set to <i>false</i>, the <i>values</i> vector is as
 Examples:
 <ul>
 <pre>
-sp_mat A(5,6);
-sp_mat B(6,5);
-
-A(0,0) = 1;
-A(1,0) = 2;
-
-B(0,0) = 3;
-B(0,1) = 4;
+sp_mat A = sprandu(1000, 2000, 0.01);
+sp_mat B = sprandu(2000, 1000, 0.01);
 
 sp_mat C = 2*B;
-
 sp_mat D = A*C;
+
+sp_mat E(1000,1000);
+E(1,2) = 123;  // element access (Armadillo 8.x)
 
 
 // batch insertion of two values at (5, 6) and (9, 9)
@@ -2301,11 +2308,6 @@ Disabling the bounds checks is not recommended until your code has been thorough
 The indices of elements are specified via the <a href="#uword">uword</a> type, which is a typedef for an <a href="#uword">unsigned integer type</a>.
 When using loops to access elements, it's best to use <i>uword</i> instead of <i>int</i>.
 For example: <code>for(uword&nbsp;i=0;&nbsp;i&lt;X.n_elem;&nbsp;++i)&nbsp;{&nbsp;X(i)&nbsp;=&nbsp;...&nbsp;}</code>
-</li>
-<br>
-<li>
-<b>Caveat</b>: for <a href="#SpMat">sparse matrices</a>, using element access operators to insert values via loops can be inefficient;
-you may wish to use <a href="#batch_constructors_sp_mat">batch insertion constructors</a> instead
 </li>
 <br>
 <li>
@@ -14459,16 +14461,26 @@ cout &lt;&lt; "number of seconds: " &lt;&lt; n &lt;&lt; endl;
 <br>
 <ul>
 <li>
-By default, warnings and messages associated with exceptions are printed to the <i>std::cout</i> stream
+In Armadillo 8.x, warnings and exception messages are printed to the <i>std::cerr</i> stream;
+in Armadillo 7.x and earlier, the <i>std::cout</i> stream is used
 <ul>
 <li>the printing can be disabled by defining <a href="#config_hpp">ARMA_DONT_PRINT_ERRORS</a> before including the armadillo header</li>
 <li>detailed information about errors is always reported via the base <i>std::exception</i> class</li>
 </ul>
 </li>
 <br>
-<li><b>set_stream_err1()</b>: change the stream for messages associated with <i>std::logic_error</i> exceptions (eg. out of bounds accesses)</li>
+<li><b>set_stream_err1()</b>:
+<ul>
+<li>change the stream for messages associated with <i>std::logic_error</i> exceptions (eg. out of bounds accesses)</li>
+<li>in Armadillo 8.x, the stream can also be changed via the ARMA_CERR_STREAM define; see <a href="#config_hpp">config.hpp</a></li>
+</ul>
+</li>
 <br>
-<li><b>set_stream_err2()</b>: change the stream for warnings and messages associated with <i>std::runtime_error</i> and <i>std::bad_alloc</i> exceptions (eg. failed decompositions, out of memory)</li>
+<li><b>set_stream_err2()</b>:
+<ul>
+<li>change the stream for warnings and messages associated with <i>std::runtime_error</i> and <i>std::bad_alloc</i> exceptions (eg. failed decompositions, out of memory)</li>
+<li>in Armadillo 8.x, the stream can also be changed via the ARMA_CERR_STREAM define; see <a href="#config_hpp">config.hpp</a></li>
+</ul>
 <br>
 <li><b>get_stream_err1()</b>: get a reference to the stream for messages associated with <i>std::logic_error</i> exceptions</li>
 <br>
@@ -16157,15 +16169,39 @@ If you mainly use lots of very small vectors (eg.&nbsp;&le;&nbsp;4&nbsp;elements
   </tr>
   <tr>
     <td style="vertical-align: top;">
-<code>ARMA_DEFAULT_OSTREAM</code>
+<code>ARMA_COUT_STREAM</code>
     </td>
     <td style="vertical-align: top;">
       &nbsp;
     </td>
     <td style="vertical-align: top;">
-The default stream used for printing <a href="#logging">error messages</a> and by <a href="#print">.print()</a>.
+The default stream used for printing matrices and cubes by <a href="#print">.print()</a>.
 Must be always enabled.
 By default defined to <i>std::cout</i>
+    </td>
+  </tr>
+  <tr>
+    <td style="vertical-align: top;">
+      &nbsp;
+    </td>
+    <td style="vertical-align: top;">
+      &nbsp;
+    </td>
+    <td style="vertical-align: top;">
+      &nbsp;
+    </td>
+  </tr>
+  <tr>
+    <td style="vertical-align: top;">
+<code>ARMA_CERR_STREAM</code>
+    </td>
+    <td style="vertical-align: top;">
+      &nbsp;
+    </td>
+    <td style="vertical-align: top;">
+The default stream used for printing <a href="#logging">error messages and warnings</a>.
+Must be always enabled.
+By default defined to <i>std::cerr</i>
     </td>
   </tr>
   <tr>
@@ -16359,6 +16395,16 @@ List of additions and changes for each version:
 
 
 
+<a name="version_8100"></a>
+<li>Version 8.xxx:
+<ul>
+<li>faster incremental construction of <a href="#SpMat">sparse matrices</a> via element access operators</li>
+<li>faster <a href="#diag">diagonal views</a> in <a href="#SpMat">sparse matrices</a></li>
+<li>warnings and errors are now printed by default to the <i>std::cerr</i> stream</li>
+<li>new <a href="#config_hpp">configuration</a> options ARMA_COUT_STREAM and ARMA_CERR_STREAM (replaces previous ARMA_DEFAULT_OSTREAM option)</li>
+</ul>
+</li>
+<br>
 <a name="version_7960"></a>
 <li>Version 7.960:
 <ul>

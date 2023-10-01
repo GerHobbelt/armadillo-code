@@ -36,10 +36,6 @@ class SpMat : public SpBase< eT, SpMat<eT> >
   const uword n_nonzero; //!< number of nonzero elements (read-only)
   const uword vec_state; //!< 0: matrix; 1: column vector; 2: row vector
   
-  // so that SpValProxy can call add_element() and delete_element()
-  friend class SpValProxy<SpMat<eT> >;
-  friend class SpSubview<eT>;
-  
   /**
    * The memory used to store the values of the matrix.
    * In accordance with the CSC format, this stores only the actual values.
@@ -51,6 +47,8 @@ class SpMat : public SpBase< eT, SpMat<eT> >
    * it's probably best to use mem_resize() instead, which automatically sets
    * the length to (n_nonzero + 1).  If you need to allocate the memory yourself
    * for some reason, be sure to set values[n_nonzero] to 0.
+   *
+   * WARNING: the 'values' array is only valid after sync() is called
    */
   arma_aligned const eT* const values;
   
@@ -61,6 +59,8 @@ class SpMat : public SpBase< eT, SpMat<eT> >
    * the integrity of iterators.  If you are planning on resizing this vector,
    * it's probably best to use mem_resize() instead.  If you need to allocate
    * the memory yourself for some reason, be sure to set row_indices[n_nonzero] to 0.
+   * 
+   * WARNING: the 'row_indices' array is only valid after sync() is called
    */
   arma_aligned const uword* const row_indices;
   
@@ -76,6 +76,8 @@ class SpMat : public SpBase< eT, SpMat<eT> >
    * The col_ptrs array is set by the init() function (which is called by the
    * constructors and set_size() and other functions that set the size of the
    * matrix), so allocating col_ptrs by hand should not be necessary.
+   * 
+   * WARNING: the 'col_ptrs' array is only valid after sync() is called
    */
   arma_aligned const uword* const col_ptrs;
   
@@ -91,11 +93,13 @@ class SpMat : public SpBase< eT, SpMat<eT> >
   inline SpMat& operator=(const std::string& text);
   inline            SpMat(const SpMat<eT>&   x);
   
-  
   #if defined(ARMA_USE_CXX11)
   inline            SpMat(SpMat&& m);
   inline SpMat& operator=(SpMat&& m);
   #endif
+  
+  inline explicit    SpMat(const CoMat<eT>& x);
+  inline SpMat&  operator=(const CoMat<eT>& x);
   
   template<typename T1, typename T2, typename T3>
   inline SpMat(const Base<uword,T1>& rowind, const Base<uword,T2>& colptr, const Base<eT,T3>& values, const uword n_rows, const uword n_cols);
@@ -232,18 +236,18 @@ class SpMat : public SpBase< eT, SpMat<eT> >
   
   
   // access the i-th element; if there is nothing at element i, 0 is returned
-  arma_inline arma_warn_unused SpValProxy<SpMat<eT> > operator[] (const uword i);
-  arma_inline arma_warn_unused eT                     operator[] (const uword i) const;
-  arma_inline arma_warn_unused SpValProxy<SpMat<eT> > at         (const uword i);
-  arma_inline arma_warn_unused eT                     at         (const uword i) const;
-  arma_inline arma_warn_unused SpValProxy<SpMat<eT> > operator() (const uword i);
-  arma_inline arma_warn_unused eT                     operator() (const uword i) const;
+  arma_inline arma_warn_unused CoMat_elem<eT> operator[] (const uword i);
+  arma_inline arma_warn_unused eT             operator[] (const uword i) const;
+  arma_inline arma_warn_unused CoMat_elem<eT> at         (const uword i);
+  arma_inline arma_warn_unused eT             at         (const uword i) const;
+  arma_inline arma_warn_unused CoMat_elem<eT> operator() (const uword i);
+  arma_inline arma_warn_unused eT             operator() (const uword i) const;
   
   // access the element at the given row and column; if there is nothing at that position, 0 is returned
-  arma_inline arma_warn_unused SpValProxy<SpMat<eT> > at         (const uword in_row, const uword in_col);
-  arma_inline arma_warn_unused eT                     at         (const uword in_row, const uword in_col) const;
-  arma_inline arma_warn_unused SpValProxy<SpMat<eT> > operator() (const uword in_row, const uword in_col);
-  arma_inline arma_warn_unused eT                     operator() (const uword in_row, const uword in_col) const;
+  arma_inline arma_warn_unused CoMat_elem<eT> at         (const uword in_row, const uword in_col);
+  arma_inline arma_warn_unused eT             at         (const uword in_row, const uword in_col) const;
+  arma_inline arma_warn_unused CoMat_elem<eT> operator() (const uword in_row, const uword in_col);
+  arma_inline arma_warn_unused eT             operator() (const uword in_row, const uword in_col) const;
   
   
   arma_inline arma_warn_unused bool is_empty()  const;
@@ -543,11 +547,17 @@ class SpMat : public SpBase< eT, SpMat<eT> >
    */
   inline void mem_resize(const uword new_n_nonzero);
   
+  // synchronise CSC from cache
+  inline void sync() const;
+  
   //! don't use this unless you're writing internal Armadillo code
   inline void remove_zeros();
   
   //! don't use this unless you're writing internal Armadillo code
   inline void steal_mem(SpMat& X);
+  
+  //! don't use this unless you're writing internal Armadillo code
+  inline void steal_mem_simple(SpMat& X);
   
   //! don't use this unless you're writing internal Armadillo code
   template<              typename T1, typename Functor> arma_hot inline void init_xform   (const SpBase<eT, T1>& x, const Functor& func);
@@ -558,7 +568,8 @@ class SpMat : public SpBase< eT, SpMat<eT> >
   
   inline void init(uword in_rows, uword in_cols);
   inline void init(const std::string& text);
-  inline void init(const SpMat& x);
+  inline void init(const SpMat<eT>& x);
+  inline void init(const CoMat<eT>& x);
   
   
   inline void init_batch_std(const Mat<uword>& locations, const Mat<eT>& values, const bool sort_locations);
@@ -586,6 +597,28 @@ class SpMat : public SpBase< eT, SpMat<eT> >
   inline arma_hot arma_warn_unused eT& add_element(const uword in_row, const uword in_col, const eT in_val = eT(0));
   
   inline arma_hot void delete_element(const uword in_row, const uword in_col);
+  
+  
+  // cache related
+  
+  arma_aligned mutable CoMat<eT> cache;
+  arma_aligned mutable uword     sync_state;
+  // 0: cache needs to be updated from CSC
+  // 1: CSC needs to be updated from cache
+  // 2: no update required
+  
+  arma_inline void invalidate_cache() const;
+  arma_inline void invalidate_csc()   const;
+  
+  arma_inline void sync_cache() const;
+  arma_inline void sync_csc()   const;
+  
+  
+  // so that SpValProxy can call add_element() and delete_element()
+  friend class SpValProxy< SpMat<eT> >;
+  friend class SpSubview<eT>;
+  friend class SpRow<eT>;
+  friend class SpCol<eT>;
   
   
   public:

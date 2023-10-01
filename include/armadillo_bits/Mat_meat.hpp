@@ -29,11 +29,8 @@ Mat<eT>::~Mat()
     memory::release( access::rw(mem) );
     }
   
-  if(arma_config::debug == true)
-    {
-    // try to expose buggy user code that accesses deleted objects
-    access::rw(mem) = 0;
-    }
+  // try to expose buggy user code that accesses deleted objects
+  if(arma_config::debug)  { access::rw(mem) = 0; }
   
   arma_type_check(( is_supported_elem_type<eT>::value == false ));
   }
@@ -6012,14 +6009,14 @@ Mat<eT>::impl_print(const std::string& extra_text) const
   
   if(extra_text.length() != 0)
     {
-    const std::streamsize orig_width = ARMA_DEFAULT_OSTREAM.width();
+    const std::streamsize orig_width = ARMA_COUT_STREAM.width();
     
-    ARMA_DEFAULT_OSTREAM << extra_text << '\n';
+    ARMA_COUT_STREAM << extra_text << '\n';
   
-    ARMA_DEFAULT_OSTREAM.width(orig_width);
+    ARMA_COUT_STREAM.width(orig_width);
     }
   
-  arma_ostream::print(ARMA_DEFAULT_OSTREAM, *this, true);
+  arma_ostream::print(ARMA_COUT_STREAM, *this, true);
   }
 
 
@@ -6062,14 +6059,14 @@ Mat<eT>::impl_raw_print(const std::string& extra_text) const
   
   if(extra_text.length() != 0)
     {
-    const std::streamsize orig_width = ARMA_DEFAULT_OSTREAM.width();
+    const std::streamsize orig_width = ARMA_COUT_STREAM.width();
     
-    ARMA_DEFAULT_OSTREAM << extra_text << '\n';
+    ARMA_COUT_STREAM << extra_text << '\n';
   
-    ARMA_DEFAULT_OSTREAM.width(orig_width);
+    ARMA_COUT_STREAM.width(orig_width);
     }
   
-  arma_ostream::print(ARMA_DEFAULT_OSTREAM, *this, false);
+  arma_ostream::print(ARMA_COUT_STREAM, *this, false);
   }
 
 
@@ -6723,6 +6720,26 @@ Mat<eT>::reset()
     case 2:
       init_warm(1, 0);
       break;
+    }
+  }
+
+
+
+template<typename eT>
+inline
+void
+Mat<eT>::soft_reset()
+  {
+  arma_extra_debug_sigprint();
+  
+  // don't change the size if the matrix has a fixed size or is a cube slice
+  if(mem_state <= 1)
+    {
+    reset();
+    }
+  else
+    {
+    fill(Datum<eT>::nan);
     }
   }
 

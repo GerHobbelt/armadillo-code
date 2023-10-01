@@ -31,6 +31,8 @@ SpSubview<eT>::SpSubview(const SpMat<eT>& in_m, const uword in_row1, const uword
   {
   arma_extra_debug_sigprint();
   
+  m.sync();
+  
   // There must be a O(1) way to do this
   uword lend     = m.col_ptrs[in_col1 + in_n_cols];
   uword lend_row = in_row1 + in_n_rows;
@@ -62,6 +64,8 @@ SpSubview<eT>::SpSubview(SpMat<eT>& in_m, const uword in_row1, const uword in_co
   , n_nonzero(0)
   {
   arma_extra_debug_sigprint();
+  
+  m.sync();
   
   // There must be a O(1) way to do this
   uword lend     = m.col_ptrs[in_col1 + in_n_cols];
@@ -140,6 +144,8 @@ SpSubview<eT>::operator*=(const eT val)
   {
   arma_extra_debug_sigprint();
   
+  m.invalidate_cache();
+  
   const uword lstart_row = aux_row1;
   const uword lend_row   = aux_row1 + n_rows;
   
@@ -148,6 +154,8 @@ SpSubview<eT>::operator*=(const eT val)
   
   const uword* m_row_indices = m.row_indices;
         eT*    m_values      = access::rwp(m.values);
+  
+  bool has_zero = false;
   
   for(uword c = lstart_col; c < lend_col; ++c)
     {
@@ -160,18 +168,25 @@ SpSubview<eT>::operator*=(const eT val)
       
       if( (m_row_indices_r >= lstart_row) && (m_row_indices_r < lend_row) )
         {
-        m_values[r] *= val;
+        eT& m_values_r = m_values[r];
+        
+        m_values_r *= val;
+        
+        if(m_values_r == eT(0))  { has_zero = true; }
         }
       }
     }
   
-  const uword old_m_n_nonzero = m.n_nonzero;
-  
-  access::rw(m).remove_zeros();
-  
-  if(m.n_nonzero != old_m_n_nonzero)
+  if(has_zero)
     {
-    access::rw(n_nonzero) = n_nonzero - (old_m_n_nonzero - m.n_nonzero); 
+    const uword old_m_n_nonzero = m.n_nonzero;
+    
+    access::rw(m).remove_zeros();
+    
+    if(m.n_nonzero != old_m_n_nonzero)
+      {
+      access::rw(n_nonzero) = n_nonzero - (old_m_n_nonzero - m.n_nonzero); 
+      }
     }
   
   return *this;
@@ -188,6 +203,8 @@ SpSubview<eT>::operator/=(const eT val)
   
   arma_debug_check( (val == eT(0)), "element-wise division: division by zero" );
   
+  m.invalidate_cache();
+  
   const uword lstart_row = aux_row1;
   const uword lend_row   = aux_row1 + n_rows;
   
@@ -196,6 +213,8 @@ SpSubview<eT>::operator/=(const eT val)
   
   const uword* m_row_indices = m.row_indices;
         eT*    m_values      = access::rwp(m.values);
+  
+  bool has_zero = false;
   
   for(uword c = lstart_col; c < lend_col; ++c)
     {
@@ -208,18 +227,25 @@ SpSubview<eT>::operator/=(const eT val)
       
       if( (m_row_indices_r >= lstart_row) && (m_row_indices_r < lend_row) )
         {
-        m_values[r] /= val;
+        eT& m_values_r = m_values[r];
+        
+        m_values_r /= val;
+        
+        if(m_values_r == eT(0))  { has_zero = true; }
         }
       }
     }
   
-  const uword old_m_n_nonzero = m.n_nonzero;
-  
-  access::rw(m).remove_zeros();
-  
-  if(m.n_nonzero != old_m_n_nonzero)
+  if(has_zero)
     {
-    access::rw(n_nonzero) = n_nonzero - (old_m_n_nonzero - m.n_nonzero); 
+    const uword old_m_n_nonzero = m.n_nonzero;
+    
+    access::rw(m).remove_zeros();
+    
+    if(m.n_nonzero != old_m_n_nonzero)
+      {
+      access::rw(n_nonzero) = n_nonzero - (old_m_n_nonzero - m.n_nonzero); 
+      }
     }
   
   return *this;
@@ -818,6 +844,8 @@ SpSubview<eT>::replace(const eT old_val, const eT new_val)
     arma_debug_warn("SpSubview::replace(): replacement not done, as old_val = 0");
     return;
     }
+  
+  m.invalidate_cache();
   
   const uword lstart_row = aux_row1;
   const uword lend_row   = aux_row1 + n_rows;

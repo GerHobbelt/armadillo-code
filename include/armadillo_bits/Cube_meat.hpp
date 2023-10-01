@@ -31,9 +31,9 @@ Cube<eT>::~Cube()
     memory::release( access::rw(mem) );
     }
   
-  if(arma_config::debug == true)
+  // try to expose buggy user code that accesses deleted objects
+  if(arma_config::debug)
     {
-    // try to expose buggy user code that accesses deleted objects
     access::rw(mem)      = 0;
     access::rw(mat_ptrs) = 0;
     }
@@ -3011,10 +3011,10 @@ Cube<eT>::impl_print(const std::string& extra_text) const
   
   if(extra_text.length() != 0)
     {
-    ARMA_DEFAULT_OSTREAM << extra_text << '\n';
+    ARMA_COUT_STREAM << extra_text << '\n';
     }
   
-  arma_ostream::print(ARMA_DEFAULT_OSTREAM, *this, true);
+  arma_ostream::print(ARMA_COUT_STREAM, *this, true);
   }
 
 
@@ -3052,10 +3052,10 @@ Cube<eT>::impl_raw_print(const std::string& extra_text) const
   
   if(extra_text.length() != 0)
     {
-    ARMA_DEFAULT_OSTREAM << extra_text << '\n';
+    ARMA_COUT_STREAM << extra_text << '\n';
     }
   
-  arma_ostream::print(ARMA_DEFAULT_OSTREAM, *this, false);
+  arma_ostream::print(ARMA_COUT_STREAM, *this, false);
   }
 
 
@@ -3511,6 +3511,26 @@ Cube<eT>::reset()
   arma_extra_debug_sigprint();
   
   init_warm(0,0,0);
+  }
+
+
+
+template<typename eT>
+inline
+void
+Cube<eT>::soft_reset()
+  {
+  arma_extra_debug_sigprint();
+  
+  // don't change the size if the cube has a fixed size
+  if(mem_state <= 1)
+    {
+    reset();
+    }
+  else
+    {
+    fill(Datum<eT>::nan);
+    }
   }
 
 
