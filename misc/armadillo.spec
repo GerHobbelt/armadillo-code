@@ -1,5 +1,5 @@
 Name:           armadillo
-Version:        8.500.0
+Version:        9.100.0
 Release:        1%{?dist}
 Summary:        Fast C++ matrix library with syntax similar to MATLAB and Octave
 
@@ -7,7 +7,7 @@ License:        ASL 2.0
 URL:            http://arma.sourceforge.net/
 Source:         http://sourceforge.net/projects/arma/files/%{name}-%{version}.tar.xz
 
-BuildRequires:  cmake, lapack-devel, arpack-devel, hdf5-devel, zlib-devel
+BuildRequires:  gcc-c++, cmake, lapack-devel, arpack-devel, hdf5-devel, zlib-devel
 %{!?openblas_arches:%global openblas_arches x86_64 %{ix86} armv7hl %{power64} aarch64}
 %ifarch %{openblas_arches}
 BuildRequires:  openblas-devel
@@ -36,7 +36,7 @@ computer vision, signal processing, bioinformatics, statistics, finance, etc.
 %package devel
 Summary:        Development headers and documentation for the Armadillo C++ library
 Requires:       %{name} = %{version}-%{release}
-Requires:       lapack-devel, arpack-devel, hdf5-devel, zlib-devel, libstdc++-devel
+Requires:       lapack-devel,  atlas-devel, arpack-devel, hdf5-devel, zlib-devel, libstdc++-devel
 %ifarch %{openblas_arches}
 Requires:       openblas-devel
 %endif
@@ -54,7 +54,7 @@ and user documentation (API reference guide).
 
 # convert DOS end-of-line to UNIX end-of-line
 
-for file in README.txt; do
+for file in README.md; do
   sed 's/\r//' $file >$file.new && \
   touch -r $file $file.new && \
   mv $file.new $file
@@ -90,7 +90,7 @@ rm -rf examples/lib_win64
 %{_includedir}/armadillo
 %{_includedir}/armadillo_bits/
 %{_datadir}/Armadillo/
-%doc README.txt index.html docs.html
+%doc README.md index.html docs.html
 %doc examples armadillo_icon.png
 %doc armadillo_joss_2016.pdf
 %doc arma_spmat_icms_2018.pdf
