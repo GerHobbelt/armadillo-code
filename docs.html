@@ -148,7 +148,7 @@ hr.greyline
 <a class="noprint" style="display:scroll; position:fixed; bottom:5px; right:5px;" href="#top"><font size=-1>[top]</font></a>
 
 <a name="top"></a>
-<big><b>API Documentation for Armadillo 9.100</b></big>
+<big><b>API Documentation for Armadillo 9.200</b></big>
 <br>
 <br>
 <br>
@@ -501,15 +501,15 @@ Conrad Sanderson and Ryan Curtin.
 <tr style="background-color: #F5F5F5;"><td><a href="#cor">cor</a></td><td>&nbsp;</td><td>correlation</td></tr>
 <tr><td><a href="#hist">hist</a></td><td>&nbsp;</td><td>histogram of counts</td></tr>
 <tr><td><a href="#histc">histc</a></td><td>&nbsp;</td><td>histogram of counts with user specified edges</td></tr>
-<tr><td><a href="#princomp">princomp</a></td><td>&nbsp;</td><td>principal component analysis</td></tr>
+<tr><td><a href="#princomp">princomp</a></td><td>&nbsp;</td><td>principal component analysis (PCA)</td></tr>
 <tr style="background-color: #F5F5F5;"><td><a href="#normpdf">normpdf</a></td><td>&nbsp;</td><td>probability density function of normal distribution</td></tr>
 <tr style="background-color: #F5F5F5;"><td><a href="#normcdf">normcdf</a></td><td>&nbsp;</td><td>cumulative distribution function of normal distribution</td></tr>
 <tr style="background-color: #F5F5F5;"><td><a href="#mvnrnd">mvnrnd</a></td><td>&nbsp;</td><td>random vectors from multivariate normal distribution</td></tr>
 <tr><td><a href="#chi2rnd">chi2rnd</a></td><td>&nbsp;</td><td>random numbers from chi-squared distribution</td></tr>
 <tr><td><a href="#wishrnd">wishrnd</a></td><td>&nbsp;</td><td>random matrix from Wishart distribution</td></tr>
 <tr><td><a href="#iwishrnd">iwishrnd</a></td><td>&nbsp;</td><td>random matrix from inverse Wishart distribution</td></tr>
-<tr style="background-color: #F5F5F5;"><td><a href="#running_stat">running_stat</a></td><td>&nbsp;</td><td>running statistics of one dimensional process/signal</td></tr>
-<tr style="background-color: #F5F5F5;"><td><a href="#running_stat_vec">running_stat_vec</a></td><td>&nbsp;</td><td>running statistics of multi-dimensional process/signal</td></tr>
+<tr style="background-color: #F5F5F5;"><td><a href="#running_stat">running_stat</a></td><td>&nbsp;</td><td>running statistics of scalars (one dimensional process/signal)</td></tr>
+<tr style="background-color: #F5F5F5;"><td><a href="#running_stat_vec">running_stat_vec</a></td><td>&nbsp;</td><td>running statistics of vectors (multi-dimensional process/signal)</td></tr>
 <tr style="background-color: #F5F5F5;"><td><a href="#kmeans">kmeans</a></td><td>&nbsp;</td><td>cluster data into disjoint sets</td></tr>
 <tr><td><a href="#gmm_diag">gmm_diag/gmm_full</a></td><td>&nbsp;</td><td>model and evaluate data using Gaussian Mixture Models (GMMs)</td></tr>
 </tbody>
@@ -703,7 +703,7 @@ Constructors:
 </li>
 <br>
 <li>
-When using the <i>mat(n_rows, n_cols)</i> or <i>mat(size(X)</i> constructors, by default the memory is uninitialised (ie. may contain garbage);
+When using the <i>mat(n_rows, n_cols)</i> or <i>mat(size(X))</i> constructors, by default the memory is uninitialised (ie. may contain garbage);
 memory can be explicitly initialised by specifying the <i>fill_type</i>,
 which is one of:
 <i>fill::zeros</i>,
@@ -2495,6 +2495,7 @@ double z = p[9];
 <li><a href="#element_initialisation">element initialisation</a></li>
 <li><a href="#ind2sub">ind2sub()</a></li>
 <li><a href="#sub2ind">sub2ind()</a></li>
+<li><a href="#index_min_and_index_max_member">.index_min()&nbsp;/&nbsp;.index_max()</a></li>
 <li><a href="#submat">submatrix views</a></li>
 <li><a href="#memptr">.memptr()</a></li>
 <li><a href="#transform">.transform()</a></li>
@@ -3542,7 +3543,7 @@ X.<b>submat(&nbsp;</b>first_row<b>,</b>&nbsp;first_col<b>,</b>&nbsp;last_row<b>,
 X<b>(&nbsp;span(</b>first_row<b>,</b>&nbsp;last_row<b>),&nbsp;span(</b>first_col<b>,</b>&nbsp;last_col<b>)&nbsp;)</b><br>
 <br>
 X<b>(&nbsp;</b>first_row<b>,</b>&nbsp;first_col<b>,&nbsp;size(</b>n_rows<b>,&nbsp;</b>n_cols<b>)&nbsp;)</b><br>
-X<b>(&nbsp;</b>first_row<b>,</b>&nbsp;first_col<b>,&nbsp;size(</b>Y<b>)&nbsp;)</b>&nbsp;&nbsp;&nbsp;&nbsp;<i>(Y&nbsp;is&nbsp;a&nbsp;mat)</i><br>
+X<b>(&nbsp;</b>first_row<b>,</b>&nbsp;first_col<b>,&nbsp;size(</b>Y<b>)&nbsp;)</b>&nbsp;&nbsp;&nbsp;&nbsp;<i>[&nbsp;Y&nbsp;is&nbsp;a&nbsp;matrix&nbsp;]</i><br>
 <br>
 X<b>(</b>&nbsp;<b>span(</b>first_row<b>,</b>&nbsp;last_row<b>),</b>&nbsp;col_number&nbsp;<b>)</b><br>
 X<b>(</b>&nbsp;row_number<b>,</b>&nbsp;<b>span(</b>first_col<b>,</b>&nbsp;last_col<b>)&nbsp;)</b><br>
@@ -3553,7 +3554,7 @@ X.<b>head_rows(&nbsp;</b>number_of_rows<b>&nbsp;)</b><br>
 X.<b>tail_cols(&nbsp;</b>number_of_cols<b>&nbsp;)</b><br>
 X.<b>tail_rows(&nbsp;</b>number_of_rows<b>&nbsp;)</b><br>
 <br>
-X.<b>unsafe_col(&nbsp;</b>col_number<b>&nbsp;)</b><br>
+X.<b>unsafe_col(&nbsp;</b>col_number<b>&nbsp;)</b>&nbsp;&nbsp;&nbsp;&nbsp;<i>[&nbsp;use&nbsp;with&nbsp;caution&nbsp;]</i><br>
 </ul>
 </li>
 
@@ -3567,7 +3568,7 @@ contiguous views for vector V:
 V<b>(&nbsp;span(</b>first_index<b>,</b> last_index<b>)&nbsp;)</b><br>
 V.<b>subvec(&nbsp;</b>first_index<b>,</b> last_index<b>&nbsp;)</b><br>
 <br>
-V.<b>subvec(&nbsp;</b>first_index<b>, size(</b>W<b>)&nbsp;)</b>&nbsp;&nbsp;&nbsp;&nbsp;<i>(W&nbsp;is&nbsp;a&nbsp;vector)</i><br>
+V.<b>subvec(&nbsp;</b>first_index<b>, size(</b>W<b>)&nbsp;)</b>&nbsp;&nbsp;&nbsp;&nbsp;<i>[&nbsp;W&nbsp;is&nbsp;a&nbsp;vector&nbsp;]</i><br>
 <br>
 V.<b>head(&nbsp;</b>number_of_elements<b>&nbsp;)</b><br>
 V.<b>tail(&nbsp;</b>number_of_elements<b>&nbsp;)</b>
@@ -3610,7 +3611,7 @@ X<b>(</b>&nbsp;vector_of_row_indices<b>,</b>&nbsp;vector_of_column_indices&nbsp;
 <br>
 <br>
 
-<li>related views (documented separately)
+<li>related matrix views (documented separately)
 <ul>
 <br>
 X.<a href="#diag">diag()</a><br>
@@ -3748,7 +3749,7 @@ Q.<b>subcube(&nbsp;</b>first_row<b>,</b> first_col<b>,</b> first_slice<b>, </b>l
 Q<b>(&nbsp;span(</b>first_row<b>,</b> last_row<b>), span(</b>first_col<b>,</b> last_col<b>), span(</b>first_slice<b>,</b> last_slice<b>)&nbsp;)</b><br>
 <br>
 Q<b>(&nbsp;</b>first_row<b>,</b> first_col<b>,</b> first_slice<b>, size(</b>n_rows<b>,</b> n_cols<b>, </b>n_slices<b>)&nbsp;)</b><br>
-Q<b>(&nbsp;</b>first_row<b>,</b> first_col<b>,</b> first_slice<b>, size(</b>R<b>)&nbsp;)</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i>(R is a cube)</i><br>
+Q<b>(&nbsp;</b>first_row<b>,</b> first_col<b>,</b> first_slice<b>, size(</b>R<b>)&nbsp;)</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i>[&nbsp;R&nbsp;is&nbsp;a&nbsp;cube&nbsp;]</i><br>
 <br>
 Q.<b>head_slices(&nbsp;</b>number_of_slices<b>&nbsp;)</b><br>
 Q.<b>tail_slices(&nbsp;</b>number_of_slices<b>&nbsp;)</b><br>
@@ -3777,7 +3778,7 @@ Q.<b>slices(</b>&nbsp;vector_of_slice_indices&nbsp;<b>)</b><br>
 </ul>
 </li>
 <br>
-<li>related views (documented separately)
+<li>related cube views (documented separately)
 <ul>
 <br>
 Q.<a href="#each_slice">each_slice()</a><br>
@@ -3885,7 +3886,7 @@ F.<b>subfield(&nbsp;</b>first_row<b>,</b>&nbsp;first_col<b>,</b> last_row<b>,</b
 <br>
 F<b>(&nbsp;span(</b>first_row<b>,</b> last_row<b>), span(</b>first_col<b>,</b>&nbsp;last_col<b>) )</b><br>
 <br>
-F<b>(&nbsp;</b>first_row<b>,</b> first_col<b>, size(</b>G<b>)&nbsp;)</b> &nbsp;&nbsp;&nbsp;<i>(G is a 2D field)</i><br>
+F<b>(&nbsp;</b>first_row<b>,</b> first_col<b>, size(</b>G<b>)&nbsp;)</b> &nbsp;&nbsp;&nbsp;<i>[&nbsp;G&nbsp;is&nbsp;a&nbsp;2D&nbsp;field&nbsp;]</i><br>
 F<b>(&nbsp;</b>first_row<b>,</b> first_col<b>, size(</b>n_rows<b>, </b>n_cols<b>)&nbsp;)</b><br>
 </ul>
 <br>
@@ -3900,7 +3901,7 @@ F.<b>subfield(&nbsp;</b>first_row<b>,</b>&nbsp;first_col<b>,</b>&nbsp;first_slic
 <br>
 F<b>(&nbsp;span(</b>first_row<b>,</b> last_row<b>), span(</b>first_col<b>,</b>&nbsp;last_col<b>), span(</b>first_slice<b>,</b>&nbsp;last_slice<b>) )</b><br>
 <br>
-F<b>(&nbsp;</b>first_row<b>,</b> first_col<b>,</b> first_slice<b>, size(</b>G<b>)&nbsp;)</b> &nbsp;&nbsp;&nbsp;<i>(G is a 3D field)</i><br>
+F<b>(&nbsp;</b>first_row<b>,</b> first_col<b>,</b> first_slice<b>, size(</b>G<b>)&nbsp;)</b> &nbsp;&nbsp;&nbsp;<i>[&nbsp;G&nbsp;is&nbsp;a&nbsp;3D&nbsp;field&nbsp;]</i><br>
 F<b>(&nbsp;</b>first_row<b>,</b> first_col<b>,</b> first_slice<b>, size(</b>n_rows<b>, </b>n_cols<b>, </b>n_slices<b>)&nbsp;)</b><br>
 </ul>
 </li>
@@ -3964,7 +3965,7 @@ X.diag().ones();
 </li>
 <br>
 <li>
-<b>NOTE:</b> handling of sparse matrix diagonals has changed slightly in Armadillo 8.x;
+<b>NOTE:</b> handling of sparse matrix diagonals has changed slightly between Armadillo 7.x and 8.x;
 to copy sparse diagonal to dense vector, use:
 <ul>
 <pre>
@@ -5595,7 +5596,7 @@ double max_val = A.max();
 See also:
 <ul>
 <li><a href="#index_min_and_index_max_member">.index_min() &amp; .index_max()</a></li>
-<li><a href="#min_and_max">min() &amp; max()</a> (standalone functions)</li>
+<li><a href="#min_and_max">min() &amp; max()</a> (standalone functions with extended functionality)</li>
 <li><a href="#clamp">clamp()</a>
 <li><a href="#running_stat">running_stat</a></li>
 <li><a href="#running_stat_vec">running_stat_vec</a></li>
@@ -5638,7 +5639,7 @@ double max_val = A(i);
 See also:
 <ul>
 <li><a href="#min_and_max_member">.min() &amp; .max()</a></li>
-<li><a href="#index_min_and_index_max_standalone">index_min() &amp; index_max()</a> (standalone functions)</li>
+<li><a href="#index_min_and_index_max_standalone">index_min() &amp; index_max()</a> (standalone functions with extended functionality)</li>
 <li><a href="#ind2sub">ind2sub()</a></li>
 <li><a href="#sort_index">sort_index()</a></li>
 <li><a href="#find">find()</a></li>
@@ -6485,8 +6486,13 @@ Applicable to <i>Mat</i> only.
                         <td style="vertical-align: top;"><br>
                         </td>
                         <td style="vertical-align: top;">
-Numerical data stored in coordinate list format, without a header.
+Numerical data stored as a text file in coordinate list format, without a header.
+Only non-zero values are stored.
 Applicable only to sparse matrices (<a href="#SpMat">SpMat</a>).
+<br>
+For real matrices, each line contains information in the following format:&nbsp; <code>row column value</code>
+<br>For complex matrices, each line contains information in the following format:&nbsp; <code>row column real_value imag_value</code>
+<br>The rows and columns start at zero. 
 <br>
 <br>
                         </td>
@@ -8205,6 +8211,7 @@ See also:
 <a name="diagmat"></a>
 <b>diagmat( V )</b>
 <br><b>diagmat( V, k )</b>
+<br>
 <br><b>diagmat( X )</b>
 <br><b>diagmat( X, k )</b>
 <ul>
@@ -9522,8 +9529,9 @@ See also:
 <li><a href="#index_min_and_index_max_standalone">index_min() &amp; index_max()</a>
 <li><a href="#clamp">clamp()</a>
 <li><a href="#stats_fns">statistics functions</a>
-<li><a href="#running_stat">running_stat</a></li>
-<li><a href="#running_stat_vec">running_stat_vec</a></li>
+<li><a href="#running_stat">running_stat</a> - class for running statistics of scalars</li>
+<li><a href="#running_stat_vec">running_stat_vec</a> - class for running statistics of vectors</li>
+<li><a href="http://ensmallen.org">ensmallen</a> - library for finding minimum of arbitrary function</li>
 </ul>
 </li>
 <br>
@@ -9777,7 +9785,7 @@ See also:
 <b>rcond( A )</b>
 <ul>
 <li>
-Return an estimate of the reciprocal of the condition number of square matrix <i>A</i>
+Return the 1-norm estimate of the reciprocal of the condition number of square matrix <i>A</i>
 </li>
 <br>
 <li>
@@ -11192,6 +11200,9 @@ For single argument functions, <i>B = trig_fn(A)</i>, where <i>trig_fn</i> is ap
 <li>
 <i>tan</i>, <i>atan</i>, <i>tanh</i>, <i>atanh</i>
 </li>
+<li>
+<i>sinc</i>, defined as sinc(x) = sin(&pi;x)&nbsp;/&nbsp;(&pi;x) for x&nbsp;&ne;&nbsp;0, and sinc(x) = 1 for x&nbsp;=&nbsp;0
+</li>
 </ul>
 </li>
 <br>
@@ -11215,11 +11226,11 @@ mat Y = cos(X);
 <li>
 See also:
 <ul>
-<li><a href="#misc_fns">miscellaneous functions</a></li>
-<li><a href="#stats_fns">statistics functions</a></li>
+<li><a href="#misc_fns">miscellaneous element-wise functions</a></li>
 <li><a href="https://en.wikipedia.org/wiki/Trigonometric_functions">trigonometric functions in Wikipedia</a></li>
 <li><a href="https://en.wikipedia.org/wiki/Atan2">atan2 function in Wikipedia</a></li>
 <li><a href="https://en.wikipedia.org/wiki/Hypot">hypot function in Wikipedia</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Sinc_function">sinc function in Wikipedia</a></li>
 </ul>
 </li>
 <br>
@@ -11372,6 +11383,7 @@ See also:
 <li><a href="#eig_pair">eig_pair()</a></li>
 <li><a href="#svd">svd()</a></li>
 <li><a href="#svd_econ">svd_econ()</a></li>
+<li><a href="#princomp">princomp()</a></li>
 <li><a href="#eigs_sym">eigs_sym()</a></li>
 <li><a href="http://mathworld.wolfram.com/EigenDecomposition.html">eigen decomposition in MathWorld</a></li>
 <li><a href="http://en.wikipedia.org/wiki/Eigenvalues_and_eigenvectors">eigenvalues &amp; eigenvectors in Wikipedia</a></li>
@@ -12148,6 +12160,7 @@ The number of rows in <i>A</i> and <i>B</i> must be the same
 <tr><td><code>solve_opts::no_approx</code></td><td>&nbsp;&nbsp;&nbsp;</td><td>do not find approximate solutions for rank deficient systems</td></tr>
 <tr><td><code>solve_opts::no_band</code></td><td>&nbsp;&nbsp;&nbsp;</td><td>do not use optimisations for band matrices</td></tr>
 <tr><td><code>solve_opts::no_sympd</code></td><td>&nbsp;&nbsp;&nbsp;</td><td>do not use optimisations for symmetric/hermitian positive definite matrices</td></tr>
+<tr><td><code>solve_opts::allow_ugly</code></td><td>&nbsp;&nbsp;&nbsp;</td><td>keep solutions of systems that are singular to working precision</td></tr>
 </tbody>
 </table>
 <br>
@@ -12278,6 +12291,7 @@ See also:
 <li><a href="#svd_econ">svd_econ()</a></li>
 <li><a href="#eig_gen">eig_gen()</a></li>
 <li><a href="#eig_sym">eig_sym()</a></li>
+<li><a href="#princomp">princomp()</a></li>
 <li><a href="#svds">svds()</a></li>
 <li><a href="http://en.wikipedia.org/wiki/Singular_value_decomposition">singular value decomposition in Wikipedia</a></li>
 <li><a href="http://mathworld.wolfram.com/SingularValueDecomposition.html">singular value decomposition in MathWorld</a></li>
@@ -12357,6 +12371,7 @@ See also:
 <li><a href="#svd">svd()</a></li>
 <li><a href="#eig_gen">eig_gen()</a></li>
 <li><a href="#eig_sym">eig_sym()</a></li>
+<li><a href="#princomp">princomp()</a></li>
 <li><a href="#svds">svds()</a></li>
 <li><a href="http://en.wikipedia.org/wiki/Singular_value_decomposition">singular value decomposition in Wikipedia</a></li>
 <li><a href="http://mathworld.wolfram.com/SingularValueDecomposition.html">singular value decomposition in MathWorld</a></li>
@@ -12472,11 +12487,12 @@ The argument <i>tol</i> is optional; it specifies the tolerance for convergence
 <br>
 <li><b>Caveats:</b>
 <ul>
-<li>there is currently no check whether <i>X</i> is symmetric</li>
+<li>the number of obtained eigenvalues/eigenvectors may be lower than requested, depending on the given data</li>
 <li>
 it's more difficult to compute the smallest eigenvalues than the largest eigenvalues;
 <br>if the decomposition fails, try increasing <i>k</i> (number of eigenvalues) and/or the tolerance
 </li>
+<li>there is currently no check whether <i>X</i> is symmetric</li>
 </ul>
 </li>
 <br>
@@ -12566,9 +12582,14 @@ If <i>X</i> is not square sized, a <i>std::logic_error</i> exception is thrown
 </ul>
 </li>
 <br>
-<li><b>Caveat:</b> it's more difficult to compute the smallest eigenvalues than the largest eigenvalues;
+<li><b>Caveats:</b>
+<ul>
+<li>the number of obtained eigenvalues/eigenvectors may be lower than requested, depending on the given data</li>
+<li>
+it's more difficult to compute the smallest eigenvalues than the largest eigenvalues;
 <br>if the decomposition fails, try increasing <i>k</i> (number of eigenvalues) and/or the tolerance
 </li>
+</ul>
 <br>
 <li>
 Examples:
@@ -13416,7 +13437,7 @@ See also:
 <li><a href="#min_and_max">min() &amp; max()</a></li>
 <li><a href="#running_stat">running_stat</a> - class for running statistics of scalars</li>
 <li><a href="#running_stat_vec">running_stat_vec</a> - class for running statistics of vectors</li>
-<li><a href="#gmm_diag">gmm_diag</a> &amp; <a href="#gmm_full">gmm_full</a> - classes for modelling and evaluating data as a Gaussian mixture model</li>
+<li><a href="#gmm_diag">gmm_diag</a> &amp; <a href="#gmm_full">gmm_full</a> - model and evaluate data using Gaussian Mixture Models (GMMs)</li>
 <li><a href="#kmeans">kmeans()</a></li>
 </ul>
 </li>
@@ -13704,8 +13725,10 @@ princomp(coeff, score, latent, tsquared, A);
 <li>
 See also:
 <ul>
+<li><a href="#eig_sym">eig_sym()</a></li>
+<li><a href="#svd">svd()</a></li>
+<li><a href="#svd_econ">svd_econ()</a></li>
 <li><a href="http://en.wikipedia.org/wiki/Principal_component_analysis">principal components analysis in Wikipedia</a></li>
-<li><a href="http://mathworld.wolfram.com/PrincipalComponentAnalysis.html">principal components analysis in MathWorld</a></li>
 </ul>
 </li>
 <br>
@@ -13767,7 +13790,7 @@ See also:
 <ul>
 <li><a href="#normcdf">normcdf()</a></li>
 <li><a href="#randu_randn_standalone">randn()</a></li>
-<li><a href="#gmm_diag">gmm_diag</a> - class for modelling and evaluating data as a Gaussian mixture model</li>
+<li><a href="#gmm_diag">gmm_diag</a> - model and evaluate data using Gaussian Mixture Models (GMMs)</li>
 <li><a href="http://en.wikipedia.org/wiki/Normal_distribution">normal distribution in Wikipedia</a></li>
 </ul>
 </li>
@@ -13870,7 +13893,7 @@ See also:
 <li><a href="#chi2rnd">chi2rnd()</a></li>
 <li><a href="#wishrnd">wishrnd()</a></li>
 <li><a href="#cov">cov()</a></li>
-<li><a href="#gmm_diag">gmm_diag</a> &amp; <a href="#gmm_full">gmm_full</a> - classes for modelling and evaluating data as a Gaussian mixture model</li>
+<li><a href="#gmm_diag">gmm_diag</a> &amp; <a href="#gmm_full">gmm_full</a> - model and evaluate data using Gaussian Mixture Models (GMMs)</li>
 <li><a href="https://en.wikipedia.org/wiki/Multivariate_normal_distribution">multivariate normal distribution in Wikipedia</a></li>
 </ul>
 </li>
@@ -14061,11 +14084,11 @@ See also:
 <b>running_stat&lt;</b><i>type</i><b>&gt;</b>
 <ul>
 <li>
-Class for keeping the running statistics of a continuously sampled one dimensional process/signal
+Class for running statistics (online statistics) of scalars (one dimensional process/signal)
 </li>
 <br>
 <li>
-Useful if the storage of individual samples (scalars) is not required, or the number of samples is not known beforehand
+Useful if the storage of all samples (scalars) is impractical, or if the number of samples is not known in advance
 </li>
 <br>
 <li>
@@ -14211,8 +14234,9 @@ cout &lt;&lt; "max  = " &lt;&lt; stats.max()  &lt;&lt; endl;
 <br>
 <li>See also:
 <ul>
+<li><a href="#running_stat_vec">running_stat_vec</a> (running statistics of vectors)</li>
 <li><a href="#stats_fns">statistics functions</a></li>
-<li><a href="#running_stat_vec">running_stat_vec</a></li>
+<li><a href="#gmm_diag">gmm_diag</a> - model and evaluate data using Gaussian Mixture Models (GMMs)</li>
 </ul>
 </li>
 <br>
@@ -14224,11 +14248,11 @@ cout &lt;&lt; "max  = " &lt;&lt; stats.max()  &lt;&lt; endl;
 <br><b>running_stat_vec&lt;</b><i>vec_type</i><b>&gt;(calc_cov)</b>
 <ul>
 <li>
-Class for keeping the running statistics of a continuously sampled multi-dimensional process/signal
+Class for running statistics (online statistics) of vectors (multi-dimensional process/signal)
 </li>
 <br>
 <li>
-Useful if the storage of individual samples (vectors) is not required, or if the number of samples is not known beforehand
+Useful if the storage of all samples (vectors) is impractical, or if the number of samples is not known in advance
 </li>
 <br>
 <li>
@@ -14418,11 +14442,11 @@ cout &lt;&lt; more_stats.cov() / (sd.t() * sd);
 <br>
 <li>See also:
 <ul>
+<li><a href="#running_stat">running_stat</a> (running statistics of scalars)</li>
+<li><a href="#stats_fns">statistics functions</a></li>
 <li><a href="#cov">cov()</a></li>
 <li><a href="#cor">cor()</a></li>
-<li><a href="#running_stat">running_stat</a></li>
-<li><a href="#stats_fns">statistics functions</a></li>
-<li><a href="#gmm_diag">gmm_diag</a></li>
+<li><a href="#gmm_diag">gmm_diag</a> - model and evaluate data using Gaussian Mixture Models (GMMs)</li>
 </ul>
 </li>
 <br>
@@ -14508,7 +14532,7 @@ means.print("means:");
 <br>
 <li>See also:
 <ul>
-<li><a href="#gmm_diag">gmm_diag</a></li>
+<li><a href="#gmm_diag">gmm_diag</a> - model and evaluate data using Gaussian Mixture Models (GMMs)</li>
 <li><a href="#stats_fns">statistics functions</a></li>
 <li><a href="#running_stat_vec">running_stat_vec</a></li>
 <li><a href="http://en.wikipedia.org/wiki/K-means_clustering">k-means clustering in Wikipedia</a></li>
@@ -14561,10 +14585,10 @@ where:
 <ul>
 <li><i>n_gaus</i> is the number of Gaussians</li>
 <li>N(<small>&nbsp;</small><i>x</i><small>&nbsp;</small>|<small>&nbsp;</small><i>m<sub>g</sub></i><small>&nbsp;</small>,&nbsp;<i>C<sub>g</sub></i><small>&nbsp;</small>) represents a Gaussian (normal) distribution</li>
-<li>for each Gaussian <i>g</i>:
+<li>each Gaussian <i>g</i> has the following parameters:
 <ul>
 <li><i>h<sub>g</sub></i> is the heft (weight), with constraints <i>h<sub>g</sub></i>&nbsp;&ge;&nbsp;0 and &sum;<i>h<sub>g</sub></i> = 1</li>
-<li><i>m<sub>g</sub></i> is the mean (centroid) vector with dimensionality <i>n_dims</i></li>
+<li><i>m<sub>g</sub></i> is the mean vector (centroid) with dimensionality <i>n_dims</i></li>
 <li><i>C<sub>g</sub></i> is the covariance matrix (either diagonal or full)</li>
 </ul>
 </li>
@@ -14585,8 +14609,12 @@ at the potential cost of some reduction in modelling accuracy
 </li>
 <br>
 <li>
-The classes include parameter estimation (training) algorithms: k-means clustering and Expectation-Maximisation (EM);
-the training algorithms will run much quicker on multi-core machines when OpenMP is enabled in your compiler (eg. <i>-fopenmp</i> in GCC and clang)
+The <i>gmm_diag</i> and <i>gmm_full</i> classes include dedicated optimisation algorithms for learning (training) the model parameters from data:
+<ul>
+<li>k-means clustering, for quick initial estimates</li>
+<li>Expectation-Maximisation (EM), for maximum-likelihood estimates</li>
+</ul>
+The optimisation algorithms are multi-threaded and run much quicker on multi-core machines when OpenMP is enabled in your compiler (eg. <i>-fopenmp</i> in GCC and clang)
 </li>
 </ul>
 </td>
@@ -14601,12 +14629,33 @@ the training algorithms will run much quicker on multi-core machines when OpenMP
 
 <ul>
 <li>
-Please cite the following paper if you use the <i>gmm_diag</i> or <i>gmm_full</i> classes in your research and/or software:
+Please cite one of the following papers if you use the <i>gmm_diag</i> or <i>gmm_full</i> classes in your research and/or software:
+<br>
+<br>
+Conrad Sanderson and Ryan Curtin.
+<br><i><a href="arma_gmm_joss_2017.pdf">gmm_diag and gmm_full: C++ classes for multi-threaded Gaussian mixture models and Expectation-Maximisation</a></i>.
+<br>Journal of Open Source Software, Vol.&nbsp;2, 2017.
 <br>
 <br>
 Conrad Sanderson and Ryan Curtin.
 <br><i><a href="arma_gmm_spcs_2017.pdf">An Open Source C++ Implementation of Multi-Threaded Gaussian Mixture Models, k-Means and Expectation Maximisation</a></i>.
 <br>International Conference on Signal Processing and Communication Systems, 2017.
+<br>
+<br>
+<br>bibtex:
+<br>
+<br>
+<font size=-1>
+<code>
+@article{gmm2017,<br>
+&nbsp;author&nbsp;&nbsp;= {Conrad Sanderson and Ryan Curtin},<br>
+&nbsp;title&nbsp;&nbsp;&nbsp;= {gmm{\tt\char95}diag and gmm{\tt\char95}full: C++ classes for multi-threaded Gaussian mixture models and Expectation-Maximisation},<br>
+&nbsp;journal&nbsp;= {Journal of Open Source Software},<br>
+&nbsp;volume&nbsp;&nbsp;= {2},<br>
+&nbsp;year&nbsp;&nbsp;&nbsp;&nbsp;= {2017}<br>
+&nbsp;}
+</code>
+</font>
 </li>
 </ul>
 
@@ -15223,7 +15272,7 @@ model.save("my_model.gmm");
 <li><a href="http://en.wikipedia.org/wiki/Mixture_model">mixture model in Wikipedia</a></li>
 <li><a href="http://en.wikipedia.org/wiki/K-means_clustering">k-means clustering in Wikipedia</a></li>
 <li><a href="http://mathworld.wolfram.com/K-MeansClusteringAlgorithm.html">k-means clustering in MathWorld</a></li>
-<li><a href="http://en.wikipedia.org/wiki/Expectation-maximization_algorithm">expectation maximisation algorithm in Wikipedia</a></li>
+<li><a href="http://en.wikipedia.org/wiki/Expectation-maximization_algorithm">Expectation-Maximisation algorithm in Wikipedia</a></li>
 <li><a href="http://mathworld.wolfram.com/MaximumLikelihood.html">maximum likelihood in MathWorld</a></li>
 <li><a href="http://en.wikipedia.org/wiki/Vector_quantization">vector quantisation in Wikipedia</a></li>
 <li><a href="http://en.wikipedia.org/wiki/OpenMP">OpenMP in Wikipedia</a></li>
@@ -17864,6 +17913,21 @@ List of additions and changes for each version:
 
 
 
+<a name="version_9200"></a>
+<li>Version 9.200:
+<ul>
+<li>faster handling of symmetric positive definite matrices by <a href="#rcond">rcond()</a></li>
+<li>faster transpose of matrices with size &geq; 512x512</li>
+<li>faster handling of compound sparse matrix expressions by <a href="#accu">accu()</a>, <a href="#diagmat">diagmat()</a>, <a href="#trace">trace()</a></li>
+<li>faster handling of sparse matrices by <a href="#join">join_rows()</a></li>
+<li>added <a href="#trig_fns">sinc()</a></li>
+<li>expanded <a href="#misc_fns">sign()</a> to handle scalar arguments</li>
+<li>expanded <a href="#operators">operators</a> (*, %, +, &minus;) to handle sparse matrices with differing element types (eg. multiplication of complex matrix by real matrix)</li>
+<li>expanded <a href="#conv_to">conv_to()</a> to allow conversion between sparse matrices with differing element types</li>
+<li>expanded <a href="#solve">solve()</a> to optionally allow keeping solutions of systems singular to working precision</li>
+</ul>
+</li>
+<br>
 <a name="version_9100"></a>
 <li>Version 9.100:
 <ul>

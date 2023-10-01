@@ -74,8 +74,9 @@ Authors:
 
 ### 2: Citation Details
 
-Please cite the following papers if you use Armadillo in your research and/or software.
-Citations are useful for the continued development and maintenance of the library.
+Please cite the following papers if you use Armadillo
+in your research and/or software.  Citations are useful
+for the continued development and maintenance of the library.
 
   * Conrad Sanderson and Ryan Curtin.  
     Armadillo: a template-based C++ library for linear algebra.  
@@ -276,9 +277,9 @@ You may need to make adaptations for 32 bit systems, later versions of Windows
 and/or the compiler. For example, you may have to enable or disable
 ARMA_BLAS_LONG and ARMA_BLAS_UNDERSCORE defines in "armadillo_bits/config.hpp".
 
-The folder "examples/lib_win64" contains reference LAPACK and BLAS libraries compiled
-for 64 bit Windows. The compilation was done by a third party. USE AT YOUR OWN RISK.
-The compiled versions of LAPACK and BLAS were obtained from:
+The folder "examples/lib_win64" contains baseline (unoptimised) LAPACK and BLAS
+libraries compiled for 64 bit Windows. The compilation was done by a third party.
+USE AT YOUR OWN RISK. The compiled versions of LAPACK and BLAS were obtained from:
   http://ylzhao.blogspot.com.au/2013/10/blas-lapack-precompiled-binaries-for.html
 
 Faster and/or alternative implementations of BLAS and LAPACK are available:
@@ -286,12 +287,12 @@ Faster and/or alternative implementations of BLAS and LAPACK are available:
   * http://icl.cs.utk.edu/lapack-for-windows/lapack/
   * http://software.intel.com/en-us/intel-mkl/
 
-The OpenBLAS and Intel MKL libraries are generally the fastest.
+The OpenBLAS and Intel MKL libraries are generally the fastest
+replacements for both BLAS and LAPACK.
 
-**Caveat:** Windows and MSVC are poor platforms for scientific/engineering development.
-The MSVC compiler has a multitude of bugs and produces low-performance executables.
-For any serious and/or performance critical work, we recommend using
-a Linux based operating system:
+**Caveat:** 
+for any high performance scientific/engineering workloads,
+we strongly recommend using a Linux based operating system:
   * Fedora  http://fedoraproject.org/
   * Ubuntu  http://www.ubuntu.com/
   * CentOS  http://centos.org/
@@ -464,15 +465,14 @@ Octave/Matlab with C++ code that uses Armadillo matrices.
 
 ### 17: Related Software Using Armadillo
 
-* MLPACK: extensive library of machine learning algorithms
-  (regression, hidden Markov models, neural networks, etc)  
+* MLPACK: extensive library of machine learning algorithms  
   http://mlpack.org
+
+* ensmallen: flexible C++ library for efficient mathematical optimisation  
+  http://ensmallen.org/
 
 * SigPack: C++ signal processing library  
   http://sigpack.sourceforge.net
-
-* OptimLib: C++ library of numerical optimisation methods for nonlinear functions  
-  https://www.kthohr.com/optimlib.html
 
 * RcppArmadillo: integration of Armadillo with the R system and environment  
   http://dirk.eddelbuettel.com/code/rcpp.armadillo.html

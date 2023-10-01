@@ -78,11 +78,11 @@ trace(const Op<T1, op_diagmat>& X)
 
 
 
-//! speedup for trace(A*B)
+//! speedup for trace(A*B); non-complex elements
 template<typename T1, typename T2>
 arma_warn_unused
 inline
-typename T1::elem_type
+typename enable_if2< is_cx<typename T1::elem_type>::no, typename T1::elem_type>::result
 trace(const Glue<T1, T2, glue_times>& X)
   {
   arma_extra_debug_sigprint();
@@ -199,6 +199,70 @@ trace(const Glue<T1, T2, glue_times>& X)
 
 
 
+//! speedup for trace(A*B); complex elements
+template<typename T1, typename T2>
+arma_warn_unused
+inline
+typename enable_if2< is_cx<typename T1::elem_type>::yes, typename T1::elem_type>::result
+trace(const Glue<T1, T2, glue_times>& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename T1::pod_type   T;
+  typedef typename T1::elem_type eT;
+  
+  const quasi_unwrap<T1> UA(X.A);
+  const quasi_unwrap<T2> UB(X.B);
+  
+  const Mat<eT>& A = UA.M;
+  const Mat<eT>& B = UB.M;
+  
+  const uword A_n_rows = A.n_rows;
+  const uword A_n_cols = A.n_cols;
+
+  const uword B_n_rows = B.n_rows;
+  const uword B_n_cols = B.n_cols;
+  
+  arma_debug_assert_mul_size(A_n_rows, A_n_cols, B_n_rows, B_n_cols, "matrix multiplication");
+  
+  if( (A.n_elem == 0) || (B.n_elem == 0) )  { return eT(0); }
+  
+  const uword N = (std::min)(A_n_rows, B_n_cols);
+  
+  // eT acc = eT(0);
+  T acc_real = T(0);
+  T acc_imag = T(0);
+  
+  for(uword k=0; k < N; ++k)
+    {
+    const eT* B_colptr = B.colptr(k);
+    
+    // condition: A_n_cols = B_n_rows
+    
+    for(uword i=0; i < A_n_cols; ++i)
+      {
+      // acc += A.at(k, i) * B_colptr[i];
+      
+      const std::complex<T>& xx = A.at(k, i);
+      const std::complex<T>& yy = B_colptr[i];
+      
+      const T a = xx.real();
+      const T b = xx.imag();
+      
+      const T c = yy.real();
+      const T d = yy.imag();
+      
+      acc_real += (a*c) - (b*d);
+      acc_imag += (a*d) + (b*c);
+      }
+    }
+  
+  // return acc;
+  return std::complex<T>(acc_real, acc_imag);
+  }
+
+
+
 //! trace of sparse object; generic version
 template<typename T1>
 arma_warn_unused
@@ -246,6 +310,77 @@ trace(const SpBase<typename T1::elem_type,T1>& expr)
 
 
 
+//! trace of sparse object; speedup for trace(A + B)
+template<typename T1, typename T2>
+arma_warn_unused
+inline
+typename T1::elem_type
+trace(const SpGlue<T1, T2, spglue_plus>& expr)
+  {
+  arma_extra_debug_sigprint();
+  
+  const unwrap_spmat<T1> UA(expr.A);
+  const unwrap_spmat<T2> UB(expr.B);
+  
+  arma_debug_assert_same_size(UA.M.n_rows, UA.M.n_cols, UB.M.n_rows, UB.M.n_cols, "addition");
+  
+  return (trace(UA.M) + trace(UB.M));
+  }
+
+
+
+//! trace of sparse object; speedup for trace(A - B)
+template<typename T1, typename T2>
+arma_warn_unused
+inline
+typename T1::elem_type
+trace(const SpGlue<T1, T2, spglue_minus>& expr)
+  {
+  arma_extra_debug_sigprint();
+  
+  const unwrap_spmat<T1> UA(expr.A);
+  const unwrap_spmat<T2> UB(expr.B);
+  
+  arma_debug_assert_same_size(UA.M.n_rows, UA.M.n_cols, UB.M.n_rows, UB.M.n_cols, "subtraction");
+  
+  return (trace(UA.M) - trace(UB.M));
+  }
+
+
+
+//! trace of sparse object; speedup for trace(A % B)
+template<typename T1, typename T2>
+arma_warn_unused
+inline
+typename T1::elem_type
+trace(const SpGlue<T1, T2, spglue_schur>& expr)
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename T1::elem_type eT;
+  
+  const unwrap_spmat<T1> UA(expr.A);
+  const unwrap_spmat<T2> UB(expr.B);
+  
+  const SpMat<eT>& A = UA.M;
+  const SpMat<eT>& B = UB.M;
+  
+  arma_debug_assert_same_size(A.n_rows, A.n_cols, B.n_rows, B.n_cols, "element-wise multiplication");
+  
+  const uword N = (std::min)(A.n_rows, A.n_cols);
+  
+  eT acc = eT(0);
+  
+  for(uword i=0; i<N; ++i)
+    {
+    acc += A.at(i,i) * B.at(i,i);
+    }
+  
+  return acc;
+  }
+
+
+
 //! trace of sparse object; speedup for trace(A*B)
 template<typename T1, typename T2>
 arma_warn_unused
@@ -276,20 +411,29 @@ trace(const SpGlue<T1, T2, spglue_times>& expr)
   
   eT acc = eT(0);
   
-  for(uword k=0; k < N; ++k)
+  if( (A.n_nonzero >= 5*N) || (B.n_nonzero >= 5*N) )
     {
-    typename SpMat<eT>::const_col_iterator B_it     = B.begin_col(k);
-    typename SpMat<eT>::const_col_iterator B_it_end = B.end_col(k);
-    
-    while(B_it != B_it_end)
+    for(uword k=0; k < N; ++k)
       {
-      const eT    B_val = (*B_it);
-      const uword i     = B_it.row();
+      typename SpMat<eT>::const_col_iterator B_it     = B.begin_col_no_sync(k);
+      typename SpMat<eT>::const_col_iterator B_it_end = B.end_col_no_sync(k);
       
-      acc += A.at(k,i) * B_val;
-      
-      ++B_it;
+      while(B_it != B_it_end)
+        {
+        const eT    B_val = (*B_it);
+        const uword i     = B_it.row();
+        
+        acc += A.at(k,i) * B_val;
+        
+        ++B_it;
+        }
       }
+    }
+  else
+    {
+    const SpMat<eT> AB = A * B;
+    
+    acc = trace(AB);
     }
   
   return acc;
@@ -326,20 +470,29 @@ trace(const SpGlue<SpOp<T1, spop_htrans>, T2, spglue_times>& expr)
   
   eT acc = eT(0);
   
-  for(uword k=0; k < N; ++k)
+  if( (A.n_nonzero >= 5*N) || (B.n_nonzero >= 5*N) )
     {
-    typename SpMat<eT>::const_col_iterator B_it     = B.begin_col(k);
-    typename SpMat<eT>::const_col_iterator B_it_end = B.end_col(k);
-    
-    while(B_it != B_it_end)
+    for(uword k=0; k < N; ++k)
       {
-      const eT    B_val = (*B_it);
-      const uword i     = B_it.row();
+      typename SpMat<eT>::const_col_iterator B_it     = B.begin_col_no_sync(k);
+      typename SpMat<eT>::const_col_iterator B_it_end = B.end_col_no_sync(k);
       
-      acc += A.at(i,k) * B_val;
-      
-      ++B_it;
+      while(B_it != B_it_end)
+        {
+        const eT    B_val = (*B_it);
+        const uword i     = B_it.row();
+        
+        acc += A.at(i,k) * B_val;
+        
+        ++B_it;
+        }
       }
+    }
+  else
+    {
+    const SpMat<eT> AtB = A.t() * B;
+    
+    acc = trace(AtB);
     }
   
   return acc;
