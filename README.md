@@ -12,6 +12,9 @@ Copyright 2017-2023 Data61 / CSIRO
 - [download latest stable release](https://arma.sourceforge.net/download.html)
 - [documentation for functions and classes](https://arma.sourceforge.net/docs.html)
 - [bug reports & questions](https://arma.sourceforge.net/faq.html)  
+* [reference Git repo at GitLab](https://gitlab.com/conradsnicta/armadillo-code)
+* [Conversion Table Between Matlab and Armadillo Syntax](https://arma.sourceforge.net/docs.html#syntax)
+
 
 ---
  
