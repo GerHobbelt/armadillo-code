@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// 
 // Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
@@ -109,11 +111,7 @@ op_sort::apply_noalias(Mat<eT>& out, const Mat<eT>& X, const uword sort_type, co
   {
   arma_extra_debug_sigprint();
   
-  if( (X.n_rows * X.n_cols) <= 1 )
-    {
-    out = X;
-    return;
-    }
+  if((X.n_rows * X.n_cols) <= 1)  { out = X; return; }
   
   if(dim == 0)  // sort the contents of each column
     {

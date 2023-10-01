@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// 
 // Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
@@ -34,10 +36,10 @@ class op_diagmat
   inline static void apply(Mat<typename T1::elem_type>& out, const Op< Glue<T1,T2,glue_times>, op_diagmat>& X);
   
   template<typename T1, typename T2>
-  inline static void apply_times(Mat<typename T1::elem_type>& out, const T1& X, const T2& Y, const typename arma_not_cx<typename T1::elem_type>::result* junk = 0);
+  inline static void apply_times(Mat<typename T1::elem_type>& out, const T1& X, const T2& Y, const typename arma_not_cx<typename T1::elem_type>::result* junk = nullptr);
   
   template<typename T1, typename T2>
-  inline static void apply_times(Mat<typename T1::elem_type>& out, const T1& X, const T2& Y, const typename arma_cx_only<typename T1::elem_type>::result* junk = 0);
+  inline static void apply_times(Mat<typename T1::elem_type>& out, const T1& X, const T2& Y, const typename arma_cx_only<typename T1::elem_type>::result* junk = nullptr);
   };
 
 

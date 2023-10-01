@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// 
 // Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
 // Copyright 2008-2016 National ICT Australia (NICTA)
 // 
@@ -27,7 +29,7 @@ namespace priv
     template<typename eT>
     static
     typename arma_real_only<eT>::result
-    nan(typename arma_real_only<eT>::result* junk = 0)
+    nan(typename arma_real_only<eT>::result* junk = nullptr)
       {
       arma_ignore(junk);
       
@@ -45,7 +47,7 @@ namespace priv
     template<typename eT>
     static
     typename arma_cx_only<eT>::result
-    nan(typename arma_cx_only<eT>::result* junk = 0)
+    nan(typename arma_cx_only<eT>::result* junk = nullptr)
       {
       arma_ignore(junk);
       
@@ -58,7 +60,7 @@ namespace priv
     template<typename eT>
     static
     typename arma_integral_only<eT>::result
-    nan(typename arma_integral_only<eT>::result* junk = 0)
+    nan(typename arma_integral_only<eT>::result* junk = nullptr)
       {
       arma_ignore(junk);
       
@@ -69,7 +71,7 @@ namespace priv
     template<typename eT>
     static
     typename arma_real_only<eT>::result
-    inf(typename arma_real_only<eT>::result* junk = 0)
+    inf(typename arma_real_only<eT>::result* junk = nullptr)
       {
       arma_ignore(junk);
       
@@ -87,7 +89,7 @@ namespace priv
     template<typename eT>
     static
     typename arma_cx_only<eT>::result
-    inf(typename arma_cx_only<eT>::result* junk = 0)
+    inf(typename arma_cx_only<eT>::result* junk = nullptr)
       {
       arma_ignore(junk);
       
@@ -100,7 +102,7 @@ namespace priv
     template<typename eT>
     static
     typename arma_integral_only<eT>::result
-    inf(typename arma_integral_only<eT>::result* junk = 0)
+    inf(typename arma_integral_only<eT>::result* junk = nullptr)
       {
       arma_ignore(junk);
       
@@ -113,7 +115,7 @@ namespace priv
 
 
 //! various constants.
-//! Physical constants taken from NIST 2014 CODATA values, and some from WolframAlpha (values provided as of 2009-06-23)
+//! Physical constants taken from NIST 2018 CODATA values, and some from WolframAlpha (values provided as of 2009-06-23)
 //! http://physics.nist.gov/cuu/Constants
 //! http://www.wolframalpha.com
 //! See also http://en.wikipedia.org/wiki/Physical_constant
@@ -125,6 +127,7 @@ class Datum
   public:
   
   static const eT pi;           //!< ratio of any circle's circumference to its diameter
+  static const eT tau;          //!< ratio of any circle's circumference to its radius (replacement of 2*pi)
   static const eT e;            //!< base of the natural logarithm
   static const eT euler;        //!< Euler's constant, aka Euler-Mascheroni constant
   static const eT gratio;       //!< golden ratio
@@ -175,6 +178,7 @@ class Datum
 // and any smart compiler that does high-precision computation at compile-time
   
 template<typename eT> const eT Datum<eT>::pi          = eT(3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679);
+template<typename eT> const eT Datum<eT>::tau         = eT(6.2831853071795864769252867665590057683943387987502116419498891846156328125724179972560696506842341359);
 template<typename eT> const eT Datum<eT>::e           = eT(2.7182818284590452353602874713526624977572470936999595749669676277240766303535475945713821785251664274);
 template<typename eT> const eT Datum<eT>::euler       = eT(0.5772156649015328606065120900824024310421593359399235988057672348848677267776646709369470632917467495);
 template<typename eT> const eT Datum<eT>::gratio      = eT(1.6180339887498948482045868343656381177203091798057628621354486227052604628189024497072072041893911374);
@@ -230,62 +234,40 @@ namespace priv
   
   template<typename eT>
   static
-  arma_inline
+  constexpr
   typename arma_real_only<eT>::result
-  most_neg(typename arma_real_only<eT>::result* junk = 0)
+  most_neg()
     {
-    arma_ignore(junk);
-    
-    if(std::numeric_limits<eT>::has_infinity)
-      {
-      return -(std::numeric_limits<eT>::infinity());
-      }
-    else
-      {
-      return -(std::numeric_limits<eT>::max());
-      }
+    return (std::numeric_limits<eT>::has_infinity) ? -(std::numeric_limits<eT>::infinity()) : std::numeric_limits<eT>::lowest();
     }
   
   
   template<typename eT>
   static
-  arma_inline
+  constexpr
   typename arma_integral_only<eT>::result
-  most_neg(typename arma_integral_only<eT>::result* junk = 0)
+  most_neg()
     {
-    arma_ignore(junk);
-    
-    return std::numeric_limits<eT>::min();
+    return std::numeric_limits<eT>::lowest();
     }
   
   
   template<typename eT>
   static
-  arma_inline
+  constexpr
   typename arma_real_only<eT>::result
-  most_pos(typename arma_real_only<eT>::result* junk = 0)
+  most_pos()
     {
-    arma_ignore(junk);
-    
-    if(std::numeric_limits<eT>::has_infinity)
-      {
-      return std::numeric_limits<eT>::infinity();
-      }
-    else
-      {
-      return std::numeric_limits<eT>::max();
-      }
+    return (std::numeric_limits<eT>::has_infinity) ? std::numeric_limits<eT>::infinity() : std::numeric_limits<eT>::max();
     }
   
   
   template<typename eT>
   static
-  arma_inline
+  constexpr
   typename arma_integral_only<eT>::result
-  most_pos(typename arma_integral_only<eT>::result* junk = 0)
+  most_pos()
     {
-    arma_ignore(junk);
-    
     return std::numeric_limits<eT>::max();
     }
 
