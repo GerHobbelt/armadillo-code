@@ -682,6 +682,54 @@ extern "C"
     
     
     
+    
+    void arma_fortran_prefix(arma_sgtsv)(blas_int* n, blas_int* nrhs,  float* dl,  float* d,  float* du,  float* b, blas_int* ldb, blas_int* info)
+      {
+      arma_fortran_noprefix(arma_sgtsv)(n, nrhs, dl, d, du, b, ldb, info);
+      }
+    
+    void arma_fortran_prefix(arma_dgtsv)(blas_int* n, blas_int* nrhs, double* dl, double* d, double* du, double* b, blas_int* ldb, blas_int* info)
+      {
+      arma_fortran_noprefix(arma_dgtsv)(n, nrhs, dl, d, du, b, ldb, info);
+      }
+    
+    void arma_fortran_prefix(arma_cgtsv)(blas_int* n, blas_int* nrhs,   void* dl,   void* d,   void* du,   void* b, blas_int* ldb, blas_int* info)
+      {
+      arma_fortran_noprefix(arma_cgtsv)(n, nrhs, dl, d, du, b, ldb, info);
+      }
+    
+    void arma_fortran_prefix(arma_zgtsv)(blas_int* n, blas_int* nrhs,   void* dl,   void* d,   void* du,   void* b, blas_int* ldb, blas_int* info)
+      {
+      arma_fortran_noprefix(arma_zgtsv)(n, nrhs, dl, d, du, b, ldb, info);
+      }
+    
+    
+    
+    
+    void arma_fortran_prefix(arma_sgtsvx)(char* fact, char* trans, blas_int* n, blas_int* nrhs,  float* dl,  float* d,  float* du,  float* dlf,  float* df,  float* duf,  float* du2, blas_int* ipiv,  float* b, blas_int* ldb,  float* x, blas_int* ldx,  float* rcond,  float* ferr,  float* berr,  float* work, blas_int* iwork, blas_int* info)
+      {
+      arma_fortran_noprefix(arma_sgtsvx)(fact, trans, n, nrhs, dl, d, du, dlf, df, duf, du2, ipiv, b, ldb, x, ldx, rcond, ferr, berr, work, iwork, info);
+      }
+    
+    void arma_fortran_prefix(arma_dgtsvx)(char* fact, char* trans, blas_int* n, blas_int* nrhs, double* dl, double* d, double* du, double* dlf, double* df, double* duf, double* du2, blas_int* ipiv, double* b, blas_int* ldb, double* x, blas_int* ldx, double* rcond, double* ferr, double* berr, double* work, blas_int* iwork, blas_int* info)
+      {
+      arma_fortran_noprefix(arma_dgtsvx)(fact, trans, n, nrhs, dl, d, du, dlf, df, duf, du2, ipiv, b, ldb, x, ldx, rcond, ferr, berr, work, iwork, info);
+      }
+    
+    
+    void arma_fortran_prefix(arma_cgtsvx)(char* fact, char* trans, blas_int* n, blas_int* nrhs, void* dl, void* d, void* du, void* dlf, void* df, void* duf, void* du2, blas_int* ipiv, void* b, blas_int* ldb, void* x, blas_int* ldx,  float* rcond,  float* ferr,  float* berr, void* work,  float* rwork, blas_int* info)
+      {
+      arma_fortran_noprefix(arma_cgtsvx)(fact, trans, n, nrhs, dl, d, du, dlf, df, duf, du2, ipiv, b, ldb, x, ldx, rcond, ferr, berr, work, rwork, info);
+      }
+    
+    void arma_fortran_prefix(arma_zgtsvx)(char* fact, char* trans, blas_int* n, blas_int* nrhs, void* dl, void* d, void* du, void* dlf, void* df, void* duf, void* du2, blas_int* ipiv, void* b, blas_int* ldb, void* x, blas_int* ldx, double* rcond, double* ferr, double* berr, void* work, double* rwork, blas_int* info)
+      {
+      arma_fortran_noprefix(arma_zgtsvx)(fact, trans, n, nrhs, dl, d, du, dlf, df, duf, du2, ipiv, b, ldb, x, ldx, rcond, ferr, berr, work, rwork, info);
+      }
+    
+    
+    
+    
     void arma_fortran_prefix(arma_sgees)(char* jobvs, char* sort, void* select, blas_int* n, float*  a, blas_int* lda, blas_int* sdim, float*  wr, float*  wi, float*  vs, blas_int* ldvs, float*  work, blas_int* lwork, blas_int* bwork, blas_int* info)
       {
       arma_fortran_noprefix(arma_sgees)(jobvs, sort, select, n, a, lda, sdim, wr, wi, vs, ldvs, work, lwork, bwork, info);
@@ -939,6 +987,28 @@ extern "C"
     void arma_fortran_prefix(arma_dlarnv)(blas_int* idist, blas_int* iseed, blas_int* n, double* x)
       {
       arma_fortran_noprefix(arma_dlarnv)(idist, iseed, n, x);
+      }
+    
+    
+    
+    void arma_fortran_prefix(arma_sgehrd)(blas_int* n, blas_int* ilo, blas_int* ihi, float*  a, blas_int* lda, float*  tao, float*  work, blas_int* lwork, blas_int* info)
+      {
+      arma_fortran_noprefix(arma_sgehrd)(n, ilo, ihi, a, lda, tao, work, lwork, info);
+      }
+    
+    void arma_fortran_prefix(arma_dgehrd)(blas_int* n, blas_int* ilo, blas_int* ihi, double* a, blas_int* lda, double* tao, double* work, blas_int* lwork, blas_int* info)
+      {
+      arma_fortran_noprefix(arma_dgehrd)(n, ilo, ihi, a, lda, tao, work, lwork, info);
+      }
+    
+    void arma_fortran_prefix(arma_cgehrd)(blas_int* n, blas_int* ilo, blas_int* ihi, void*   a, blas_int* lda, void*   tao, void*   work, blas_int* lwork, blas_int* info)
+      {
+      arma_fortran_noprefix(arma_cgehrd)(n, ilo, ihi, a, lda, tao, work, lwork, info);
+      }
+    
+    void arma_fortran_prefix(arma_zgehrd)(blas_int* n, blas_int* ilo, blas_int* ihi, void*   a, blas_int* lda, void*   tao, void*   work, blas_int* lwork, blas_int* info)
+      {
+      arma_fortran_noprefix(arma_zgehrd)(n, ilo, ihi, a, lda, tao, work, lwork, info);
       }
     
   #endif
