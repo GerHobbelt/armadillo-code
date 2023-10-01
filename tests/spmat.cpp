@@ -1,6 +1,4 @@
 // Copyright 2011-2017 Ryan Curtin (http://www.ratml.org/)
-// Copyright 2011-2012 Matthew Amidon
-// Copyright 2011-2012 James Cline
 // Copyright 2017 National ICT Australia (NICTA)
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -423,7 +421,7 @@ TEST_CASE("row_iterator_test")
 
   REQUIRE( it == x.begin_row() );
 
-  // Try removing an element we itreated to.
+  // Try removing an element we iterated to.
   it++;
   it++;
   *it = 0;
