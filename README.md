@@ -138,6 +138,7 @@ Caveats on the use of SuperLU:
 
 Armadillo can be installed in several ways: either manually or via cmake, with or without root access.
 The cmake based installation is preferred.
+
 The cmake tool can be downloaded from https://www.cmake.org
 or (preferably) installed using the package manager on your system;
 on macOS systems, cmake can be installed through MacPorts or Homebrew.
@@ -153,8 +154,7 @@ The cmake based installer detects which relevant libraries
 are installed on your system (eg. OpenBLAS, LAPACK, SuperLU, ARPACK, etc)
 and correspondingly modifies Armadillo's configuration.
 The installer also generates the Armadillo runtime library,
-which is a wrapper for all the detected libraries,
-and provides a thread-safe random number generator.
+which is a wrapper for all the detected libraries.
 
 Change into the directory that was created by unpacking the armadillo archive
 (eg. `cd armadillo-10.6.1`) and then run cmake using:

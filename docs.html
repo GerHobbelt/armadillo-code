@@ -330,7 +330,7 @@ Conrad Sanderson and Ryan Curtin.
 <tr><td><small><small>&nbsp;</small></small></td><td><small><small>&nbsp;</small></small></td><td><small><small>&nbsp;</small></small></td></tr>
 <tr><td><a href="#print">.print</a></td><td>&nbsp;</td><td>print object to <i>std::cout</i> or user specified stream</td></tr>
 <tr><td><a href="#raw_print">.raw_print</a></td><td>&nbsp;</td><td>print object without formatting</td></tr>
-<tr><td><a href="#brief_print">.brief_print</a></td><td>&nbsp;</td><td>print object in abridged form</td></tr>
+<tr><td><a href="#brief_print">.brief_print</a></td><td>&nbsp;</td><td>print object in shortened/abridged form</td></tr>
 <tr><td><small><small>&nbsp;</small></small></td><td><small><small>&nbsp;</small></small></td><td><small><small>&nbsp;</small></small></td></tr>
 <tr><td><a href="#save_load_mat">.save/.load&nbsp;(matrices&thinsp;&amp;&thinsp;cubes)</a></td><td>&nbsp;</td><td>save/load matrices and cubes in files or streams</td></tr>
 <tr><td><a href="#save_load_field">.save/.load&nbsp;(fields)</a></td><td>&nbsp;</td><td>save/load fields in files or streams</td></tr>
@@ -5937,7 +5937,6 @@ See also:
 <li><a href="#rcond">rcond()</a></li>
 <li><a href="#pinv">pinv()</a></li>
 <li><a href="#solve">solve()</a></li>
-<li><a href="#spsolve">spsolve()</a></li>
 </ul>
 </li>
 <br>
@@ -6943,8 +6942,12 @@ Member functions of <i>Mat</i>, <i>Col</i>, <i>Row</i>, <i>SpMat</i> and <i>Cube
 </li>
 <br>
 <li>
-Similar to the <a href="#print">.print()</a> member function,
-with the difference that an abridged version of the object is printed
+Print a shortened/abridged version of an object and its size to the <i>std::cout</i> stream (default),
+or a user specified stream, with an optional header string
+</li>
+<br>
+<li>
+Can be useful for gaining a glimpse of large matrices
 </li>
 <br>
 <li>
@@ -8797,7 +8800,7 @@ See also:
 <li><a href="#rcond">rcond()</a></li>
 <li><a href="#rank">rank()</a></li>
 <li><a href="#inv">inv()</a></li>
-<li><a href="#solve">solve()</a></li>
+<li><a href="#svd">svd()</a></li>
 <li><a href="https://mathworld.wolfram.com/ConditionNumber.html">condition number in MathWorld</a></li>
 <li><a href="https://en.wikipedia.org/wiki/Condition_number">condition number in Wikipedia</a></li>
 </ul>
@@ -11039,6 +11042,10 @@ If <i>A</i> is not square sized, a <i>std::logic_error</i> exception is thrown
 </li>
 <br>
 <li>
+<b>Caveat:</b> to efficiently calculate rcond and matrix inverse at the same time, use <a href="#inv">inv()</a>
+</li>
+<br>
+<li>
 Examples:
 <ul>
 <pre>
@@ -13065,7 +13072,6 @@ Inverse of general square matrix <i>A</i>
 <tbody>
 <tr><td><code>inv_opts::no_ugly</code></td><td>&nbsp;&nbsp;&nbsp;</td><td>do not provide inverses for poorly conditioned matrices (where <i>rcond &lt; A.n_rows&thinsp;&middot;&thinsp;<a href="#constants">datum::eps</a></i>)</td></tr>
 <tr><td><code>inv_opts::allow_approx</code></td><td>&nbsp;&nbsp;&nbsp;</td><td>allow approximate inverses for rank deficient or poorly conditioned matrices</td></tr>
-<tr><td><code>inv_opts::tiny</code></td><td>&nbsp;&nbsp;&nbsp;</td><td>use fast inverse algorithm for tiny matrices (with size &leq; 4x4); may produce lower quality inverses</td></tr>
 </tbody>
 </table>
 </li>
@@ -13086,7 +13092,7 @@ If <i>A</i> is not square sized, a <i>std::logic_error</i> exception is thrown
 <ul>
 <li><i>B = inv(A)</i> resets <i>B</i> and throws a <i>std::runtime_error</i> exception</li>
 <li><i>inv(B,A)</i> resets <i>B</i> and returns a bool set to <i>false</i> (exception is not thrown)</li>
-<li><i>inv(B,rcond,A)</i> resets <i>B</i>, sets rcond to zero, and returns a bool set to <i>false</i> (exception is not thrown)</li>
+<li><i>inv(B,rcond,A)</i> resets <i>B</i>, sets <i>rcond</i> to zero, and returns a bool set to <i>false</i> (exception is not thrown)</li>
 </ul>
 </li>
 <br>
@@ -13130,7 +13136,6 @@ See also:
 <li><a href="#rcond">rcond()</a>
 <li><a href="#pinv">pinv()</a>
 <li><a href="#solve">solve()</a></li>
-<li><a href="#spsolve">spsolve()</a></li>
 <li><a href="#diagmat">diagmat()</a></li>
 <li><a href="#trimat">trimatu() / trimatl()</a></li>
 <li><a href="#powmat">powmat()</a></li>
@@ -13162,7 +13167,6 @@ Inverse of symmetric/hermitian positive definite matrix <i>A</i>
 <tbody>
 <tr><td><code>inv_opts::no_ugly</code></td><td>&nbsp;&nbsp;&nbsp;</td><td>do not provide inverses for poorly conditioned matrices (where <i>rcond &lt; A.n_rows&thinsp;&middot;&thinsp;<a href="#constants">datum::eps</a></i>)</td></tr>
 <tr><td><code>inv_opts::allow_approx</code></td><td>&nbsp;&nbsp;&nbsp;</td><td>allow approximate inverses for rank deficient or poorly conditioned symmetric matrices</td></tr>
-<tr><td><code>inv_opts::tiny</code></td><td>&nbsp;&nbsp;&nbsp;</td><td>use fast inverse algorithm for tiny matrices (with size &leq; 4x4); may produce lower quality inverses</td></tr>
 </tbody>
 </table>
 </li>
@@ -13497,7 +13501,7 @@ See also:
 <li><a href="#i_member">.i()</a></li>
 <li><a href="#inv">inv()</a></li>
 <li><a href="#solve">solve()</a></li>
-<li><a href="#spsolve">spsolve()</a></li>
+<li><a href="#svd">svd()</a></li>
 <li><a href="#constants">datum::eps</a></li>
 <li><a href="https://mathworld.wolfram.com/Pseudoinverse.html">Pseudoinverse in MathWorld</a></li>
 <li><a href="https://mathworld.wolfram.com/Moore-PenroseMatrixInverse.html">Moore-Penrose Matrix Inverse in MathWorld</a></li>
@@ -13856,7 +13860,7 @@ See also:
 <li><a href="https://en.wikipedia.org/wiki/Definiteness_of_a_matrix">definiteness of a matrix in Wikipedia</a></li>
 <li><a href="https://mathworld.wolfram.com/PositiveDefiniteMatrix.html">positive definite matrix in MathWorld</a></li>
 <li><a href="https://en.wikipedia.org/wiki/Iterative_refinement">iterative refinement</a></li>
-<li><a href="https://ensmallen.org">ensmallen</a> - library for solving arbitrary optimisation problems</li>
+<li><a href="https://ensmallen.org">ensmallen</a> - C++ library for solving numerical optimisation problems</li>
 </ul>
 </li>
 <br>
@@ -13931,6 +13935,7 @@ See also:
 <li><a href="#eig_gen">eig_gen()</a></li>
 <li><a href="#eig_sym">eig_sym()</a></li>
 <li><a href="#princomp">princomp()</a></li>
+<li><a href="#pinv">pinv()</a></li>
 <li><a href="#svds">svds()</a></li>
 <li><a href="https://en.wikipedia.org/wiki/Singular_value_decomposition">singular value decomposition in Wikipedia</a></li>
 <li><a href="https://mathworld.wolfram.com/SingularValueDecomposition.html">singular value decomposition in MathWorld</a></li>
@@ -20236,7 +20241,7 @@ List of additions and changes for each version:
 <li>Version 11.0:
 <ul>
 <li>added variants of <a href="#inv">inv()</a> and <a href="#inv_sympd">inv_sympd()</a> that provide <i>rcond</i> (reciprocal condition number)</li>
-<li>expanded <a href="#inv">inv()</a> and <a href="#inv_sympd">inv_sympd()</a> with options <code>inv_opts::tiny</code> and <code>inv_opts::allow_approx</code></li>
+<li>added <code>inv_opts::allow_approx</code> option to <a href="#inv">inv()</a> and <a href="#inv_sympd">inv_sympd()</a> to allow approximate inverses of poorly conditioned matrices</li>
 <li>stricter handling of singular matrices by <a href="#inv">inv()</a> and <a href="#inv_sympd">inv_sympd()</a></li>
 <li>stricter handling of non-sympd matrices by <a href="#inv_sympd">inv_sympd()</a></li>
 <li>stricter handling of non-finite matrices by <a href="#pinv">pinv()</a></li>
