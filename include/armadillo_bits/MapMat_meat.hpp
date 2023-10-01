@@ -141,27 +141,30 @@ MapMat<eT>::operator=(const SpMat<eT>& x)
   {
   arma_extra_debug_sigprint();
   
-  (*this).zeros(x.n_rows, x.n_cols);
+  const uword x_n_rows = x.n_rows;
+  const uword x_n_cols = x.n_cols;
+  
+  (*this).zeros(x_n_rows, x_n_cols);
   
   if(x.n_nonzero == 0)  { return; }
   
-  typename SpMat<eT>::const_iterator it     = x.begin();
-  typename SpMat<eT>::const_iterator it_end = x.end();
+  const    eT* x_values      = x.values;
+  const uword* x_row_indices = x.row_indices;
+  const uword* x_col_ptrs    = x.col_ptrs;
   
   map_type& map_ref = (*map_ptr);
   
-  const uword local_n_rows = n_rows;
-  
-  for(; it != it_end; ++it)
+  for(uword col = 0; col < x_n_cols; ++col)
     {
-    const eT val = (*it);
+    const uword start = x_col_ptrs[col    ];
+    const uword end   = x_col_ptrs[col + 1];
     
-    if(val != eT(0))
+    for(uword i = start; i < end; ++i)
       {
-      const uword row = it.row();
-      const uword col = it.col();
+      const uword row = x_row_indices[i];
+      const eT    val = x_values[i];
       
-      const uword index = (local_n_rows * col) + row;
+      const uword index = (x_n_rows * col) + row;
       
       #if defined(ARMA_USE_CXX11)
         map_ref.emplace_hint(map_ref.cend(), index, val);

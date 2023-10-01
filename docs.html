@@ -3731,9 +3731,7 @@ Read/write access to a diagonal in a matrix
 <br>
 <li>For <i>k &lt; 0</i>, the <i>k</i>-th sub-diagonal is accessed (bottom-left corner)</li>
 <br>
-<li>
-The diagonal is interpreted as a column vector within expressions
-</li>
+<li>The diagonal is interpreted as a column vector within expressions</li>
 <br>
 <li>
 Examples:
@@ -3748,6 +3746,18 @@ vec c = X.diag(-2);
 X.diag()  = randu&lt;vec&gt;(5);
 X.diag() += 6;
 X.diag().ones();
+</pre>
+</ul>
+</li>
+<br>
+<li>
+<b>NOTE:</b> handling of sparse matrix diagonals has changed slightly in Armadillo 8.x;
+to copy sparse diagonal to dense vector, use:
+<ul>
+<pre>
+sp_mat S = sprandu&lt;sp_mat&gt;(10,10,0.1);
+
+vec v(S.diag());  // copy sparse diagonal to dense vector
 </pre>
 </ul>
 </li>
@@ -5909,7 +5919,7 @@ Numerical data stored in portable <a href="https://en.wikipedia.org/wiki/Hierarc
 <li>
 For saving, the default dataset name within the HDF5 file is "dataset"
 unless explicitly specified via the <i>hdf5_name()</i> argument;
-an HDF5 dataset name (e.g. <i>"dataset"</i>)
+an HDF5 dataset name (eg. <i>"dataset"</i>)
 or full path may be specified (eg. <i>"/group_name/dataset"</i>)
 </li>
 <li>
@@ -5922,7 +5932,7 @@ the order of operations is:
 <li>
 <b>Caveat</b>:
 support for HDF5 must be enabled within Armadillo's <a href="#config_hpp">configuration</a>;
-the <i>hdf5.h</i> header file must be available on your system and you will need to link with the hdf5 library (eg. -lhdf5)
+the <i>hdf5.h</i> header file must be available on your system and you will need to link with the hdf5 library (eg. <code><i>-lhdf5</i></code>)
 </li>
 </ul>
 <br>
@@ -6972,7 +6982,7 @@ See also:
 <a name="affmul"></a>
 <b>affmul( A, B )</b>
 <ul>
-<li>Multiply square matrix <i>A</i> by an augmented form of <i>B</i>, where a row with ones is appended to B;<br>for example:</li>
+<li>Multiply matrix <i>A</i> by an augmented form of <i>B</i>, where a row with ones is appended to B;<br>for example:</li>
 <pre>
 &#9121; A<sub>00</sub> A<sub>01</sub> A<sub>02</sub> &#9124;   &#9121; B<sub>0</sub> &#9124;
 &#9122; A<sub>10</sub> A<sub>11</sub> A<sub>12</sub> &#9125; x &#9122; B<sub>1</sub> &#9125;
@@ -6980,7 +6990,7 @@ See also:
 </pre>
 <li><i>A</i> is typically an affine transformation matrix</li>
 <br>
-<li><i>B</i> must have one less row than <i>A</i></li>
+<li>The number of columns in <i>A</i> must be equal to number of rows in the augmented form of <i>B</i> (ie. A.n_cols = B.n_rows+1)</li>
 <br>
 <li><i>B</i> can be a vector or matrix</li>
 <br>
@@ -13312,8 +13322,18 @@ at the potential cost of some reduction in modelling accuracy
 <br>
 <li>
 The classes include parameter estimation (training) algorithms: k-means clustering and Expectation-Maximisation (EM);
-the training algorithms will run much quicker on multi-core machines when OpenMP is enabled in your compiler (eg. <i>-fopenmp</i> in GCC and clang);
-see the associated <a href="armadillo_mtgmm_2017.pdf">technical report</a> for the underlying mathematical details
+the training algorithms will run much quicker on multi-core machines when OpenMP is enabled in your compiler (eg. <i>-fopenmp</i> in GCC and clang)
+</li>
+<br>
+<li>
+Please cite the following paper if you use the classes in your research and/or software:
+<br>
+<br>
+<ul>
+Conrad Sanderson and Ryan Curtin.
+<br><i><a href="armadillo_mtgmm_2017.pdf">An Open Source C++ Implementation of Multi-Threaded Gaussian Mixture Models, k-Means and Expectation Maximisation</a></i>.
+<br>International Conference on Signal Processing and Communication Systems, 2017.
+</ul>
 </li>
 <br>
 <li>
@@ -15583,7 +15603,7 @@ Specific functionality can be enabled or disabled by uncommenting or commenting 
     </td>
     <td style="vertical-align: top;">
 Disable going through the run-time Armadillo wrapper library (<i>libarmadillo.so</i>) when calling LAPACK, BLAS, ARPACK, SuperLU and HDF5 functions.
-You will need to directly link with BLAS, LAPACK, etc (eg. <i>-lblas -llapack </i>)
+You will need to directly link with BLAS, LAPACK, etc (eg. <code><i>-lblas -llapack</i></code>)
     </td>
   </tr>
   <tr>
@@ -15789,7 +15809,7 @@ Disable use of ARPACK. Overrides <i>ARMA_USE_ARPACK</i>
     <td style="vertical-align: top;">
 Enable use of SuperLU, which is used by <a href="#spsolve">spsolve()</a> for finding the solutions of sparse systems;
 you will need to link with the superlu library, for example <code><i>-lsuperlu</i></code>
-<br><b>Caveat:</b> Armadillo&nbsp;6.x requires SuperLU&nbsp;4.3, while Armadillo&nbsp;7.x requires SuperLU&nbsp;5.2
+<br><b>Caveat:</b> Armadillo&nbsp;6.x requires SuperLU&nbsp;4.3, while Armadillo&nbsp;7.x and 8.x require SuperLU&nbsp;5.2
     </td>
   </tr>
   <tr>
@@ -15834,7 +15854,7 @@ Disable use of SuperLU. Overrides <i>ARMA_USE_SUPERLU</i>
     </td>
     <td style="vertical-align: top;">
 Enable the ability to <a href="#save_load_mat">save and load</a> matrices stored in the HDF5 format;
-the <i>hdf5.h</i> header file must be available on your system and you will need to link with the hdf5 library (eg. -lhdf5)
+the <i>hdf5.h</i> header file must be available on your system and you will need to link with the hdf5 library (eg. <code><i>-lhdf5</i></code>)
     </td>
   </tr>
   <tr>
