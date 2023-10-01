@@ -50,9 +50,9 @@ template<typename eT> class SpSubview;
 template<typename eT> class diagview;
 template<typename eT> class spdiagview;
 
-template<typename eT> class CoMat;
-template<typename eT> class CoMat_val;
-template<typename eT> class CoMat_elem;
+template<typename eT> class MapMat;
+template<typename eT> class MapMat_val;
+template<typename eT> class MapMat_elem;
 
 template<typename eT, typename T1>              class subview_elem1;
 template<typename eT, typename T1, typename T2> class subview_elem2;
@@ -268,6 +268,24 @@ enum file_type
   hdf5_binary,        //!< Open binary format, not specific to Armadillo, which can store arbitrary data
   hdf5_binary_trans,  //!< as per hdf5_binary, but save/load the data with columns transposed to rows
   coord_ascii         //!< simple co-ordinate format for sparse matrices
+  };
+
+
+struct hdf5_name
+  {
+  const std::string filename;
+  const std::string dsname;
+  
+  inline
+  hdf5_name(const std::string& in_filename)
+    : filename(in_filename)
+    {}
+  
+  inline
+  hdf5_name(const std::string& in_filename, const std::string& in_dsname)
+    : filename(in_filename)
+    , dsname  (in_dsname  )
+    {}
   };
 
 

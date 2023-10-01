@@ -231,7 +231,7 @@ SpMat<eT>::SpMat(const SpMat<eT>& x)
 
 template<typename eT>
 inline
-SpMat<eT>::SpMat(const CoMat<eT>& x)
+SpMat<eT>::SpMat(const MapMat<eT>& x)
   : n_rows(0)
   , n_cols(0)
   , n_elem(0)
@@ -251,7 +251,7 @@ SpMat<eT>::SpMat(const CoMat<eT>& x)
 template<typename eT>
 inline
 SpMat<eT>&
-SpMat<eT>::operator=(const CoMat<eT>& x)
+SpMat<eT>::operator=(const MapMat<eT>& x)
   {
   arma_extra_debug_sigprint();
   
@@ -2680,7 +2680,7 @@ SpMat<eT>::shed_cols(const uword in_col1, const uword in_col2)
 template<typename eT>
 arma_inline
 arma_warn_unused
-CoMat_elem<eT>
+MapMat_elem<eT>
 SpMat<eT>::operator[](const uword i)
   {
   sync_cache();
@@ -2704,7 +2704,7 @@ SpMat<eT>::operator[](const uword i) const
 template<typename eT>
 arma_inline
 arma_warn_unused
-CoMat_elem<eT>
+MapMat_elem<eT>
 SpMat<eT>::at(const uword i)
   {
   sync_cache();
@@ -2728,7 +2728,7 @@ SpMat<eT>::at(const uword i) const
 template<typename eT>
 arma_inline
 arma_warn_unused
-CoMat_elem<eT>
+MapMat_elem<eT>
 SpMat<eT>::operator()(const uword i)
   {
   arma_debug_check( (i >= n_elem), "SpMat::operator(): out of bounds");
@@ -2761,7 +2761,7 @@ SpMat<eT>::operator()(const uword i) const
 template<typename eT>
 arma_inline
 arma_warn_unused
-CoMat_elem<eT>
+MapMat_elem<eT>
 SpMat<eT>::at(const uword in_row, const uword in_col)
   {
   sync_cache();
@@ -2785,7 +2785,7 @@ SpMat<eT>::at(const uword in_row, const uword in_col) const
 template<typename eT>
 arma_inline
 arma_warn_unused
-CoMat_elem<eT>
+MapMat_elem<eT>
 SpMat<eT>::operator()(const uword in_row, const uword in_col)
   {
   arma_debug_check( ((in_row >= n_rows) || (in_col >= n_cols)), "SpMat::operator(): out of bounds");
@@ -3065,14 +3065,14 @@ SpMat<eT>::impl_print(const std::string& extra_text) const
   
   if(extra_text.length() != 0)
     {
-    const std::streamsize orig_width = ARMA_COUT_STREAM.width();
-
-    ARMA_COUT_STREAM << extra_text << '\n';
-
-    ARMA_COUT_STREAM.width(orig_width);
+    const std::streamsize orig_width = get_cout_stream().width();
+    
+    get_cout_stream() << extra_text << '\n';
+    
+    get_cout_stream().width(orig_width);
     }
-
-  arma_ostream::print(ARMA_COUT_STREAM, *this, true);
+  
+  arma_ostream::print(get_cout_stream(), *this, true);
   }
 
 
@@ -3111,14 +3111,14 @@ SpMat<eT>::impl_raw_print(const std::string& extra_text) const
   
   if(extra_text.length() != 0)
     {
-    const std::streamsize orig_width = ARMA_COUT_STREAM.width();
+    const std::streamsize orig_width = get_cout_stream().width();
 
-    ARMA_COUT_STREAM << extra_text << '\n';
+    get_cout_stream() << extra_text << '\n';
 
-    ARMA_COUT_STREAM.width(orig_width);
+    get_cout_stream().width(orig_width);
     }
 
-  arma_ostream::print(ARMA_COUT_STREAM, *this, false);
+  arma_ostream::print(get_cout_stream(), *this, false);
   }
 
 
@@ -3160,14 +3160,14 @@ SpMat<eT>::impl_print_dense(const std::string& extra_text) const
   
   if(extra_text.length() != 0)
     {
-    const std::streamsize orig_width = ARMA_COUT_STREAM.width();
+    const std::streamsize orig_width = get_cout_stream().width();
 
-    ARMA_COUT_STREAM << extra_text << '\n';
+    get_cout_stream() << extra_text << '\n';
 
-    ARMA_COUT_STREAM.width(orig_width);
+    get_cout_stream().width(orig_width);
     }
 
-  arma_ostream::print_dense(ARMA_COUT_STREAM, *this, true);
+  arma_ostream::print_dense(get_cout_stream(), *this, true);
   }
 
 
@@ -3206,14 +3206,14 @@ SpMat<eT>::impl_raw_print_dense(const std::string& extra_text) const
   
   if(extra_text.length() != 0)
     {
-    const std::streamsize orig_width = ARMA_COUT_STREAM.width();
+    const std::streamsize orig_width = get_cout_stream().width();
 
-    ARMA_COUT_STREAM << extra_text << '\n';
+    get_cout_stream() << extra_text << '\n';
 
-    ARMA_COUT_STREAM.width(orig_width);
+    get_cout_stream().width(orig_width);
     }
 
-  arma_ostream::print_dense(ARMA_COUT_STREAM, *this, false);
+  arma_ostream::print_dense(get_cout_stream(), *this, false);
   }
 
 
@@ -3911,7 +3911,6 @@ SpMat<eT>::save(const std::string name, const file_type type, const bool print_s
       break;
     
     case coord_ascii:
-      arma_debug_warn("SpMat::save(): support for coord format is experimental");
       save_okay = diskio::save_coord_ascii(*this, name);
       break;
     
@@ -3954,7 +3953,6 @@ SpMat<eT>::save(std::ostream& os, const file_type type, const bool print_status)
       break;
     
     case coord_ascii:
-      arma_debug_warn("SpMat::save(): support for coord format is experimental");
       save_okay = diskio::save_coord_ascii(*this, os);
       break;
     
@@ -4002,7 +4000,6 @@ SpMat<eT>::load(const std::string name, const file_type type, const bool print_s
       break;
     
     case coord_ascii:
-      arma_debug_warn("SpMat::load(): support for coord format is experimental");
       load_okay = diskio::load_coord_ascii(*this, name, err_msg);
       break;
     
@@ -4065,7 +4062,6 @@ SpMat<eT>::load(std::istream& is, const file_type type, const bool print_status)
       break;
     
     case coord_ascii:
-      arma_debug_warn("SpMat::load(): support for coord format is experimental");
       load_okay = diskio::load_coord_ascii(*this, is, err_msg);
       break;
     
@@ -4383,7 +4379,7 @@ SpMat<eT>::init(const SpMat<eT>& x)
 template<typename eT>
 inline
 void
-SpMat<eT>::init(const CoMat<eT>& x)
+SpMat<eT>::init(const MapMat<eT>& x)
   {
   arma_extra_debug_sigprint();
   
@@ -4397,9 +4393,9 @@ SpMat<eT>::init(const CoMat<eT>& x)
   
   arrayops::inplace_set(access::rwp(col_ptrs), uword(0), x_n_cols + 1);
   
-  typename CoMat<eT>::map_type& x_map_ref = *(x.map_ptr);
+  typename MapMat<eT>::map_type& x_map_ref = *(x.map_ptr);
   
-  typename CoMat<eT>::map_type::const_iterator x_it = x_map_ref.begin();
+  typename MapMat<eT>::map_type::const_iterator x_it = x_map_ref.begin();
   
   for(uword i=0; i < x_n_nz; ++i)
     {
@@ -4731,7 +4727,7 @@ SpMat<eT>::mem_resize(const uword new_n_nonzero)
       }
     else
       {
-      // Figure out the actual amount of memory currently allocated
+      // Figure out the actual amount of memory currently allocated.
       // NOTE: this relies on memory::acquire_chunked() being used for the 'values' and 'row_indices' arrays
       const uword n_alloc = memory::enlarge_to_mult_of_chunksize(n_nonzero);
       
@@ -4755,9 +4751,9 @@ SpMat<eT>::mem_resize(const uword new_n_nonzero)
         access::rw(values)      = new_values;
         access::rw(row_indices) = new_row_indices;
         }
-        
-      // Set the "fake end" of the matrix by setting the last value and row
-      // index to 0.  This helps the iterators work correctly.
+      
+      // Set the "fake end" of the matrix by setting the last value and row index to 0.
+      // This helps the iterators work correctly.
       access::rw(     values[new_n_nonzero]) = 0;
       access::rw(row_indices[new_n_nonzero]) = 0;
       }
