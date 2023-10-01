@@ -47,6 +47,9 @@ struct arma_type_check_cxx1998<false>
 
 
 
+#undef arma_static_check
+#undef arma_type_check
+
 #if defined(ARMA_USE_CXX11)
   
   #define arma_static_check(condition, message)  static_assert( !(condition), #message )

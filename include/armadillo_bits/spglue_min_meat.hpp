@@ -58,9 +58,6 @@ spglue_min::apply_noalias(SpMat<eT>& out, const SpProxy<T1>& pa, const SpProxy<T
   
   arma_debug_assert_same_size(pa.get_n_rows(), pa.get_n_cols(), pb.get_n_rows(), pb.get_n_cols(), "element-wise minimum");
   
-  if(pa.get_n_nonzero() == 0)  { out = pb.Q; return; }
-  if(pb.get_n_nonzero() == 0)  { out = pa.Q; return; }
-  
   // The plus helper works here also to get an upper bound on n_nonzero.
   const uword max_n_nonzero = spglue_elem_helper::max_n_nonzero_plus(pa, pb);
   

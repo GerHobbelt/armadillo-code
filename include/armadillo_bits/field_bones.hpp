@@ -106,6 +106,7 @@ class field
   arma_inline       oT& operator()(const uword row, const uword col, const uword slice);
   arma_inline const oT& operator()(const uword row, const uword col, const uword slice) const;
   
+  
   inline field_injector<field> operator<<(const oT& val);
   inline field_injector<field> operator<<(const injector_end_of_row<>& x);
   

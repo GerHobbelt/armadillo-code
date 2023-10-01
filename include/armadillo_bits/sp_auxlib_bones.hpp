@@ -105,3 +105,6 @@ class sp_auxlib
   template<typename T>
   inline static bool rudimentary_sym_check(const SpMat< std::complex<T> >& X);
   };
+
+
+//! @}

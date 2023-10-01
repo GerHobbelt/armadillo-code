@@ -44,7 +44,7 @@ TEST_CASE("fn_eigs_gen_odd_test")
 
     for (size_t i = 0; i < n_eigval; ++i)
       {
-      // Sorting these is a super bitch.
+      // Sorting these is difficult.
       // Find which one is the likely dense eigenvalue.
       uword dense_eval = n_rows + 1;
       for (uword k = 0; k < n_rows; ++k)
@@ -85,7 +85,7 @@ TEST_CASE("fn_eigs_gen_even_test")
     m.submat(2, 2, 6, 6) += 5 * z;
     mat d(m);
 
-    // Eigendecompose, getting first 5 eigenvectors.
+    // Eigendecompose, getting first 4 eigenvectors.
     Col< std::complex<double> > sp_eigval;
     Mat< std::complex<double> > sp_eigvec;
     eigs_gen(sp_eigval, sp_eigvec, m, n_eigval);
@@ -100,7 +100,7 @@ TEST_CASE("fn_eigs_gen_even_test")
 
     for (size_t i = 0; i < n_eigval; ++i)
       {
-      // Sorting these is a super bitch.
+      // Sorting these is difficult.
       // Find which one is the likely dense eigenvalue.
       uword dense_eval = n_rows + 1;
       for (uword k = 0; k < n_rows; ++k)
@@ -157,7 +157,7 @@ TEST_CASE("fn_eigs_gen_odd_float_test")
 
     for (size_t i = 0; i < n_eigval; ++i)
       {
-      // Sorting these is a super bitch.
+      // Sorting these is difficult.
       // Find which one is the likely dense eigenvalue.
       uword dense_eval = n_rows + 1;
       for (uword k = 0; k < n_rows; ++k)
@@ -199,7 +199,7 @@ TEST_CASE("fn_eigs_gen_even_float_test")
       }
     Mat<float> d(m);
 
-    // Eigendecompose, getting first 5 eigenvectors.
+    // Eigendecompose, getting first 8 eigenvectors.
     Col< std::complex<float> > sp_eigval;
     Mat< std::complex<float> > sp_eigvec;
     eigs_gen(sp_eigval, sp_eigvec, m, n_eigval);
@@ -214,7 +214,7 @@ TEST_CASE("fn_eigs_gen_even_float_test")
 
     for (size_t i = 0; i < n_eigval; ++i)
       {
-      // Sorting these is a super bitch.
+      // Sorting these is difficult.
       // Find which one is the likely dense eigenvalue.
       uword dense_eval = n_rows + 1;
       for (uword k = 0; k < n_rows; ++k)
@@ -267,7 +267,7 @@ TEST_CASE("fn_eigs_gen_odd_complex_float_test")
 
     for (size_t i = 0; i < n_eigval; ++i)
       {
-      // Sorting these is a super bitch.
+      // Sorting these is difficult.
       // Find which one is the likely dense eigenvalue.
       uword dense_eval = n_rows + 1;
       for (uword k = 0; k < n_rows; ++k)
@@ -305,7 +305,7 @@ TEST_CASE("fn_eigs_gen_even_complex_float_test")
     m.sprandu(n_rows, n_rows, 0.3);
     Mat< std::complex<float> > d(m);
 
-    // Eigendecompose, getting first 5 eigenvectors.
+    // Eigendecompose, getting first 8 eigenvectors.
     Col< std::complex<float> > sp_eigval;
     Mat< std::complex<float> > sp_eigvec;
     eigs_gen(sp_eigval, sp_eigvec, m, n_eigval);
@@ -320,7 +320,7 @@ TEST_CASE("fn_eigs_gen_even_complex_float_test")
 
     for (size_t i = 0; i < n_eigval; ++i)
       {
-      // Sorting these is a super bitch.
+      // Sorting these is difficult.
       // Find which one is the likely dense eigenvalue.
       uword dense_eval = n_rows + 1;
       for (uword k = 0; k < n_rows; ++k)
@@ -373,7 +373,7 @@ TEST_CASE("eigs_gen_odd_complex_test")
 
     for (size_t i = 0; i < n_eigval; ++i)
       {
-      // Sorting these is a super bitch.
+      // Sorting these is difficult.
       // Find which one is the likely dense eigenvalue.
       uword dense_eval = n_rows + 1;
       for (uword k = 0; k < n_rows; ++k)
@@ -411,7 +411,7 @@ TEST_CASE("fn_eigs_gen_even_complex_test")
     m.sprandu(n_rows, n_rows, 0.3);
     Mat< std::complex<double> > d(m);
 
-    // Eigendecompose, getting first 5 eigenvectors.
+    // Eigendecompose, getting first 6 eigenvectors.
     Col< std::complex<double> > sp_eigval;
     Mat< std::complex<double> > sp_eigvec;
     eigs_gen(sp_eigval, sp_eigvec, m, n_eigval);
@@ -426,7 +426,7 @@ TEST_CASE("fn_eigs_gen_even_complex_test")
 
     for (size_t i = 0; i < n_eigval; ++i)
       {
-      // Sorting these is a super bitch.
+      // Sorting these is difficult.
       // Find which one is the likely dense eigenvalue.
       uword dense_eval = n_rows + 1;
       for (uword k = 0; k < n_rows; ++k)

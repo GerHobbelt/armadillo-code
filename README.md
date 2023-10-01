@@ -1,10 +1,10 @@
 ### Armadillo: C++ Library for Linear Algebra & Scientific Computing  
 http://arma.sourceforge.net
 
-Copyright 2008-2019 Conrad Sanderson (http://conradsanderson.id.au)  
+Copyright 2008-2020 Conrad Sanderson (http://conradsanderson.id.au)  
 Copyright 2008-2016 National ICT Australia (NICTA)  
-Copyright 2017-2019 Arroyo Consortium  
-Copyright 2017-2019 Data61, CSIRO  
+Copyright 2017-2020 Arroyo Consortium  
+Copyright 2017-2020 Data61, CSIRO  
 
 ---
 
@@ -76,7 +76,7 @@ Authors:
 
 ### 2: Citation Details
 
-Please cite the following papers if you use Armadillo in your research and/or software.
+Please cite the following papers if you use Armadillo in your research and/or software.  
 Citations are useful for the continued development and maintenance of the library.
 
   * Conrad Sanderson and Ryan Curtin.  
@@ -84,8 +84,8 @@ Citations are useful for the continued development and maintenance of the librar
     Journal of Open Source Software, Vol. 1, pp. 26, 2016.  
   
   * Conrad Sanderson and Ryan Curtin.  
-    Practical Sparse Matrices in C++ with Hybrid Storage and Template-Based Expression Optimisation.  
-    Mathematical and Computational Applications, Vol. 24, No. 3, 2019.
+    A User-Friendly Hybrid Sparse Matrix Class in C++.  
+    Lecture Notes in Computer Science (LNCS), Vol. 10931, pp. 422-430, 2018.
 
 ---
 
@@ -106,17 +106,17 @@ informational purposes only and do not modify the License.
 
 ### 4: Compilers and External Dependencies
 
-Armadillo makes extensive use of template meta-programming, recursive templates
-and template based function overloading. As such, C++ compilers which do not
-fully implement the C++ standard may not work correctly.
+A compiler that properly supports the C++98/C++03 standards is required,
+as Armadillo makes extensive use of template meta-programming.
 
 The functionality of Armadillo is partly dependent on other libraries:
-LAPACK, BLAS, ARPACK and SuperLU. The LAPACK and BLAS libraries are
-used for dense matrices, while the ARPACK and SuperLU libraries are
-used for sparse matrices. Armadillo can work without these libraries,
-but its functionality will be reduced. In particular, basic functionality
-will be available (eg. matrix addition and multiplication), but things
-like eigen decomposition or matrix inversion will not be.
+LAPACK, BLAS (preferably OpenBLAS), ARPACK and SuperLU.
+LAPACK and BLAS are used for dense matrices,
+while ARPACK and SuperLU are used for sparse matrices.
+
+Armadillo can work without the above libraries, but its functionality will be reduced.
+Basic functionality will be available (eg. matrix addition and multiplication),
+but operations like eigen decomposition or matrix inversion will not be.
 Matrix multiplication (mainly for big matrices) may not be as fast.
 
 As Armadillo is a template library, we recommended that optimisation
@@ -130,26 +130,28 @@ For example, for GCC and Clang compilers use -O2 or -O3
 * Step 1:
   Ensure a C++ compiler is installed on your system.
 
-   - On macOS systems you will need to install Xcode (version 8 or later)
-     and then type the following command in a terminal window:  
-     xcode-select --install
+  - On macOS systems install Xcode (version 8 or later)
+    and then type the following command in a terminal window:  
+
+    xcode-select --install
 
 * Step 2:
   Ensure the CMake tool is installed on your system.
-  You can download it from http://www.cmake.org
-  or (preferably) install it using your package manager.
 
-  - On Linux-based systems, you can get CMake using dnf, yum, apt, aptitude, ...
-  - On macOS systems, you can get CMake through MacPorts or Homebrew.
+  - Cmake can be downloaded from http://www.cmake.org
+    or (preferably) installed using the package manager on your system.
+
+  - On Linux-based systems, CMake can be installed using dnf, yum, apt, aptitude, ...
+
+  - On macOS systems, CMake can be installed through MacPorts or Homebrew.
 
 * Step 3:
-  Ensure LAPACK and BLAS (or preferably OpenBLAS) are installed on your system.
-  On macOS this is not necessary.
+  Ensure that OpenBLAS (or standard BLAS and LAPACK) is installed on your system.
+  On macOS, the Accelerate framework can be used for BLAS/LAPACK.
 
-  - For better performance, we recommend installing the OpenBLAS library.
-    See http://www.openblas.net/  
+  - On macOS, optionally install OpenBLAS for better performance.
 
-  - If you are using sparse matrices, also install ARPACK and SuperLU.
+  - If support for sparse matrices is required, also install ARPACK and SuperLU.
     Caveat: only SuperLU version 5.2 can be used!
 
   - On Linux-based systems, the following libraries are recommended
@@ -159,12 +161,41 @@ For example, for GCC and Clang compilers use -O2 or -O3
     package, also install the "lapack-devel" or "lapack-dev" package.
   
 * Step 4:
-  Open a terminal window, change into the directory that was created
-  by unpacking the armadillo archive, and type the following command:
+  Run the cmake installer.
+
+  - Open a terminal window and change into the directory that was created
+    by unpacking the armadillo archive.
+  
+  - The simplest case is to run cmake using:
 
     cmake .
 
-  - The full stop separated from "cmake" by a space is important.
+  - NOTE: the full stop separated from "cmake" by a space is important.
+  
+  - Options to the cmake installer:
+  
+    - On Linux, to enable the detection of FlexiBLAS, 
+      use the additional ALLOW_FLEXIBLAS_LINUX option when running cmake:
+
+      cmake -DALLOW_FLEXIBLAS_LINUX=ON .
+
+    - On macOS, to enable the detection of OpenBLAS, 
+      use the additional ALLOW_OPENBLAS_MACOS option when running cmake:
+
+      cmake -DALLOW_OPENBLAS_MACOS=ON .
+
+      Note: depending on your installation, OpenBLAS may masquerade as standard BLAS.
+      To detect standard BLAS and LAPACK, use the ALLOW_BLAS_LAPACK_MACOS option:
+
+      cmake -DALLOW_BLAS_LAPACK_MACOS=ON .
+
+    - By default, cmake assumes that the Armadillo library and the
+      corresponding header files will be installed in the default 
+      system directory (eg. in the /usr hierarchy in Linux-based systems).
+      To install the library and headers in an alternative directory,
+      use the additional option CMAKE_INSTALL_PREFIX in this form:
+
+      cmake . -DCMAKE_INSTALL_PREFIX:PATH=alternative_directory
 
   - CMake will detect which relevant libraries are installed on your system
     (eg. OpenBLAS, LAPACK, SuperLU, ARPACK, etc)
@@ -172,34 +203,17 @@ For example, for GCC and Clang compilers use -O2 or -O3
     CMake will also generate the Armadillo run-time library,
     which is a wrapper for all the detected libraries.
 
-  - By default, cmake assumes that the Armadillo library and the
-    corresponding header files are going to be installed in the default 
-    system directory (eg. in the /usr hierarchy in Linux-based systems).
-    If you wish to install the library and headers in an alternative directory,
-    use the additional option CMAKE_INSTALL_PREFIX in this form:
-
-    cmake . -DCMAKE_INSTALL_PREFIX:PATH=alternative_directory
-
-  - If you need to re-run cmake, it's a good idea to first delete the
+  - If cmake needs to re-run, it's a good idea to first delete the
     "CMakeCache.txt" file (not "CMakeLists.txt").
 
-  - Caveat: out-of-tree builds are currently not fully supported;
-     eg, creating a sub-directory called "build" and running cmake ..
-     from within "build" is currently not supported.
-
-  - Caveat: if you are installing Armadillo in a non-system directory,
-    make sure your C++ compiler is configured to use the "lib" and "include"
+  - Caveat: if Armadillo is installed in a non-system directory,
+    make sure that the C++ compiler is configured to use the "lib" and "include"
     sub-directories present within this directory.  Note that the "lib"
     directory might be named differently on your system.
     On recent 64 bit Debian & Ubuntu systems it is "lib/x86_64-linux-gnu".
     On recent 64 bit Fedora & RHEL systems it is "lib64".
 
 * Step 5:
-  To generate the run-time armadillo library, type the following command:
-
-    make
-
-* Step 6:
   If you and have access to root/administrator/superuser privileges
   (ie. able to use "sudo") and didn't use the CMAKE_INSTALL_PREFIX option,
   type the following command:
@@ -216,25 +230,27 @@ For example, for GCC and Clang compilers use -O2 or -O3
 
 ### 6: Linux and macOS: Compiling and Linking
 
-The "examples" directory contains several quick example programs
-that use the Armadillo library.
+If you have installed Armadillo via the CMake installer,
+use the following command:
 
-In general, programs which use Armadillo are compiled along these lines:
+    g++ prog.cpp -o prog -O2 -larmadillo
 
-    g++ example1.cpp -o example1 -O2 -larmadillo
+Otherwise, if you want to use Armadillo without installation
+(ie. without the Armadillo runtime library), use the following command:
+  
+    g++ prog.cpp -o prog.cpp -O2 -I /home/blah/armadillo-7.200.3/include -DARMA_DONT_USE_WRAPPER -lopenblas
 
-If you want to use Armadillo without installation
-(ie. without the runtime library generated by CMake during installation),
-compile along these lines:
+The above command assumes that the armadillo archive was unpacked into /home/blah/  
+The command needs to be adjusted if the archive was unpacked into a different directory
+and/or for each specific version of Armadillo (ie. "7.200.3" needs to be changed).
+  
+If you don't have OpenBLAS, on Linux change -lopenblas to -lblas -llapack
+and on macOS change -lopenblas to -framework Accelerate
 
-    g++ example1.cpp -o example1 -O2 -I /home/blah/armadillo-7.200.3/include -DARMA_DONT_USE_WRAPPER -lblas -llapack
+See the Questions page for more info on linking:
+http://arma.sourceforge.net/faq.html
 
-The above command line assumes that you have unpacked the armadillo archive into /home/blah/  
-You will need to adjust this for later versions of Armadillo (ie. change the 7.200.3 part)
-and/or if you have unpacked the armadillo archive into a different directory.
-
-Replace -lblas with -lopenblas if you have OpenBLAS.
-On macOS, replace -lblas -llapack with -framework Accelerate
+The "examples" directory contains a short example program that uses the Armadillo library.
 
 ---
 
@@ -246,12 +262,12 @@ The installation is comprised of 3 steps:
   Copy the entire "include" folder to a convenient location
   and tell your compiler to use that location for header files
   (in addition to the locations it uses already).
-  Alternatively, you can use the "include" folder directly.
+  Alternatively, the "include" folder can be used directly.
 
 * Step 2:
   Modify "include/armadillo_bits/config.hpp" to indicate which
   libraries are currently available on your system. For example,
-  if you have LAPACK, BLAS (or OpenBLAS), ARPACK and SuperLU present,
+  if LAPACK, BLAS (or OpenBLAS), ARPACK and SuperLU present,
   uncomment the following lines:
 
     #define ARMA_USE_LAPACK  
@@ -259,7 +275,8 @@ The installation is comprised of 3 steps:
     #define ARMA_USE_ARPACK  
     #define ARMA_USE_SUPERLU  
 
-  If you don't need sparse matrices, don't worry about ARPACK or SuperLU.
+  If support for sparse matrices is not required,
+  don't worry about ARPACK or SuperLU.
 
 * Step 3:
   Configure your compiler to link with LAPACK and BLAS
@@ -273,10 +290,10 @@ Within the "examples" folder, there is an MSVC project named "example1_win64"
 which can be used to compile "example1.cpp". The project needs to be compiled as a
 64 bit program: the active solution platform must be set to x64, instead of win32.
 
-The MSVC project was tested on 64 bit Windows 7 with Visual C++ 2012.
-You may need to make adaptations for 32 bit systems, later versions of Windows
-and/or the compiler. For example, you may have to enable or disable
-ARMA_BLAS_LONG and ARMA_BLAS_UNDERSCORE defines in "armadillo_bits/config.hpp".
+The MSVC project was tested on Windows 7 (64 bit) with Visual Studio C++ 2012.
+Adaptations may need to be made for 32 bit systems, later versions of Windows
+and/or the compiler. For example, options such as ARMA_BLAS_LONG and ARMA_BLAS_UNDERSCORE,
+defined in "armadillo_bits/config.hpp", may need to be either enabled or disabled.
 
 The folder "examples/lib_win64" contains baseline (unoptimised) LAPACK and BLAS
 libraries compiled for 64 bit Windows. The compilation was done by a third party.
@@ -305,10 +322,10 @@ Armadillo can use OpenBLAS or Intel Math Kernel Library (MKL) as high-speed
 replacements for BLAS and LAPACK. In essence this involves linking with the
 replacement libraries instead of BLAS and LAPACK.
 
-You may need to make minor modifications to include/armadillo_bits/config.hpp
-to make sure Armadillo uses the same integer sizes and style of function names
-as used by the replacement libraries. Specifically, you may need comment or uncomment
-the following defines:
+Minor modifications to include/armadillo_bits/config.hpp may be required
+to ensure Armadillo uses the same integer sizes and style of function names
+as used by the replacement libraries. Specifically, the following defines
+may need to be enabled or disabled:
 
     ARMA_USE_WRAPPER  
     ARMA_BLAS_CAPITALS  
@@ -325,9 +342,8 @@ For example, /opt/intel/mkl/lib/intel64/.  This can be achieved by setting
 the LD_LIBRARY_PATH environment variable, or for a more permanent solution,
 adding the directory locations to /etc/ld.so.conf.  It may also be possible
 to store a text file with the locations in the /etc/ld.so.conf.d directory.
-For example, /etc/ld.so.conf.d/mkl.conf.  If you modify /etc/ld.so.conf
-or create /etc/ld.so.conf.d/mkl.conf, you will need to run /sbin/ldconfig
-afterwards.
+For example, /etc/ld.so.conf.d/mkl.conf.  If /etc/ld.so.conf is modified
+or /etc/ld.so.conf.d/mkl.conf is created, /sbin/ldconfig must be run afterwards.
 
 Below is an example of /etc/ld.so.conf.d/mkl.conf
 where Intel MKL is installed in /opt/intel
@@ -335,10 +351,10 @@ where Intel MKL is installed in /opt/intel
     /opt/intel/lib/intel64  
     /opt/intel/mkl/lib/intel64  
 
-If you have MKL installed and it is persistently giving problems
-during linking, you can disable Armadillo's support for MKL by editing
-the CMakeLists.txt file, deleting CMakeCache.txt and re-running
-the CMake based installation. Comment out the lines containing:
+If MKL is installed and it is persistently giving problems during linking,
+Support for MKL can be disabled by editing the CMakeLists.txt file,
+deleting CMakeCache.txt and re-running the CMake based installation.
+Comment out the lines containing:
 
     INCLUDE(ARMA_FindMKL)  
     INCLUDE(ARMA_FindACMLMP)  
@@ -365,7 +381,7 @@ as well as the newer C++11 and C++14 standards.
 
 Armadillo will enable extra features (such as move constructors)
 when a C++11/C++14 compiler is detected. You can also force Armadillo
-to make use C++11 features by defining ARMA_USE_CXX11 before
+to make use of C++11 features by defining ARMA_USE_CXX11 before
 `#include <armadillo>` in your code.
 
 You may need to explicitly enable C++11 mode in your compiler.
