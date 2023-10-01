@@ -53,12 +53,11 @@ set(ARMA_USE_WRAPPER true)
 
 # the settings below will be automatically configured by the rest of this script
 
-set(ARMA_USE_LAPACK     false)
-set(ARMA_USE_BLAS       false)
-set(ARMA_USE_ATLAS      false)
-set(ARMA_USE_ARPACK     false)
-set(ARMA_USE_EXTERN_RNG false)
-set(ARMA_USE_SUPERLU    false)  # Caveat: only SuperLU version 5.x can be used!
+set(ARMA_USE_LAPACK  false)
+set(ARMA_USE_BLAS    false)
+set(ARMA_USE_ATLAS   false)
+set(ARMA_USE_ARPACK  false)
+set(ARMA_USE_SUPERLU false)  # Caveat: only SuperLU version 5.x can be used!
 
 
 ## extract version from sources
@@ -84,7 +83,7 @@ if(NOT CXX_FLAGS_EMPTY)
 endif()
 
 
-# NOTE: ARMA_USE_EXTERN_RNG requires compiler support for thread_local and C++11
+# NOTE: Armadillo requires compiler support for thread_local and C++11
 # NOTE: for Linux, this is available with gcc 4.8.3 onwards
 # NOTE: for macOS, thread_local is supoported in Xcode 8 (mid 2016 onwards) in C++11 mode
 
@@ -94,7 +93,6 @@ endif()
 if(DEFINED CMAKE_CXX_COMPILER_ID AND DEFINED CMAKE_CXX_COMPILER_VERSION)
   if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     if(NOT (${CMAKE_CXX_COMPILER_VERSION} VERSION_LESS 4.8.3))
-      set(ARMA_USE_EXTERN_RNG true)
       message(STATUS "Detected gcc 4.8.3 or newer")
       if(${CMAKE_CXX_COMPILER_VERSION} VERSION_LESS 6.1.0)
         message(STATUS "*** WARNING: support for gcc versions older than 6.1 is deprecated")
@@ -110,7 +108,6 @@ if(DEFINED CMAKE_CXX_COMPILER_ID AND DEFINED CMAKE_CXX_COMPILER_VERSION)
     if(NOT (${CMAKE_MAJOR_VERSION} LESS 3))
       if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
         if(NOT ${CMAKE_CXX_COMPILER_VERSION} VERSION_LESS 6.0)
-          set(ARMA_USE_EXTERN_RNG true)
           message(STATUS "Detected Clang 6.0 or newer")
           if(NOT DEFINED CMAKE_CXX_STANDARD)
             set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
@@ -121,7 +118,6 @@ if(DEFINED CMAKE_CXX_COMPILER_ID AND DEFINED CMAKE_CXX_COMPILER_VERSION)
         endif()
       elseif(CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang")
         if(NOT ${CMAKE_CXX_COMPILER_VERSION} VERSION_LESS 8.0)
-          set(ARMA_USE_EXTERN_RNG true)
           message(STATUS "Detected AppleClang 8.0 or newer")
           if(NOT DEFINED CMAKE_CXX_STANDARD)
             set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
@@ -134,13 +130,6 @@ if(DEFINED CMAKE_CXX_COMPILER_ID AND DEFINED CMAKE_CXX_COMPILER_VERSION)
     endif()
   endif()
 endif()
-
-if(MINGW OR MSYS OR CYGWIN OR MSVC)
-  # MinGW doesn't correctly handle thread_local
-  set(ARMA_USE_EXTERN_RNG false)
-endif()
-
-message(STATUS "ARMA_USE_EXTERN_RNG = ${ARMA_USE_EXTERN_RNG}")
 
 
 # As Red Hat Enterprise Linux (and related systems such as Fedora)
@@ -488,13 +477,12 @@ endif()
 
 message(STATUS "")
 message(STATUS "*** Result of configuration:")
-message(STATUS "*** ARMA_USE_WRAPPER    = ${ARMA_USE_WRAPPER}")
-message(STATUS "*** ARMA_USE_LAPACK     = ${ARMA_USE_LAPACK}")
-message(STATUS "*** ARMA_USE_BLAS       = ${ARMA_USE_BLAS}")
-message(STATUS "*** ARMA_USE_ATLAS      = ${ARMA_USE_ATLAS}")
-message(STATUS "*** ARMA_USE_ARPACK     = ${ARMA_USE_ARPACK}")
-message(STATUS "*** ARMA_USE_EXTERN_RNG = ${ARMA_USE_EXTERN_RNG}")
-message(STATUS "*** ARMA_USE_SUPERLU    = ${ARMA_USE_SUPERLU}")
+message(STATUS "*** ARMA_USE_WRAPPER = ${ARMA_USE_WRAPPER}")
+message(STATUS "*** ARMA_USE_LAPACK  = ${ARMA_USE_LAPACK}")
+message(STATUS "*** ARMA_USE_BLAS    = ${ARMA_USE_BLAS}")
+message(STATUS "*** ARMA_USE_ATLAS   = ${ARMA_USE_ATLAS}")
+message(STATUS "*** ARMA_USE_ARPACK  = ${ARMA_USE_ARPACK}")
+message(STATUS "*** ARMA_USE_SUPERLU = ${ARMA_USE_SUPERLU}")
 message(STATUS "")
 message(STATUS "*** Armadillo wrapper library will use the following libraries:")
 message(STATUS "*** ARMA_LIBS = ${ARMA_LIBS}")

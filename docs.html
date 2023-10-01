@@ -150,7 +150,7 @@ hr.greyline
 <a class="noprint" style="display:scroll; position:fixed; bottom:5px; right:5px;" href="#top"><font size=-1>[top]</font></a>
 
 <a name="top"></a>
-<big><b>API Documentation for Armadillo 12.4</b></big>
+<big><b>API Documentation for Armadillo 12.6</b></big>
 <br>
 <br>
 <br>
@@ -174,7 +174,7 @@ First time users: please see the short <a href="#example_prog">example program</
 </li>
 <br>
 <li>
-If you discover any bugs or regressions, please <a href="http://arma.sourceforge.net/faq.html">report them</a>
+If you discover any bugs or regressions, please <a href="https://arma.sourceforge.net/faq.html">report them</a>
 </li>
 <br>
 <li>
@@ -227,7 +227,7 @@ Conrad Sanderson and Ryan Curtin.
 <br>
 <li><a href="#part_sigproc">signal &amp; image processing</a></li>
 <li><a href="#part_stats">statistics and clustering</a></li>
-<li><a href="#part_misc">miscellaneous (constants, configuration)</a></li>
+<li><a href="#part_misc">miscellaneous (constants, configuration options, ...)</a></li>
 </ul>
 <br>
 
@@ -387,63 +387,64 @@ Conrad Sanderson and Ryan Curtin.
 <tr><td><a href="#det">det</a></td><td>&nbsp;</td><td>determinant</td></tr>
 <tr><td><a href="#diagmat">diagmat</a></td><td>&nbsp;</td><td>generate diagonal matrix from given matrix or vector</td></tr>
 <tr><td><a href="#diagvec">diagvec</a></td><td>&nbsp;</td><td>extract specified diagonal</td></tr>
+<tr style="background-color: #F5F5F5;"><td><a href="#diags_spdiags">diags&nbsp;/&nbsp;spdiags</a></td><td>&nbsp;</td><td>generate band matrix from given set of vectors</td></tr>
 <tr style="background-color: #F5F5F5;"><td><a href="#diff">diff</a></td><td>&nbsp;</td><td>differences between adjacent elements</td></tr>
 <tr style="background-color: #F5F5F5;"><td><a href="#dot">dot&nbsp;/&nbsp;cdot&nbsp;/&nbsp;norm_dot</a></td><td>&nbsp;</td><td>dot product</td></tr>
-<tr style="background-color: #F5F5F5;"><td><a href="#eps">eps</a></td><td>&nbsp;</td><td>obtain distance of each element to next largest floating point representation</td></tr>
+<tr><td><a href="#eps">eps</a></td><td>&nbsp;</td><td>obtain distance of each element to next largest floating point representation</td></tr>
 <tr><td><a href="#expmat">expmat</a></td><td>&nbsp;</td><td>matrix exponential</td></tr>
 <tr><td><a href="#expmat_sym">expmat_sym</a></td><td>&nbsp;</td><td>matrix exponential of symmetric matrix</td></tr>
-<tr><td><a href="#find">find</a></td><td>&nbsp;</td><td>find indices of non-zero elements, or elements satisfying a relational condition</td></tr>
+<tr style="background-color: #F5F5F5;"><td><a href="#find">find</a></td><td>&nbsp;</td><td>find indices of non-zero elements, or elements satisfying a relational condition</td></tr>
 <tr style="background-color: #F5F5F5;"><td><a href="#find_finite">find_finite</a></td><td>&nbsp;</td><td>find indices of finite elements</td></tr>
 <tr style="background-color: #F5F5F5;"><td><a href="#find_nonfinite">find_nonfinite</a></td><td>&nbsp;</td><td>find indices of non-finite elements</td></tr>
-<tr style="background-color: #F5F5F5;"><td><a href="#find_nan">find_nan</a></td><td>&nbsp;</td><td>find indices of NaN elements</td></tr>
+<tr><td><a href="#find_nan">find_nan</a></td><td>&nbsp;</td><td>find indices of NaN elements</td></tr>
 <tr><td><a href="#find_unique">find_unique</a></td><td>&nbsp;</td><td>find indices of unique elements</td></tr>
 <tr><td><a href="#flip">fliplr&nbsp;/&nbsp;flipud</a></td><td>&nbsp;</td><td>flip matrix left to right or upside down</td></tr>
-<tr><td><a href="#imag_real">imag / real</a></td><td>&nbsp;</td><td>extract imaginary/real part</td></tr>
+<tr style="background-color: #F5F5F5;"><td><a href="#imag_real">imag / real</a></td><td>&nbsp;</td><td>extract imaginary/real part</td></tr>
 <tr style="background-color: #F5F5F5;"><td><a href="#ind2sub">ind2sub</a></td><td>&nbsp;</td><td>convert linear index to subscripts</td></tr>
 <tr style="background-color: #F5F5F5;"><td><a href="#index_min_and_index_max_standalone">index_min / index_max</a></td><td>&nbsp;</td><td>indices of extremum values</td></tr>
-<tr style="background-color: #F5F5F5;"><td><a href="#inplace_trans">inplace_trans</a></td><td>&nbsp;</td><td>in-place transpose</td></tr>
+<tr><td><a href="#inplace_trans">inplace_trans</a></td><td>&nbsp;</td><td>in-place transpose</td></tr>
 <tr><td><a href="#intersect">intersect</a></td><td>&nbsp;</td><td>find common elements in two vectors/matrices</td></tr>
 <tr><td><a href="#join">join_rows / join_cols</a></td><td>&nbsp;</td><td>concatenation of matrices</td></tr>
-<tr><td><a href="#join_slices">join_slices</a></td><td>&nbsp;</td><td>concatenation of cubes</td></tr>
+<tr style="background-color: #F5F5F5;"><td><a href="#join_slices">join_slices</a></td><td>&nbsp;</td><td>concatenation of cubes</td></tr>
 <tr style="background-color: #F5F5F5;"><td><a href="#kron">kron</a></td><td>&nbsp;</td><td>Kronecker tensor product</td></tr>
 <tr style="background-color: #F5F5F5;"><td><a href="#log_det">log_det</a></td><td>&nbsp;</td><td>log determinant</td></tr>
-<tr style="background-color: #F5F5F5;"><td><a href="#log_det_sympd">log_det_sympd</a></td><td>&nbsp;</td><td>log determinant of symmetric positive definite matrix</td></tr>
+<tr><td><a href="#log_det_sympd">log_det_sympd</a></td><td>&nbsp;</td><td>log determinant of symmetric positive definite matrix</td></tr>
 <tr><td><a href="#logmat">logmat</a></td><td>&nbsp;</td><td>matrix logarithm</td></tr>
 <tr><td><a href="#logmat_sympd">logmat_sympd</a></td><td>&nbsp;</td><td>matrix logarithm of symmetric matrix</td></tr>
-<tr><td><a href="#min_and_max">min&nbsp;/&nbsp;max</a></td><td>&nbsp;</td><td>return extremum values</td></tr>
+<tr style="background-color: #F5F5F5;"><td><a href="#min_and_max">min&nbsp;/&nbsp;max</a></td><td>&nbsp;</td><td>return extremum values</td></tr>
 <tr style="background-color: #F5F5F5;"><td><a href="#nonzeros">nonzeros</a></td><td>&nbsp;</td><td>return non-zero values</td></tr>
 <tr style="background-color: #F5F5F5;"><td><a href="#norm">norm</a></td><td>&nbsp;</td><td>various norms of vectors and matrices</td></tr>
-<tr style="background-color: #F5F5F5;"><td><a href="#norm2est">norm2est</a></td><td>&nbsp;</td><td>fast estimate of the matrix 2-norm</td></tr>
+<tr><td><a href="#norm2est">norm2est</a></td><td>&nbsp;</td><td>fast estimate of the matrix 2-norm</td></tr>
 <tr><td><a href="#normalise">normalise</a></td><td>&nbsp;</td><td>normalise vectors to unit <i>p</i>-norm</td></tr>
 <tr><td><a href="#pow">pow</a></td><td>&nbsp;</td><td>element-wise power</td></tr>
-<tr><td><a href="#powmat">powmat</a></td><td>&nbsp;</td><td>matrix power</td></tr>
+<tr style="background-color: #F5F5F5;"><td><a href="#powmat">powmat</a></td><td>&nbsp;</td><td>matrix power</td></tr>
 <tr style="background-color: #F5F5F5;"><td><a href="#prod">prod</a></td><td>&nbsp;</td><td>product of elements</td></tr>
 <tr style="background-color: #F5F5F5;"><td><a href="#rank">rank</a></td><td>&nbsp;</td><td>rank of matrix</td></tr>
-<tr style="background-color: #F5F5F5;"><td><a href="#rcond">rcond</a></td><td>&nbsp;</td><td>reciprocal condition number</td></tr>
+<tr><td><a href="#rcond">rcond</a></td><td>&nbsp;</td><td>reciprocal condition number</td></tr>
 <tr><td><a href="#repelem">repelem</a></td><td>&nbsp;</td><td>replicate elements</td></tr>
 <tr><td><a href="#repmat">repmat</a></td><td>&nbsp;</td><td>replicate matrix in block-like fashion</td></tr>
-<tr><td><a href="#reshape">reshape</a></td><td>&nbsp;</td><td>change size while keeping elements</td></tr>
+<tr style="background-color: #F5F5F5;"><td><a href="#reshape">reshape</a></td><td>&nbsp;</td><td>change size while keeping elements</td></tr>
 <tr style="background-color: #F5F5F5;"><td><a href="#resize">resize</a></td><td>&nbsp;</td><td>change size while keeping elements and preserving layout</td></tr>
 <tr style="background-color: #F5F5F5;"><td><a href="#reverse">reverse</a></td><td>&nbsp;</td><td>reverse order of elements</td></tr>
-<tr style="background-color: #F5F5F5;"><td><a href="#roots">roots</a></td><td>&nbsp;</td><td>roots of polynomial</td></tr>
+<tr><td><a href="#roots">roots</a></td><td>&nbsp;</td><td>roots of polynomial</td></tr>
 <tr><td><a href="#shift">shift</a></td><td>&nbsp;</td><td>shift elements</td></tr>
 <tr><td><a href="#shuffle">shuffle</a></td><td>&nbsp;</td><td>randomly shuffle elements</td></tr>
-<tr><td><a href="#size">size</a></td><td>&nbsp;</td><td>obtain dimensions of given object</td></tr>
+<tr style="background-color: #F5F5F5;"><td><a href="#size">size</a></td><td>&nbsp;</td><td>obtain dimensions of given object</td></tr>
 <tr style="background-color: #F5F5F5;"><td><a href="#sort">sort</a></td><td>&nbsp;</td><td>sort elements</td></tr>
 <tr style="background-color: #F5F5F5;"><td><a href="#sort_index">sort_index</a></td><td>&nbsp;</td><td>vector describing sorted order of elements</td></tr>
-<tr style="background-color: #F5F5F5;"><td><a href="#sqrtmat">sqrtmat</a></td><td>&nbsp;</td><td>square root of matrix</td></tr>
+<tr><td><a href="#sqrtmat">sqrtmat</a></td><td>&nbsp;</td><td>square root of matrix</td></tr>
 <tr><td><a href="#sqrtmat_sympd">sqrtmat_sympd</a></td><td>&nbsp;</td><td>square root of symmetric matrix</td></tr>
 <tr><td><a href="#sum">sum</a></td><td>&nbsp;</td><td>sum of elements</td></tr>
-<tr><td><a href="#sub2ind">sub2ind</a></td><td>&nbsp;</td><td>convert subscripts to linear index</td></tr>
+<tr style="background-color: #F5F5F5;"><td><a href="#sub2ind">sub2ind</a></td><td>&nbsp;</td><td>convert subscripts to linear index</td></tr>
 <tr style="background-color: #F5F5F5;"><td><a href="#symmat">symmatu&nbsp;/&nbsp;symmatl</a></td><td>&nbsp;</td><td>generate symmetric matrix from given matrix</td></tr>
 <tr style="background-color: #F5F5F5;"><td><a href="#trace">trace</a></td><td>&nbsp;</td><td>sum of diagonal elements</td></tr>
-<tr style="background-color: #F5F5F5;"><td><a href="#trans">trans</a></td><td>&nbsp;</td><td>transpose of matrix</td></tr>
+<tr><td><a href="#trans">trans</a></td><td>&nbsp;</td><td>transpose of matrix</td></tr>
 <tr><td><a href="#trapz">trapz</a></td><td>&nbsp;</td><td>trapezoidal numerical integration</td></tr>
 <tr><td><a href="#trimat">trimatu&nbsp;/&nbsp;trimatl</a></td><td>&nbsp;</td><td>copy upper/lower triangular part</td></tr>
-<tr><td><a href="#trimat_ind">trimatu_ind&nbsp;/&nbsp;trimatl_ind</a></td><td>&nbsp;</td><td>obtain indices of upper/lower triangular part</td></tr>
+<tr style="background-color: #F5F5F5;"><td><a href="#trimat_ind">trimatu_ind&nbsp;/&nbsp;trimatl_ind</a></td><td>&nbsp;</td><td>obtain indices of upper/lower triangular part</td></tr>
 <tr style="background-color: #F5F5F5;"><td><a href="#unique">unique</a></td><td>&nbsp;</td><td>return unique elements</td></tr>
 <tr style="background-color: #F5F5F5;"><td><a href="#vecnorm">vecnorm</a></td><td>&nbsp;</td><td>obtain vector norm of each row or column of a matrix</td></tr>
-<tr style="background-color: #F5F5F5;"><td><a href="#vectorise">vectorise</a></td><td>&nbsp;</td><td>flatten matrix into vector</td></tr>
+<tr><td><a href="#vectorise">vectorise</a></td><td>&nbsp;</td><td>flatten matrix into vector</td></tr>
 <tr><td><a href="#misc_fns">misc&nbsp;functions</a></td><td>&nbsp;</td><td>miscellaneous element-wise functions:&nbsp;exp,&nbsp;log,&nbsp;sqrt,&nbsp;round,&nbsp;sign,&nbsp;...</td></tr>
 <tr><td><a href="#trig_fns">trig&nbsp;functions</a></td><td>&nbsp;</td><td>trigonometric element-wise functions:&nbsp;cos,&nbsp;sin,&nbsp;tan,&nbsp;...</td></tr>
 </tbody>
@@ -548,13 +549,14 @@ Conrad Sanderson and Ryan Curtin.
 <tbody>
 <tr style="background-color: #F5F5F5;"><td><a href="#constants">constants</a></td><td>&nbsp;</td><td>pi, inf, NaN, eps, speed of light, ...</td></tr>
 <tr style="background-color: #F5F5F5;"><td><a href="#wall_clock">wall_clock</a></td><td>&nbsp;</td><td>timer for measuring number of elapsed seconds</td></tr>
-<tr style="background-color: #F5F5F5;"><td><a href="#output_streams">output&nbsp;streams</a></td><td>&nbsp;</td><td>streams for printing warnings and errors</td></tr>
+<tr style="background-color: #F5F5F5;"><td><a href="#rng_seed">RNG&nbsp;seed&nbsp;setting</a></td><td>&nbsp;</td><td>functions for changing RNG seeds</td></tr>
+<tr><td><a href="#output_streams">output&nbsp;streams</a></td><td>&nbsp;</td><td>streams for printing warnings and errors</td></tr>
 <tr><td><a href="#uword">uword&nbsp;/&nbsp;sword</a></td><td>&nbsp;</td><td>shorthand for unsigned and signed integers</td></tr>
 <tr><td><a href="#cx_double">cx_double&nbsp;/&nbsp;cx_float</a></td><td>&nbsp;</td><td>shorthand for std::complex&lt;double&gt; and std::complex&lt;float&gt;</td></tr>
-<tr><td><a href="#syntax">Matlab/Armadillo&nbsp;syntax&nbsp;differences</a></td><td>&nbsp;</td><td>examples of Matlab syntax and conceptually corresponding Armadillo syntax</td></tr>
+<tr style="background-color: #F5F5F5;"><td><a href="#syntax">Matlab/Armadillo&nbsp;syntax&nbsp;differences</a></td><td>&nbsp;</td><td>examples of Matlab syntax and conceptually corresponding Armadillo syntax</td></tr>
 <tr style="background-color: #F5F5F5;"><td><a href="#example_prog">example&nbsp;program</a></td><td>&nbsp;</td><td>short example program</td></tr>
 <tr style="background-color: #F5F5F5;"><td><a href="#config_hpp">config.hpp</a></td><td>&nbsp;</td><td>configuration options</td></tr>
-<tr style="background-color: #F5F5F5;"><td><a href="#changelog">API&nbsp;additions</a></td><td>&nbsp;</td><td>API stability and list of API additions</td></tr>
+<tr><td><a href="#changelog">API&nbsp;additions</a></td><td>&nbsp;</td><td>API stability and list of API additions</td></tr>
 <!--<tr><td><a href="#log_add">log_add</a></td><td>&nbsp;</td><td>TODO</td></tr>-->
 <!--<tr><td><a href="#catching_exceptions">catching exceptions</a></td><td>&nbsp;</td><td>TODO</td></tr>-->
 </tbody>
@@ -694,11 +696,15 @@ For convenience the following typedefs have been defined:
 <br>
 <li>
 In this documentation the <i>mat</i> type is used for convenience;
-it is possible to use other types instead, eg. <i>fmat</i>
+it is possible to use other matrix types instead, eg. <i>fmat</i>
 </li>
 <br>
 <li>
-Functions which use LAPACK (generally matrix decompositions) are only valid for the following types:
+Matrix types with integer elements (such as <i>umat</i> and <i>imat</i>) cannot hold special values such as NaN and Inf
+</li>
+<br>
+<li>
+Functions which use LAPACK (generally matrix decompositions) are only valid for the following matrix types:
 <i>mat</i>, <i>dmat</i>, <i>fmat</i>, <i>cx_mat</i>, <i>cx_dmat</i>, <i>cx_fmat</i>
 </li>
 <br>
@@ -750,7 +756,7 @@ which is one of:
 <li>since Armadillo 10.5, the elements are initialised to zero by default</li>
 <li>
 in Armadillo 10.4 and older versions, the elements are not initialised unless <i>fill_form</i> is specified;
-<br>ie. without specifying <i>fill_form</i>, the elements may contain garbage values, including NaN
+ie. without specifying <i>fill_form</i>, the elements may contain garbage values, including NaN
 </li>
 </ul>
 </li>
@@ -905,12 +911,13 @@ See also:
 <li><a href="#iterators_mat">element iterators</a></li>
 <li><a href="#eval_member">.eval()</a></li>
 <li><a href="#conv_to">conv_to()</a> (convert between matrix types)</li>
-<li><a href="https://cplusplus.com/doc/tutorial/other_data_types/">explanation of <i>typedef</i></a> (cplusplus.com)
 <li><a href="#Col">Col class</a></li>
 <li><a href="#Row">Row class</a></li>
 <li><a href="#Cube">Cube class</a></li>
 <li><a href="#SpMat">SpMat class</a> (sparse matrix with compressed sparse column format)</li>
 <li><a href="#config_hpp">config.hpp</a></li>
+<li><a href="https://cplusplus.com/doc/tutorial/other_data_types/">explanation of <i>typedef</i></a> (cplusplus.com)
+<li><a href="https://en.wikipedia.org/wiki/C_data_types">C data types</a> (Wikipedia)
 </ul>
 </li>
 <br>
@@ -1076,11 +1083,11 @@ For convenience the following typedefs have been defined:
 </li>
 <br>
 <li>
-In this documentation, the <b><i>vec</i></b> and <b><i>colvec</i></b> types have the <b>same meaning</b> and are used <b>interchangeably</b>
+The <b><i>vec</i></b> and <b><i>colvec</i></b> types have the <b>same meaning</b> and are used <b>interchangeably</b>
 </li>
 <br>
 <li>
-In this documentation, the types <i>vec</i> or <i>colvec</i> are used for convenience; it is possible to use other types instead, eg. <i>fvec</i>, <i>fcolvec</i>
+In this documentation, the types <i>vec</i> or <i>colvec</i> are used for convenience; it is possible to use other column vector types instead, eg. <i>fvec</i>, <i>fcolvec</i>
 </li>
 <br>
 <li>
@@ -1115,7 +1122,7 @@ Constructors:
 <li>since Armadillo 10.5, the elements are initialised to zero by default</li>
 <li>
 in Armadillo 10.4 and older versions, the elements are not initialised unless <i>fill_form</i> is specified;
-<br>ie. without specifying <i>fill_form</i>, the elements may contain garbage values, including NaN; see the <a href="#Mat">Mat class</a> for details on <i>fill_form</i>
+ie. without specifying <i>fill_form</i>, the elements may contain garbage values, including NaN; see the <a href="#Mat">Mat class</a> for details on <i>fill_form</i>
 </li>
 </ul>
 </li>
@@ -1355,12 +1362,12 @@ For convenience the following typedefs have been defined:
 <br>
 <li>
 In this documentation, the <i>rowvec</i> type is used for convenience;
-it is possible to use other types instead, eg. <i>frowvec</i>
+it is possible to use other row vector types instead, eg. <i>frowvec</i>
 </li>
 <br>
 <li>
-Functions which take <i>Mat</i> as input can generally also take <i>Row</i> as input.
-Main exceptions are functions which require square matrices
+Functions which take <i>Mat</i> as input can generally also take <i>Row</i> as input;
+main exceptions are functions which require square matrices
 </li>
 <br>
 <li>
@@ -1390,7 +1397,7 @@ Constructors:
 <li>since Armadillo 10.5, the elements are initialised to zero by default</li>
 <li>
 in Armadillo 10.4 and older versions, the elements are not initialised unless <i>fill_form</i> is specified;
-<br>ie. without specifying <i>fill_form</i>, the elements may contain garbage values, including NaN; see the <a href="#Mat">Mat class</a> for details on <i>fill_form</i>
+ie. without specifying <i>fill_form</i>, the elements may contain garbage values, including NaN; see the <a href="#Mat">Mat class</a> for details on <i>fill_form</i>
 </li>
 </ul>
 </li>
@@ -1684,7 +1691,7 @@ which is one of:
 <li>since Armadillo 10.5, the elements are initialised to zero by default</li>
 <li>
 in Armadillo 10.4 and older versions, the elements are not initialised unless <i>fill_form</i> is specified;
-<br>ie. without specifying <i>fill_form</i>, the elements may contain garbage values, including NaN
+ie. without specifying <i>fill_form</i>, the elements may contain garbage values, including NaN
 </li>
 </ul>
 </li>
@@ -1899,7 +1906,7 @@ F.save("mat_field");
 <br><b>sp_cx_mat</b>
 <ul>
 <li>
-Classes for sparse matrices; intended for storing very large matrices, where the vast majority of elements is zero
+Classes for sparse matrices; intended for storing large matrices, where most of the elements are zeros
 </li>
 <br>
 <li>
@@ -2041,9 +2048,15 @@ zero-valued elements are never stored
 </li>
 <br>
 <li>
-This class behaves in a similar manner to the <a href="#Mat">Mat</a> class;
+This class behaves in a similar manner to the dense matrix <a href="#Mat">Mat</a> class;
 however, member functions which set all elements to non-zero values (and hence do not make sense for sparse matrices) have been deliberately omitted;
 examples of omitted functions: <a href="#fill">.fill()</a>, <a href="#ones_member">.ones()</a>, +=&nbsp;scalar, etc.
+</li>
+<br>
+<li>
+<b>Caveat:</b>
+the sparse matrix class is not intended for small matrices (eg. with size &leq; 100x100), due to the overhead of the compressed storage format;
+for small matrices use the <a href="#Mat">Mat</a> class, even if most of the elements are zeros
 </li>
 <br>
 <li>
@@ -2110,19 +2123,11 @@ The following subset of operations &amp; functions is available for sparse matri
 <li>element-wise functions: <a href="#abs">abs()</a>, <a href="#misc_fns">ceil()</a>, <a href="#conj">conj()</a>, <a href="#misc_fns">floor()</a>, <a href="#imag_real">imag()</a>, <a href="#imag_real">real()</a>, <a href="#misc_fns">round()</a>, <a href="#misc_fns">sign()</a>, <a href="#misc_fns">sqrt()</a>, <a href="#misc_fns">square()</a>, <a href="#misc_fns">trunc()</a></li>
 <li>scalar functions of matrices: <a href="#accu">accu()</a>, <a href="#as_scalar">as_scalar()</a>, <a href="#dot">dot()</a>, <a href="#norm">norm()</a>, <a href="#norm2est">norm2est()</a>, <a href="#trace">trace()</a></li>
 <li>vector valued functions of matrices: <a href="#diagvec">diagvec()</a>, <a href="#min_and_max">min()</a>, <a href="#min_and_max">max()</a>, <a href="#nonzeros">nonzeros()</a>, <a href="#sum">sum()</a>, <a href="#stats_fns">mean()</a>, <a href="#stats_fns">var()</a>, <a href="#vecnorm">vecnorm()</a>, <a href="#vectorise">vectorise()</a></li>
-<li>matrix valued functions of matrices: <a href="#clamp">clamp()</a>, <a href="#diagmat">diagmat()</a>, <a href="#flip">flipud()/fliplr()</a>, <a href="#join">join_rows()</a>, <a href="#join">join_cols()</a>, <a href="#kron">kron()</a>, <a href="#normalise">normalise()</a>, <a href="#repelem">repelem()</a>, <a href="#repmat">repmat()</a>, <a href="#reshape">reshape()</a>, <a href="#resize">resize()</a>, <a href="#reverse">reverse()</a>, <a href="#symmat">symmatu()/symmatl()</a>, <a href="#trimat">trimatu()/trimatl()</a>, <a href="#t_st_members">.t()</a>, <a href="#trans">trans()</a></li>
+<li>matrix valued functions of matrices: <a href="#clamp">clamp()</a>, <a href="#diagmat">diagmat()</a>, <a href="#diags_spdiags">spdiags()</a>, <a href="#flip">flipud()/fliplr()</a>, <a href="#join">join_rows()</a>, <a href="#join">join_cols()</a>, <a href="#kron">kron()</a>, <a href="#normalise">normalise()</a>, <a href="#repelem">repelem()</a>, <a href="#repmat">repmat()</a>, <a href="#reshape">reshape()</a>, <a href="#resize">resize()</a>, <a href="#reverse">reverse()</a>, <a href="#symmat">symmatu()/symmatl()</a>, <a href="#trimat">trimatu()/trimatl()</a>, <a href="#t_st_members">.t()</a>, <a href="#trans">trans()</a></li>
 <li>generated matrices: <a href="#speye">speye()</a>, <a href="#spones">spones()</a>, <a href="#sprandu_sprandn">sprandu()</a>, <a href="#sprandu_sprandn">sprandn()</a>, <a href="#zeros_standalone">zeros()</a></li>
-<li>eigen and svd decomposition: <a href="#eigs_sym">eigs_sym()</a>, <a href="#eigs_gen">eigs_gen()</a>, <a href="#svds">svds()</a></li>
+<li>eigen decompositions and SVD: <a href="#eigs_sym">eigs_sym()</a>, <a href="#eigs_gen">eigs_gen()</a>, <a href="#svds">svds()</a></li>
 <li>solution of sparse linear systems: <a href="#spsolve">spsolve()</a>
 <li>miscellaneous: <a href="#approx_equal">approx_equal()</a>, <a href="#element_access">element access</a>, <a href="#iterators_spmat">element iterators</a>, <a href="#as_col_row">.as_col()&nbsp;/&nbsp;.as_row()</a>, <a href="#for_each">.for_each()</a>, <a href="#print">.print()</a>, <a href="#clean">.clean()</a>, <a href="#replace">.replace()</a>, <a href="#transform">.transform()</a>, <a href="#is_finite">.is_finite()</a>, <a href="#is_symmetric">.is_symmetric()</a>, <a href="#is_hermitian">.is_hermitian()</a>, <a href="#is_trimat">.is_trimatu()</a>, <a href="#is_trimat">.is_trimatl()</a>, <a href="#is_diagmat">.is_diagmat()</a></li>
-</ul>
-</li>
-<br>
-<li>
-<b>Caveats:</b>
-<ul>
-<li>the sparse matrix class is not intended for small matrices (eg. &leq; 100x100), due to the overhead of the compressed storage format</li>
-<li>for small matrices, use the <a href="#Mat">dense matrix</a> class, even if the vast majority of elements is zero</li>
 </ul>
 </li>
 <br>
@@ -3006,10 +3011,6 @@ optionally first changing the size to specified dimensions
 </li>
 <br>
 <li>
-To change the RNG seed, use <i>arma_rng::set_seed(value)</i> or <i>arma_rng::set_seed_random()</i> functions
-</li>
-<br>
-<li>
 Examples:
 <ul>
 <pre>
@@ -3021,8 +3022,6 @@ B.randu( size(A) );
 
 mat C(5, 10, fill::zeros);
 C.randu();
-
-arma_rng::set_seed_random();  // set the seed to a random value
 </pre>
 </ul>
 </li>
@@ -3037,6 +3036,7 @@ See also:
 <li><a href="#ones_member">.ones()</a></li>
 <li><a href="#zeros_member">.zeros()</a></li>
 <li><a href="#size">size()</a></li>
+<li><a href="#rng_seed">RNG seed setting</a></li>
 <li><a href="https://en.wikipedia.org/wiki/Uniform_distribution_(continuous)">uniform distribution in Wikipedia</a></li>
 <li><a href="https://en.wikipedia.org/wiki/Normal_distribution">normal distribution in Wikipedia</a></li>
 </ul>
@@ -4212,6 +4212,7 @@ See also:
 <li><a href="#eye_member">.eye()</a></li>
 <li><a href="#diagvec">diagvec()</a></li>
 <li><a href="#diagmat">diagmat()</a></li>
+<li><a href="#diags_spdiags">diags() / spdiags()</a></li>
 <li><a href="#submat">submatrix views</a></li>
 <li><a href="#each_colrow">.each_col() &amp; .each_row()</a></li>
 <li><a href="#trace">trace()</a></li>
@@ -7617,6 +7618,7 @@ See also:
 <li><a href="#shuffle">shuffle()</a></li>
 <li><a href="#linspace">linspace()</a></li>
 <li><a href="#regspace">regspace()</a></li>
+<li><a href="#rng_seed">RNG seed setting</a></li>
 </ul>
 </li>
 <br>
@@ -7835,10 +7837,6 @@ Usage:
 </li>
 <br>
 <li>
-To change the RNG seed, use <i>arma_rng::set_seed(value)</i> or <i>arma_rng::set_seed_random()</i> functions
-</li>
-<br>
-<li>
 <b>Caveat:</b> to generate a matrix with random integer values instead of floating point values, use <a href="#randi">randi()</a> instead 
 </li>
 <br>
@@ -7860,8 +7858,6 @@ mat A2 = randu(5, 6, distr_param(10,20));
 
 fmat B1 = randu&lt;fmat&gt;(5, 6);
 fmat B2 = randu&lt;fmat&gt;(5, 6, distr_param(10,20));
-
-arma_rng::set_seed_random();  // set the seed to a random value
 </pre>
 </ul>
 </li>
@@ -7877,6 +7873,7 @@ arma_rng::set_seed_random();  // set the seed to a random value
 <li><a href="#shuffle">shuffle()</a></li>
 <li><a href="#sprandu_sprandn">sprandu()</a></li>
 <li><a href="#size">size()</a></li>
+<li><a href="#rng_seed">RNG seed setting</a></li>
 <li><a href="https://en.wikipedia.org/wiki/Uniform_distribution_(continuous)">uniform distribution in Wikipedia</a></li>
 </ul>
 </li>
@@ -7925,10 +7922,6 @@ Usage:
 </li>
 <br>
 <li>
-To change the RNG seed, use <i>arma_rng::set_seed(value)</i> or <i>arma_rng::set_seed_random()</i> functions
-</li>
-<br>
-<li>
 Examples:
 <ul>
 <pre>
@@ -7946,8 +7939,6 @@ mat A2 = randn(5, 6, distr_param(10,5));
 
 fmat B1 = randn&lt;fmat&gt;(5, 6);
 fmat B2 = randn&lt;fmat&gt;(5, 6, distr_param(10,5));
-
-arma_rng::set_seed_random();  // set the seed to a random value
 </pre>
 </ul>
 </li>
@@ -7962,6 +7953,7 @@ arma_rng::set_seed_random();  // set the seed to a random value
 <li><a href="#imbue">.imbue()</a></li>
 <li><a href="#sprandu_sprandn">sprandn()</a></li>
 <li><a href="#size">size()</a></li>
+<li><a href="#rng_seed">RNG seed setting</a></li>
 <li><a href="https://en.wikipedia.org/wiki/Normal_distribution">normal distribution in Wikipedia</a></li>
 </ul>
 </li>
@@ -8026,10 +8018,6 @@ Usage:
 </li>
 <br>
 <li>
-To change the RNG seed, use <i>arma_rng::set_seed(value)</i> or <i>arma_rng::set_seed_random()</i> functions
-</li>
-<br>
-<li>
 Examples:
 <ul>
 <pre>
@@ -8055,6 +8043,7 @@ fmat B2 = randg&lt;fmat&gt;(10, 10, distr_param(2,1));
 <li><a href="#chi2rnd">chi2rnd()</a></li>
 <li><a href="#imbue">.imbue()</a></li>
 <li><a href="#size">size()</a></li>
+<li><a href="#rng_seed">RNG seed setting</a></li>
 <li><a href="https://en.wikipedia.org/wiki/Gamma_distribution">gamma distribution in Wikipedia</a></li>
 </ul>
 </li>
@@ -8103,10 +8092,6 @@ Usage:
 </li>
 <br>
 <li>
-To change the RNG seed, use <i>arma_rng::set_seed(value)</i> or <i>arma_rng::set_seed_random()</i> functions
-</li>
-<br>
-<li>
 <b>Caveat:</b> to generate a matrix with random floating point values (ie. <i>float</i> or <i>double</i>) instead of integers, use <a href="#randu">randu()</a> instead 
 </li>
 <br>
@@ -8122,8 +8107,6 @@ imat A2 = randi(5, 6, distr_param(-10, +20));
 
 mat B1 = randi&lt;mat&gt;(5, 6);
 mat B2 = randi&lt;mat&gt;(5, 6, distr_param(-10, +20));
-
-arma_rng::set_seed_random();  // set the seed to a random value
 </pre>
 </ul>
 </li>
@@ -8136,6 +8119,7 @@ arma_rng::set_seed_random();  // set the seed to a random value
 <li><a href="#zeros_standalone">zeros()</a></li>
 <li><a href="#shuffle">shuffle()</a></li>
 <li><a href="#size">size()</a></li>
+<li><a href="#rng_seed">RNG seed setting</a></li>
 </ul>
 </li>
 <br>
@@ -8244,10 +8228,6 @@ Usage:
 </li>
 <br>
 <li>
-To change the RNG seed, use <i>arma_rng::set_seed(value)</i> or <i>arma_rng::set_seed_random()</i> functions
-</li>
-<br>
-<li>
 Examples:
 <ul>
 <pre>
@@ -8262,6 +8242,7 @@ sp_mat A = sprandu&lt;sp_mat&gt;(100, 200, 0.1);
 <li><a href="#randu">randu()</a></li>
 <li><a href="#randn">randn()</a></li>
 <li><a href="#size">size()</a></li>
+<li><a href="#rng_seed">RNG seed setting</a></li>
 <li><a href="https://en.wikipedia.org/wiki/Uniform_distribution_(continuous)">uniform distribution in Wikipedia</a></li>
 <li><a href="https://en.wikipedia.org/wiki/Normal_distribution">normal distribution in Wikipedia</a></li>
 </ul>
@@ -9091,10 +9072,6 @@ Given matrix <i>X</i>, generate a matrix with the <i>k</i>-th diagonal containin
 </li>
 <br>
 <li>
-If <i>X</i> is an expression, the evaluation of the expression aims to calculate only the diagonal elements
-</li>
-<br>
-<li>
 The argument <i>k</i> is optional; by default the main diagonal is used (<i>k&thinsp;=&thinsp;0</i>)
 </li>
 <br>
@@ -9104,6 +9081,10 @@ For <i>k&thinsp;&gt;&thinsp;0</i>, the <i>k</i>-th super-diagonal is used (above
 <br>
 <li>
 For <i>k&thinsp;&lt;&thinsp;0</i>, the <i>k</i>-th sub-diagonal is used (below main diagonal, towards bottom-left corner)
+</li>
+<br>
+<li>
+If <i>X</i> is an expression, the evaluation of the expression aims to calculate only the diagonal elements
 </li>
 <br>
 <li>
@@ -9127,6 +9108,7 @@ See also:
 <li><a href="#diag">.diag()</a></li>
 <li><a href="#is_diagmat">.is_diagmat()</a></li>
 <li><a href="#diagvec">diagvec()</a></li>
+<li><a href="#diags_spdiags">diags() / spdiags()</a></li>
 <li><a href="#trace">trace()</a></li>
 <li><a href="#trimat">trimatu() / trimatl()</a></li>
 <li><a href="#symmat">symmatu() / symmatl()</a></li>
@@ -9148,10 +9130,6 @@ Extract the <i>k</i>-th diagonal from matrix <i>X</i>
 </li>
 <br>
 <li>
-If <i>X</i> is an expression, the evaluation of the expression aims to calculate only the diagonal elements
-</li>
-<br>
-<li>
 The argument <i>k</i> is optional; by default the main diagonal is extracted (<i>k&thinsp;=&thinsp;0</i>)
 </li>
 <br>
@@ -9161,6 +9139,10 @@ The argument <i>k</i> is optional; by default the main diagonal is extracted (<i
 <br>
 <li>
 The extracted diagonal is interpreted as a column vector
+</li>
+<br>
+<li>
+If <i>X</i> is an expression, the evaluation of the expression aims to calculate only the diagonal elements
 </li>
 <br>
 <li>
@@ -9180,6 +9162,74 @@ vec d = diagvec(A);
 <li><a href="#diagmat">diagmat()</a></li>
 <li><a href="#trace">trace()</a></li>
 <li><a href="#vectorise">vectorise()</a></li>
+</ul>
+</li>
+<br>
+</ul>
+
+<div class="pagebreak"></div><div class="noprint"><hr class="greyline"><br></div>
+<a name="diags_spdiags"></a>
+<table>
+<tbody>
+<tr><td style="text-align: right;"><b>diags( V, D, n_rows, n_cols )</b></td></tr>
+<tr><td style="text-align: right;"><b>spdiags( V, D, n_rows, n_cols )</b></td></tr>
+</tbody>
+</table>
+<ul>
+<li>
+Generate a matrix with diagonals specified by vector <i>D</i> copied from corresponding column vectors in matrix <i>V</i>
+</li>
+<br>
+<li>
+Function <i>diags()</i> generates a dense matrix, while function <i>spdiags()</i> generates a sparse matrix; in both cases the generated matrix has the same element type as matrix <i>V</i>
+</li>
+<br>
+<li>
+Given vector <i>D</i> must be a vector of type <a href="#Col">ivec</a> or <a href="#Row">irowvec</a>
+</li>
+<br>
+<li>
+The number of columns in given matrix <i>V</i> must match the number of elements in vector <i>D</i>
+</li>
+<br>
+<li>
+Each element in vector <i>D</i> specifies diagonal <i>k</i>, where:
+<ul>
+<li><i>k&thinsp;=&thinsp;0</i> indicates the main diagonal
+<li><i>k&thinsp;&lt;&thinsp;0</i> indicates the <i>k</i>-th sub-diagonal (below main diagonal, towards bottom-left corner)
+<li><i>k&thinsp;&gt;&thinsp;0</i> indicates the <i>k</i>-th super-diagonal (above main diagonal, towards top-right corner)
+</ul>
+</li>
+<br>
+<li>
+For <i>k&thinsp;&lt;&thinsp;0</i>, vectors from matrix <i>V</i> are truncated at the end
+</li>
+<br>
+<li>
+For <i>k&thinsp;&gt;&thinsp;0</i>, vectors from matrix <i>V</i> are truncated from the start
+</li>
+<br>
+<li>
+Examples:
+<ul>
+<pre>
+mat  V(10, 3, fill::randu);
+
+ivec D = {-1, 0, +1};
+
+mat X = diags(V, D, 10, 10);
+
+sp_mat Y = spdiags(V, D, 10, 10);
+</pre>
+</ul>
+</li>
+<br>
+<li>
+See also:
+<ul>
+<li><a href="#diag">.diag()</a></li>
+<li><a href="#diagmat">diagmat()</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Band_matrix">band matrix in Wikipedia</a></li>
 </ul>
 </li>
 <br>
@@ -10921,10 +10971,10 @@ See also:
 <li>Any singular values less than <i>tolerance</i> are treated as zero</li>
 <br>
 <li>
-The <i>tolerance</i> argument is optional; by default <i>tolerance</i> is set to <i>max_rc&thinsp;&middot;&thinsp;max_sv&thinsp;&middot;&thinsp;epsilon</i>, where:
+The <i>tolerance</i> argument is optional; by default <i>tolerance = max_rc&thinsp;&middot;&thinsp;max_sv&thinsp;&middot;&thinsp;epsilon</i>, where:
 <ul>
 <li><i>max_rc</i> = max(X.n_rows,&thinsp;X.n_cols)</li>
-<li><i>max_sv</i> = maximum singular value of <i>X</i></li>
+<li><i>max_sv</i> = maximum singular value of <i>X</i>  (ie. spectral norm)</li>
 <li><i>epsilon</i> = difference between 1 and the least value greater than 1 that is representable</li>
 </ul>
 </li>
@@ -11393,6 +11443,7 @@ See also:
 <li><a href="#unique">unique()</a></li>
 <li><a href="#randi">randi()</a></li>
 <li><a href="#randperm">randperm()</a></li>
+<li><a href="#rng_seed">RNG seed setting</a></li>
 </ul>
 </li>
 <br>
@@ -11411,25 +11462,30 @@ Obtain the dimensions of object <i>X</i>, or explicitly specify the dimensions
 </li>
 <br>
 <li>
-The dimensions can be used in conjunction with:
-<ul>
-<li><a href="#part_a">object constructors</a></li>
-<li><a href="#part_b">functions for changing size</a></li>
-<li><a href="#part_c">generator functions</a></li>
-<li><a href="#submat">submatrix views</a></li>
-<li><a href="#subcube">subcube views</a></li>
-<li><a href="#subfield">subfield views</a></li>
-<li><a href="#ind2sub">ind2sub()</a> and <a href="#sub2ind">sub2ind()</a></li>
-</ul>
+Dimensions provided via <i>size(...)</i> can be used in conjunction with
+<a href="#Mat">matrix constructors</a>,
+<a href="#submat">submatrix views</a>,
+<a href="#randu">random matrix generation</a>,
+<a href="#ind2sub">ind2sub()</a>, 
+<a href="#sub2ind">sub2ind()</a>,
+etc.
 </li>
 <br>
 <li>
-The dimensions support simple arithmetic operations; they can also be printed and compared for equality/inequality
+<i>size(&hellip;)</i> objects support simple arithmetic operations such as addition and multiplication
+</li>
+<br>
+<li>
+Two <i>size(&hellip;)</i> objects can be compared for equality/inequality
+</li>
+<br>
+<li>
+<i>size(&hellip;)</i> objects can be passed to an std::ostream (eg. cout) via &lt;&lt;
 </li>
 <br>
 <li>
 <b>Caveat:</b> to prevent interference from <a href="https://en.cppreference.com/w/cpp/iterator/size"><i>std::size()</i></a> in C++17,
-preface Armadillo's <i>size()</i> with the <i>arma</i> namespace qualification, eg. <i>arma::size(X)</i>
+preface Armadillo's <i>size(&hellip;)</i> with the <i>arma</i> namespace qualification, eg. <i>arma::size(&hellip;)</i>
 </li>
 <br>
 <li>
@@ -13256,10 +13312,10 @@ The dimension of the range space is the number of singular values of <i>A</i> no
 </li>
 <br>
 <li>
-The <i>tolerance</i> argument is optional; by default <i>tolerance</i> is set to <i>max_rc&thinsp;&middot;&thinsp;max_sv&thinsp;&middot;&thinsp;epsilon</i>, where:
+The <i>tolerance</i> argument is optional; by default <i>tolerance = max_rc&thinsp;&middot;&thinsp;max_sv&thinsp;&middot;&thinsp;epsilon</i>, where:
 <ul>
 <li><i>max_rc</i> = max(A.n_rows,&thinsp;A.n_cols)</li>
-<li><i>max_sv</i> = maximum singular value of <i>A</i></li>
+<li><i>max_sv</i> = maximum singular value of <i>A</i> (ie. spectral norm)</li>
 <li><i>epsilon</i> = difference between 1 and the least value greater than 1 that is representable</li>
 </ul>
 </li>
@@ -13318,10 +13374,10 @@ The dimension of the range space is the number of singular values of <i>A</i> gr
 </li>
 <br>
 <li>
-The <i>tolerance</i> argument is optional; by default <i>tolerance</i> is set to <i>max_rc&thinsp;&middot;&thinsp;max_sv&thinsp;&middot;&thinsp;epsilon</i>, where:
+The <i>tolerance</i> argument is optional; by default <i>tolerance = max_rc&thinsp;&middot;&thinsp;max_sv&thinsp;&middot;&thinsp;epsilon</i>, where:
 <ul>
-<li><i>mar_rc</i> = max(A.n_rows,&thinsp;A.n_cols)</li>
-<li><i>max_sv</i> = maximum singular value of <i>A</i></li>
+<li><i>max_rc</i> = max(A.n_rows,&thinsp;A.n_cols)</li>
+<li><i>max_sv</i> = maximum singular value of <i>A</i> (ie. spectral norm)</li>
 <li><i>epsilon</i> = difference between 1 and the least value greater than 1 that is representable</li>
 </ul>
 </li>
@@ -13375,12 +13431,11 @@ See also:
 The computation is based on singular value decomposition
 </li>
 <br>
-<li>The <i>tolerance</i> argument is optional</li>
-<br>
-<li>The default <i>tolerance</i> is set to <i>max_rc&thinsp;&middot;&thinsp;max_sv&thinsp;&middot;&thinsp;epsilon</i>, where:
+<li>The <i>tolerance</i> argument is optional;
+by default <i>tolerance = max_rc&thinsp;&middot;&thinsp;max_sv&thinsp;&middot;&thinsp;epsilon</i>, where:
 <ul>
-<li><i>mar_rc</i> = max(A.n_rows,&thinsp;A.n_cols)</li>
-<li><i>max_sv</i> = maximum singular value of <i>A</i></li>
+<li><i>max_rc</i> = max(A.n_rows,&thinsp;A.n_cols)</li>
+<li><i>max_sv</i> = maximum singular value of <i>A</i> (ie. spectral norm)</li>
 <li><i>epsilon</i> = difference between 1 and the least value greater than 1 that is representable</li>
 </ul>
 </li>
@@ -13414,7 +13469,7 @@ the divide-and-conquer method provides slightly different results than the stand
 <ul>
 <li>
 to find approximate solutions to under-/over-determined or rank deficient systems of linear equations,
-using <a href="#solve">solve()</a> can be considerably faster and/or more accurate
+<a href="#solve">solve()</a> can be considerably faster and/or more accurate
 </li>
 <li>
 if the given matrix <i>A</i> is square-sized and only occasionally rank deficient,
@@ -14107,6 +14162,11 @@ and/or <i>opts.tol</i> (tolerance for convergence), and/or <i>k</i> (number of e
 </li>
 <br>
 <li>
+<b>NOTE:</b> the implementation in Armadillo 12.6 is considerably faster than earlier versions;
+further speedups can be obtained by enabling OpenMP in your compiler (eg. <i>-fopenmp</i> in GCC and clang)
+</li>
+<br>
+<li>
 Examples:
 <ul>
 <pre>
@@ -14135,7 +14195,7 @@ See also:
 <li><a href="#svds">svds()</a></li>
 <li><a href="#is_symmetric">.is_symmetric()</a></li>
 <!-- <li><a href="https://www.caam.rice.edu/software/ARPACK/UG/node33.html">shift-invert mode in ARPACK</a></li> -->
-<a href="https://li.mit.edu/Archive/Activities/Archive/CourseWork/Ju_Li/MITCourses/18.335/Doc/ARPACK/Lehoucq97.pdf">shift-invert mode in ARPACK</a>
+<li><a href="http://li.mit.edu/Archive/Activities/Archive/CourseWork/Ju_Li/MITCourses/18.335/Doc/ARPACK/Lehoucq97.pdf">shift-invert mode in ARPACK</a></li>
 <li><a href="https://mathworld.wolfram.com/EigenDecomposition.html">eigen decomposition in MathWorld</a></li>
 <li><a href="https://en.wikipedia.org/wiki/Eigenvalues_and_eigenvectors">eigenvalues &amp; eigenvectors in Wikipedia</a></li>
 </ul>
@@ -14238,6 +14298,11 @@ and/or <i>opts.tol</i> (tolerance for convergence), and/or <i>k</i> (number of e
 </li>
 <br>
 <li>
+<b>NOTE:</b> the implementation in Armadillo 12.6 is considerably faster than earlier versions;
+further speedups can be obtained by enabling OpenMP in your compiler (eg. <i>-fopenmp</i> in GCC and clang)
+</li>
+<br>
+<li>
 Examples:
 <ul>
 <pre>
@@ -14263,7 +14328,8 @@ See also:
 <li><a href="#eigs_sym">eigs_sym()</a></li>
 <li><a href="#eig_gen">eig_gen()</a></li>
 <li><a href="#svds">svds()</a></li>
-<li><a href="https://www.caam.rice.edu/software/ARPACK/UG/node33.html">shift-invert mode in ARPACK</a></li>
+<!-- <li><a href="https://www.caam.rice.edu/software/ARPACK/UG/node33.html">shift-invert mode in ARPACK</a></li> -->
+<li><a href="http://li.mit.edu/Archive/Activities/Archive/CourseWork/Ju_Li/MITCourses/18.335/Doc/ARPACK/Lehoucq97.pdf">shift-invert mode in ARPACK</a></li>
 <li><a href="https://mathworld.wolfram.com/EigenDecomposition.html">eigen decomposition in MathWorld</a></li>
 <li><a href="https://en.wikipedia.org/wiki/Eigenvalues_and_eigenvectors">eigenvalues &amp; eigenvectors in Wikipedia</a></li>
 </ul>
@@ -14334,6 +14400,11 @@ to find all singular values, use <a href="#svd">svd()</a> instead
 depending on the given matrix, <i>svds()</i> may find fewer singular values than specified
 </li>
 </ul>
+</li>
+<br>
+<li>
+<b>NOTE:</b> the implementation in Armadillo 12.6 is considerably faster than earlier versions;
+further speedups can be obtained by enabling OpenMP in your compiler (eg. <i>-fopenmp</i> in GCC and clang)
 </li>
 <br>
 <li>
@@ -17332,7 +17403,7 @@ model.save("my_model.gmm");
       &nbsp;
     </td>
     <td style="vertical-align: top;">
-      &tau;, the ratio of any circle's circumference to its radius (equivalent to 2&pi;)
+      &tau;, the ratio of any circle's circumference to its radius; equivalent to 2&pi;
     </td>
   </tr>
   <tr>
@@ -17948,6 +18019,97 @@ See also:
 <br>
 
 <div class="pagebreak"></div><div class="noprint"><hr class="greyline"><br></div>
+<a name="rng_seed"></a>
+<b>RNG seed setting</b>
+<ul>
+<li>
+There are two functions to change the seed used by the random number generator (RNG):
+<br>
+<br>
+<table style="text-align: left;" border="0" cellpadding="2" cellspacing="2">
+  <tbody>
+    <tr>
+      <td style="vertical-align: top;">
+      <b><code>arma_rng::set_seed(&thinsp;value&thinsp;)</code></b>
+      </td>
+      <td style="vertical-align: top;">&nbsp;<br>
+      </td>
+      <td style="vertical-align: top;">
+      set the RNG seed to the specified <i>value</i>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      <b><code>arma_rng::set_seed_random()</code></b>
+      </td>
+      <td style="vertical-align: top;">&nbsp;<br>
+      </td>
+      <td style="vertical-align: top;">
+      set the RNG seed to a value drawn from
+      <a href="https://en.cppreference.com/w/cpp/numeric/random/random_device">std::random_device</a> (if the reported entropy is not zero),
+      or <a href="https://en.wikipedia.org/wiki//dev/random">/dev/urandom</a> (on Linux and macOS),
+      or based on the current time (on systems without <i>/dev/urandom</i>)
+      </td>
+    </tr>
+  </tbody>
+</table>
+</li>
+<br>
+<li>
+Since Armadillo 12.6.2, the default RNG on all systems is the 64-bit version of the <a href="https://en.wikipedia.org/wiki/Mersenne_Twister">Mersenne Twister</a> (aka MT19937-64)
+</li>
+<br>
+<li>
+<b>Caveat:</b> when using a multi-threading framework (such as OpenMP) and the underlying system supports the <a href="https://en.cppreference.com/w/cpp/language/storage_duration">thread_local</a> storage specifier,
+the above functions change the seed only within the thread they are running on
+</li>
+<br>
+<li>
+To change the seeds on all OpenMP threads to the same value, adapt the following code:
+<pre>
+#pragma omp parallel
+  {
+  arma_rng::set_seed(123);
+  }
+</pre>
+</li>
+<br>
+<li>
+To change the seeds on all OpenMP threads to unique values, adapt the following code:
+<pre>
+std::atomic&lt;std::size_t&gt; counter(0);
+
+#pragma omp parallel
+  {
+  arma_rng::set_seed(123 + counter++);
+  }
+</pre>
+</li>
+<br>
+<li>
+See also:
+<ul>
+<li>
+<a href="#randu">randu()</a>,
+<a href="#randn">randn()</a>,
+<a href="#randg">randg()</a>,
+<a href="#randi">randi()</a>,
+<a href="#sprandu_sprandn">sprandu()</a>,
+<a href="#sprandu_sprandn">sprandn()</a>,
+<a href="#shuffle">shuffle()</a>,
+<a href="#randperm">randperm()</a>
+</li>
+<li><a href="https://en.wikipedia.org/wiki/Pseudorandom_number_generator">Pseudo-random number generator</a> in Wikipedia</li>
+<li><a href="https://en.wikipedia.org/wiki/Mersenne_Twister">Mersenne Twister</a> in Wikipedia</li>
+<li><a href="https://en.wikipedia.org/wiki//dev/random">/dev/random</a> in Wikipedia</li>
+<li><a href="https://en.cppreference.com/w/cpp/numeric/random/mersenne_twister_engine">std::mersenne_twister_engine</a> in cppreference.com</li>
+<li><a href="https://en.cppreference.com/w/cpp/numeric/random/random_device">std::random_device</a> in cppreference.com</li>
+</ul>
+</li>
+</ul>
+<br>
+
+<div class="pagebreak"></div><div class="noprint"><hr class="greyline"><br></div>
 <a name="output_streams"></a>
 <a name="logging"></a>
 <b>output streams</b>
@@ -18045,11 +18207,33 @@ log_a, log_b and log_c must have the same type
 <b>cx_double</b>, <b>cx_float</b> 
 <ul>
 <li>
-<i>cx_double</i> is a shorthand / typedef for <i>std::complex&lt;double&gt;</i>
-</li>
+Convenience short forms (typedefs) for complex element types:
 <br>
-<li>
-<i>cx_float</i> is a shorthand / typedef for <i>std::complex&lt;float&gt;</i>
+<br>
+<table style="text-align: left;" border="0" cellpadding="2" cellspacing="2">
+  <tbody>
+    <tr>
+      <td>
+      <b><code>cx_double</code></b>
+      </td>
+      <td>&nbsp;<br>
+      </td>
+      <td>
+      equivalent to <code>std::complex&lt;double&gt;</code>
+      </td>
+    </tr>
+    <tr>
+      <td>
+      <b><code>cx_float</code></b>
+      </td>
+      <td>&nbsp;<br>
+      </td>
+      <td>
+      equivalent to <code>std::complex&lt;float&gt;</code>
+      </td>
+    </tr>
+  </tbody>
+</table>
 </li>
 <br>
 <li>
@@ -18058,7 +18242,9 @@ Example:
 <pre>
 cx_mat X(5, 5, fill::randu);
 
-X(1,2) = cx_double(2.0, 3.0);
+X(1,2) = cx_double(3.4, 5.6);
+
+cx_double val = X(2,3);
 </pre>
 </ul>
 </li>
@@ -19916,7 +20102,7 @@ See also:
 <div class="pagebreak"></div><div class="noprint"><hr class="greyline"><br></div>
 <a name="api_additions"></a>
 <a name="changelog"></a>
-<b>History of API Additions, Changes and Deprecations</b>
+<b>History of API Additions and Changes</b>
 <br>
 <ul>
 <li>API Stability and Version Policy:
@@ -19928,15 +20114,15 @@ Each release of Armadillo has its public API (functions, classes, constants) des
 </li>
 <br>
 <li>
-Each release of Armadillo has its full version specified as <i>A.B.C</i>, where <i>A</i> is a major version number, <i>B</i> is a minor version number, and <i>C</i> is a patch level (indicating bug fixes).
-The version specification has explicit meaning, similar to <a href="https://semver.org/">Semantic Versioning</a>, as follows:
+Each release of Armadillo has its full version specified as <i>A.B.C</i>, where <i>A</i> is a major version number, <i>B</i> is a minor version number, and <i>C</i> is a patch level.
+The version specification has explicit meaning (similar to <a href="https://semver.org/">Semantic Versioning</a>) as follows:
 </li>
 <br>
 <ul>
 <li>
 Within a major version (eg. 10), each minor version (eg. 10.2) has a public API that strongly strives to be <b>backwards compatible</b> (at the source level) with the public API of preceding minor versions.
 For example, user code written for version 10.0 should work with version 10.1, 10.2, etc.
-However, later minor versions may have more features (API additions and extensions) than preceding minor versions.
+However, subsequent minor versions may have more features (API additions and extensions) than preceding minor versions.
 As such, user code <i>specifically</i> written for version 10.2 may not work with 10.1.
 </li>
 <br>
@@ -19983,6 +20169,17 @@ List of additions and changes for each version:
 
 
 
+<a name="version_126"></a>
+<li>Version 12.6:
+<ul>
+<li>faster multiplication of dense vectors by <a href="#SpMat">sparse matrices</a> (and vice versa)</li>
+<li>faster <a href="#eigs_sym">eigs_sym()</a>, <a href="#eigs_gen">eigs_gen()</a>, <a href="#svds">svds()</a></li>
+<li>faster <a href="#conv">conv()</a> and <a href="#conv2">conv2()</a> when using OpenMP</li>
+<!-- <li>more efficient move constructors in dense vector classes</li> -->
+<li>added <a href="#diags_spdiags">diags()</a> and <a href="#diags_spdiags">spdiags()</a> for generating band matrices from set of vectors</li>
+</ul>
+</li>
+<br>
 <a name="version_124"></a>
 <li>Version 12.4:
 <ul>

@@ -402,16 +402,15 @@ described in the accompanying API documentation (docs.html) specific
 to that release.
 
 Each release of Armadillo has its full version specified as A.B.C,
-where A is a major version number, B is a minor version number,
-and C is a patch level (indicating bug fixes).
-The version specification has explicit meaning,
-similar to [Semantic Versioning](https://semver.org/), as follows:
+where A is a major version number, B is a minor version number, and C is a patch level.
+The version specification has explicit meaning
+(similar to [Semantic Versioning](https://semver.org/)), as follows:
 
 * Within a major version (eg. 10), each minor version has a public API that
   strongly strives to be backwards compatible (at the source level) with the
   public API of preceding minor versions. For example, user code written for
   version 10.0 should work with version 10.1, 10.2, etc.
-  However, later minor versions may have more features (API additions and extensions)
+  However, subsequent minor versions may have more features (API additions and extensions)
   than preceding minor versions. As such, user code _specifically_
   written for version 10.2 may not work with 10.1.
 
@@ -461,18 +460,18 @@ Octave/Matlab with C++ code that uses Armadillo matrices.
 
 ### 16: Related Software Using Armadillo
 
+* Bandicoot: C++ library for accelerated linear algebra on GPUs  
+  https://coot.sourceforge.io
+
 * ensmallen: fast library for non-linear numerical optimisation  
   https://ensmallen.org/
 
 * MLPACK: extensive library of machine learning algorithms  
   https://mlpack.org
 
-* CARMA: bidirectional interface between Python and Armadillo  
-  https://github.com/RUrlus/carma
-
 * RcppArmadillo: integration of Armadillo with R  
   https://dirk.eddelbuettel.com/code/rcpp.armadillo.html
 
-* PyArmadillo: streamlined linear algebra library for Python  
-  https://pyarma.sourceforge.io
+* CARMA: bidirectional interface between Python and Armadillo  
+  https://github.com/RUrlus/carma
 

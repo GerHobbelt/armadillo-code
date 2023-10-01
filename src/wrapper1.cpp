@@ -19,6 +19,7 @@
 #include <climits>
 #include <limits>
 #include <complex>
+#include <random>
 
 #include "armadillo_bits/config.hpp"
 
@@ -29,15 +30,11 @@
 #include "armadillo_bits/typedef_elem.hpp"
 #include "armadillo_bits/include_superlu.hpp"
 
-
-#if defined(ARMA_USE_EXTERN_RNG)
-  #include <random>
-  
-  namespace arma
-    {
-    thread_local std::mt19937_64 mt19937_64_instance;
-    }
-#endif
+namespace arma
+  {
+  // kept for compatibility with programs compiled with older versions of Armadillo
+  thread_local std::mt19937_64 mt19937_64_instance;
+  }
 
 namespace arma
 {
