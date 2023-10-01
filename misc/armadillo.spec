@@ -1,7 +1,7 @@
 Name:           armadillo
-Version:        11.1.x
+Version:        12.6.x
 Release:        1%{?dist}
-Summary:        Fast C++ matrix library with syntax similar to MATLAB and Octave
+Summary:        C++ library for linear algebra and scientific computing with MATLAB-like syntax
 
 License:        ASL 2.0
 URL:            http://arma.sourceforge.net/
