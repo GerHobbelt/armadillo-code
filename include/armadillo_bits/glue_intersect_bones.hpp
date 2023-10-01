@@ -14,45 +14,23 @@
 // ------------------------------------------------------------------------
 
 
-//! \addtogroup arma_version
+//! \addtogroup glue_intersect
 //! @{
 
 
 
-#define ARMA_VERSION_MAJOR 8
-#define ARMA_VERSION_MINOR 200
-#define ARMA_VERSION_PATCH 2
-#define ARMA_VERSION_NAME  "Feral Pursuits Deluxe"
-
-
-
-struct arma_version
+class glue_intersect
   {
-  static const unsigned int major = ARMA_VERSION_MAJOR;
-  static const unsigned int minor = ARMA_VERSION_MINOR;
-  static const unsigned int patch = ARMA_VERSION_PATCH;
+  public:
   
-  static
-  inline
-  std::string
-  as_string()
-    {
-    const char* nickname = ARMA_VERSION_NAME;
-    
-    std::stringstream ss;
-    ss << arma_version::major
-       << '.'
-       << arma_version::minor
-       << '.'
-       << arma_version::patch
-       << " ("
-       << nickname
-       << ')';
-    
-    return ss.str();
-    }
+  template<typename T1, typename T2>
+  inline static void apply(Mat<typename T1::elem_type>& out, const Glue<T1,T2,glue_intersect>& X);
+  
+  template<typename T1, typename T2>
+  inline static void apply(Mat<typename T1::elem_type>& out, uvec& iA, uvec& iB, const Base<typename T1::elem_type,T1>& A_expr, const Base<typename T1::elem_type,T2>& B_expr, const bool calc_indx);
   };
 
 
 
 //! @}
+
