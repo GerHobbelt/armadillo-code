@@ -1,10 +1,10 @@
 Armadillo C++ Linear Algebra Library
 http://arma.sourceforge.net
 
-Copyright 2008-2017 Conrad Sanderson (http://conradsanderson.id.au)
+Copyright 2008-2018 Conrad Sanderson (http://conradsanderson.id.au)
 Copyright 2008-2016 National ICT Australia (NICTA)
-Copyright 2017      Arroyo Consortium
-Copyright 2017      Data61, CSIRO
+Copyright 2017-2018 Arroyo Consortium
+Copyright 2017-2018 Data61, CSIRO
 
 
 
@@ -17,8 +17,8 @@ Contents
 
  4: Compilers and External Dependencies
 
- 5: Linux and Mac OS X: Installation
- 6: Linux and Mac OS X: Compiling & Linking
+ 5: Linux and macOS: Installation
+ 6: Linux and macOS: Compiling & Linking
 
  7: Windows: Installation
  8: Windows: Compiling & Linking
@@ -117,13 +117,13 @@ For example, for GCC and Clang compilers use -O2 or -O3
 
 
 
-5: Linux and Mac OS X: Installation
+5: Linux and macOS: Installation
 ===================================
 
 * Step 1:
   Ensure a C++ compiler is installed on your system.
   
-  Caveat: on Mac OS X you will need to install Xcode
+  Caveat: on macOS you will need to install Xcode
   and then type the following command in a terminal window:
   xcode-select --install
   
@@ -134,11 +134,11 @@ For example, for GCC and Clang compilers use -O2 or -O3
   
   On Linux-based systems, you can get CMake using yum, dnf, apt, aptitude, ...
   
-  On Mac OS X systems, you can get CMake through MacPorts or Homebrew.
+  On macOS systems, you can get CMake through MacPorts or Homebrew.
   
 * Step 3:
   Ensure LAPACK and BLAS are installed on your system.
-  On Mac OS X this is not necessary.
+  On macOS this is not necessary.
   
   For better performance, we recommend installing the OpenBLAS library.
   See http://www.openblas.net/
@@ -194,7 +194,7 @@ For example, for GCC and Clang compilers use -O2 or -O3
 
 
 
-6: Linux and Mac OS X: Compiling & Linking
+6: Linux and macOS: Compiling & Linking
 ==========================================
 
 The "examples" directory contains several quick example programs
@@ -214,7 +214,7 @@ You will need to adjust this for later versions of Armadillo (ie. change the 7.2
 and/or if you have unpacked the armadillo archive into a different directory.
 
 Replace -lblas with -lopenblas if you have OpenBLAS.
-On Mac OS X, replace -lblas -llapack with -framework Accelerate
+On macOS, replace -lblas -llapack with -framework Accelerate
 
 
 
@@ -273,7 +273,7 @@ Faster and/or alternative implementations of BLAS and LAPACK are available:
 The OpenBLAS and Intel MKL libraries are generally the fastest.
 
 Caveat: for any serious and/or performance critical work,
-we recommend using either Mac OS X or a Linux based operating system:
+we recommend using a Linux based operating system:
   Fedora  http://fedoraproject.org/
   Ubuntu  http://www.ubuntu.com/
   CentOS  http://centos.org/
@@ -336,17 +336,13 @@ the CMake based installation. Comment out the lines containing:
 10: Support for ATLAS
 =====================
 
-Armadillo can use the ATLAS library for faster versions of
-certain LAPACK and BLAS functions. Not all ATLAS functions are
-currently used, and as such LAPACK should still be installed.
+Armadillo can use the ATLAS library for faster versions of a subset
+of LAPACK and BLAS functions. LAPACK should still be installed to
+obtain full functionality.
 
-The minimum recommended version of ATLAS is 3.8.
-Old versions (eg. 3.6) can produce incorrect results
-as well as corrupting memory, leading to random crashes.
-
-Users of older Ubuntu and Debian based systems should explicitly
-check that ATLAS 3.6 is not installed. It's better to
-remove the old version and use the standard LAPACK library.
+Caveat: the minimum recommended version of ATLAS is 3.10;
+earlier versions (such as 3.6 and 3.8) can produce incorrect
+results and/or corrupt memory, leading to random crashes.
 
 
 
@@ -471,7 +467,7 @@ Octave/Matlab with C++ code that uses Armadillo matrices.
   http://mlpack.org
   
 * SigPack: C++ signal processing library using Armadillo
-  https://sourceforge.net/projects/sigpack/
+  http://sigpack.sourceforge.net
   
 * matlab2cpp: conversion of Matlab code to Armadillo based C++ code
   https://github.com/jonathf/matlab2cpp

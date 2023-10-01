@@ -296,51 +296,51 @@ TEST_CASE("iterator_test")
   REQUIRE( (double) *it == Approx(3.1) );
   REQUIRE( it.row() == 4 );
   REQUIRE( it.col() == 1 );
-  it++;
+  ++it;
 
   REQUIRE( (double) *it == Approx(4.2) );
   REQUIRE( it.row() == 1 );
   REQUIRE( it.col() == 2 );
-  it++;
+  ++it;
 
   REQUIRE( (double) *it == Approx(5.5) );
   REQUIRE( it.row() == 1 );
   REQUIRE( it.col() == 3 );
-  it++;
+  ++it;
 
   REQUIRE( (double) *it == Approx(4.5) );
   REQUIRE( it.row() == 2 );
   REQUIRE( it.col() == 3 );
-  it++;
+  ++it;
 
   REQUIRE( (double) *it == Approx(6.4) );
   REQUIRE( it.row() == 4 );
   REQUIRE( it.col() == 4 );
-  it++;
+  ++it;
 
   REQUIRE( it == x.end() );
 
   // Now let's go backwards.
-  it--; // Get it off the end.
+  --it; // Get it off the end.
   REQUIRE( (double) *it == Approx(6.4) );
   REQUIRE( it.row() == 4 );
   REQUIRE( it.col() == 4 );
-  it--;
+  --it;
 
   REQUIRE( (double) *it == Approx(4.5) );
   REQUIRE( it.row() == 2 );
   REQUIRE( it.col() == 3 );
-  it--;
+  --it;
 
   REQUIRE( (double) *it == Approx(5.5) );
   REQUIRE( it.row() == 1 );
   REQUIRE( it.col() == 3 );
-  it--;
+  --it;
 
   REQUIRE( (double) *it == Approx(4.2) );
   REQUIRE( it.row() == 1 );
   REQUIRE( it.col() == 2 );
-  it--;
+  --it;
 
   REQUIRE( (double) *it == Approx(3.1) );
   REQUIRE( it.row() == 4 );
@@ -349,8 +349,8 @@ TEST_CASE("iterator_test")
   REQUIRE( it == x.begin() );
 
   // Try removing an element we iterated to.
-  it++;
-  it++;
+  ++it;
+  ++it;
   *it = 0;
   REQUIRE( x.n_nonzero == 4 );
 }
@@ -369,51 +369,51 @@ TEST_CASE("row_iterator_test")
   REQUIRE( (double) *it == Approx(4.2) );
   REQUIRE( it.row() == 1 );
   REQUIRE( it.col() == 2 );
-  it++;
+  ++it;
 
   REQUIRE( (double) *it == Approx(5.5) );
   REQUIRE( it.row() == 1 );
   REQUIRE( it.col() == 3 );
-  it++;
+  ++it;
 
   REQUIRE( (double) *it == Approx(4.5) );
   REQUIRE( it.row() == 2 );
   REQUIRE( it.col() == 3 );
-  it++;
+  ++it;
 
   REQUIRE( (double) *it == Approx(3.1) );
   REQUIRE( it.row() == 4 );
   REQUIRE( it.col() == 1 );
-  it++;
+  ++it;
 
   REQUIRE( (double) *it == Approx(6.4) );
   REQUIRE( it.row() == 4 );
   REQUIRE( it.col() == 4 );
-  it++;
+  ++it;
 
 //  REQUIRE( it == x.end_row() );
 
   // Now let's go backwards.
-  it--; // Get it off the end.
+  --it; // Get it off the end.
   REQUIRE( (double) *it == Approx(6.4) );
   REQUIRE( it.row() == 4 );
   REQUIRE( it.col() == 4 );
-  it--;
+  --it;
 
   REQUIRE( (double) *it == Approx(3.1) );
   REQUIRE( it.row() == 4 );
   REQUIRE( it.col() == 1 );
-  it--;
+  --it;
 
   REQUIRE( (double) *it == Approx(4.5) );
   REQUIRE( it.row() == 2 );
   REQUIRE( it.col() == 3 );
-  it--;
+  --it;
 
   REQUIRE( (double) *it == Approx(5.5) );
   REQUIRE( it.row() == 1 );
   REQUIRE( it.col() == 3 );
-  it--;
+  --it;
 
   REQUIRE( (double) *it == Approx(4.2) );
   REQUIRE( it.row() == 1 );
@@ -422,8 +422,8 @@ TEST_CASE("row_iterator_test")
   REQUIRE( it == x.begin_row() );
 
   // Try removing an element we iterated to.
-  it++;
-  it++;
+  ++it;
+  ++it;
   *it = 0;
   REQUIRE( x.n_nonzero == 4 );
   }
@@ -2568,7 +2568,7 @@ TEST_CASE("spmat_const_row_col_iterator_test")
   mat::const_row_col_iterator it;
   // Make sure ++ operator, operator* and comparison operators work fine.
   size_t count = 0;
-  for (it = X.begin_row_col(); it != X.end_row_col(); it++)
+  for (it = X.begin_row_col(); it != X.end_row_col(); ++it)
     {
     // Check iterator value.
     REQUIRE( *it == (count % 5) * 3 + (count / 5) );
@@ -2583,7 +2583,7 @@ TEST_CASE("spmat_const_row_col_iterator_test")
   it = X.end_row_col();
   do
     {
-    it--;
+    --it;
     count--;
 
     // Check iterator value.
@@ -2617,7 +2617,7 @@ TEST_CASE("spmat_row_col_iterator_test")
   mat::row_col_iterator it;
   // Make sure ++ operator, operator* and comparison operators work fine.
   size_t count = 0;
-  for (it = X.begin_row_col(); it != X.end_row_col(); it++)
+  for (it = X.begin_row_col(); it != X.end_row_col(); ++it)
     {
     // Check iterator value.
     REQUIRE( *it == (count % 5) * 3 + (count / 5) );
@@ -2632,7 +2632,7 @@ TEST_CASE("spmat_row_col_iterator_test")
   it = X.end_row_col();
   do
     {
-    it--;
+    --it;
     count--;
 
     // Check iterator value.
@@ -2665,7 +2665,7 @@ TEST_CASE("spmat_const_sprow_col_iterator_test")
   sp_mat::const_row_col_iterator it;
   // Make sure ++ operator, operator* and comparison operators work fine.
   size_t count = 1;
-  for (it = X.begin_row_col(); it != X.end_row_col(); it++)
+  for (it = X.begin_row_col(); it != X.end_row_col(); ++it)
     {
     // Check iterator value.
     REQUIRE( *it == (count % 5) * 3 + (count / 5) );
@@ -2680,7 +2680,7 @@ TEST_CASE("spmat_const_sprow_col_iterator_test")
   it = X.end_row_col();
   do
     {
-    it--;
+    --it;
     count--;
 
     // Check iterator value.
@@ -2713,7 +2713,7 @@ TEST_CASE("spmat_sprow_col_iterator_test")
   sp_mat::row_col_iterator it;
   // Make sure ++ operator, operator* and comparison operators work fine.
   size_t count = 1;
-  for (it = X.begin_row_col(); it != X.end_row_col(); it++)
+  for (it = X.begin_row_col(); it != X.end_row_col(); ++it)
     {
     // Check iterator value.
     REQUIRE( *it == (count % 5) * 3 + (count / 5) );
@@ -2728,7 +2728,7 @@ TEST_CASE("spmat_sprow_col_iterator_test")
   it = X.end_row_col();
   do
     {
-    it--;
+    --it;
     count--;
 
     // Check iterator value.
