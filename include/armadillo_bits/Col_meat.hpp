@@ -311,10 +311,9 @@ Col<eT>::Col(const std::vector<eT>& x)
   {
   arma_extra_debug_sigprint_this(this);
   
-  if(x.size() > 0)
-    {
-    arrayops::copy( Mat<eT>::memptr(), &(x[0]), uword(x.size()) );
-    }
+  const uword N = uword(x.size());
+  
+  if(N > 0)  { arrayops::copy( Mat<eT>::memptr(), &(x[0]), N ); }
   }
   
   
@@ -327,12 +326,11 @@ Col<eT>::operator=(const std::vector<eT>& x)
   {
   arma_extra_debug_sigprint();
   
-  Mat<eT>::init_warm(uword(x.size()), 1);
+  const uword N = uword(x.size());
   
-  if(x.size() > 0)
-    {
-    arrayops::copy( Mat<eT>::memptr(), &(x[0]), uword(x.size()) );
-    }
+  Mat<eT>::init_warm(N, 1);
+  
+  if(N > 0)  { arrayops::copy( Mat<eT>::memptr(), &(x[0]), N ); }
   
   return *this;
   }
@@ -342,11 +340,13 @@ Col<eT>::operator=(const std::vector<eT>& x)
 template<typename eT>
 inline
 Col<eT>::Col(const std::initializer_list<eT>& list)
-  : Mat<eT>(arma_vec_indicator(), 1)
+  : Mat<eT>(arma_vec_indicator(), uword(list.size()), 1, 1)
   {
-  arma_extra_debug_sigprint();
+  arma_extra_debug_sigprint_this(this);
   
-  (*this).operator=(list);
+  const uword N = uword(list.size());
+  
+  if(N > 0)  { arrayops::copy( Mat<eT>::memptr(), list.begin(), N ); }
   }
 
 
@@ -358,14 +358,11 @@ Col<eT>::operator=(const std::initializer_list<eT>& list)
   {
   arma_extra_debug_sigprint();
   
-  Mat<eT> tmp(list);
+  const uword N = uword(list.size());
   
-  arma_debug_check( ((tmp.n_elem > 0) && (tmp.is_vec() == false)), "Mat::init(): requested size is not compatible with column vector layout" );
+  Mat<eT>::init_warm(N, 1);
   
-  access::rw(tmp.n_rows) = tmp.n_elem;
-  access::rw(tmp.n_cols) = 1;
-  
-  (*this).steal_mem(tmp);
+  if(N > 0)  { arrayops::copy( Mat<eT>::memptr(), list.begin(), N ); }
   
   return *this;
   }
@@ -421,15 +418,7 @@ Col<eT>::operator=(Col<eT>&& X)
   {
   arma_extra_debug_sigprint(arma_str::format("this = %x   X = %x") % this % &X);
   
-  (*this).steal_mem(X);
-  
-  if( (X.mem_state == 0) && (X.n_alloc <= arma_config::mat_prealloc) && (this != &X) )
-    {
-    access::rw(X.n_rows) = 0;
-    access::rw(X.n_cols) = 1;
-    access::rw(X.n_elem) = 0;
-    access::rw(X.mem)    = nullptr;
-    }
+  (*this).steal_mem(X, true);
   
   return *this;
   }
@@ -622,7 +611,6 @@ Col<eT>::operator=(const subview_cube<eT>& X)
 
 template<typename eT>
 inline
-arma_deprecated
 mat_injector< Col<eT> >
 Col<eT>::operator<<(const eT val)
   {
@@ -633,7 +621,6 @@ Col<eT>::operator<<(const eT val)
 
 template<typename eT>
 arma_inline
-arma_warn_unused
 const Op<Col<eT>,op_htrans>
 Col<eT>::t() const
   {
@@ -644,7 +631,6 @@ Col<eT>::t() const
 
 template<typename eT>
 arma_inline
-arma_warn_unused
 const Op<Col<eT>,op_htrans>
 Col<eT>::ht() const
   {
@@ -655,7 +641,6 @@ Col<eT>::ht() const
 
 template<typename eT>
 arma_inline
-arma_warn_unused
 const Op<Col<eT>,op_strans>
 Col<eT>::st() const
   {
@@ -666,7 +651,6 @@ Col<eT>::st() const
 
 template<typename eT>
 arma_inline
-arma_warn_unused
 const Op<Col<eT>,op_strans>
 Col<eT>::as_row() const
   {
@@ -1065,12 +1049,24 @@ Col<eT>::shed_rows(const Base<uword, T1>& indices)
 
 
 
-//! insert N rows at the specified row position,
-//! optionally setting the elements of the inserted rows to zero
 template<typename eT>
 inline
 void
 Col<eT>::insert_rows(const uword row_num, const uword N, const bool set_to_zero)
+  {
+  arma_extra_debug_sigprint();
+  
+  arma_ignore(set_to_zero);
+  
+  (*this).insert_rows(row_num, N);
+  }
+
+
+
+template<typename eT>
+inline
+void
+Col<eT>::insert_rows(const uword row_num, const uword N)
   {
   arma_extra_debug_sigprint();
   
@@ -1082,30 +1078,26 @@ Col<eT>::insert_rows(const uword row_num, const uword N, const bool set_to_zero)
   // insertion at row_num == n_rows is in effect an append operation
   arma_debug_check_bounds( (row_num > t_n_rows), "Col::insert_rows(): index out of bounds" );
   
-  if(N > 0)
+  if(N == 0)  { return; }
+  
+  Col<eT> out(t_n_rows + N, arma_nozeros_indicator());
+  
+        eT* out_mem = out.memptr();
+  const eT*   t_mem = (*this).memptr();
+  
+  if(A_n_rows > 0)
     {
-    Col<eT> out(t_n_rows + N, arma_nozeros_indicator());
-    
-          eT* out_mem = out.memptr();
-    const eT*   t_mem = (*this).memptr();
-    
-    if(A_n_rows > 0)
-      {
-      arrayops::copy( out_mem, t_mem, A_n_rows );
-      }
-    
-    if(B_n_rows > 0)
-      {
-      arrayops::copy( &(out_mem[row_num + N]), &(t_mem[row_num]), B_n_rows );
-      }
-    
-    if(set_to_zero)
-      {
-      arrayops::inplace_set( &(out_mem[row_num]), eT(0), N );
-      }
-    
-    Mat<eT>::steal_mem(out);
+    arrayops::copy( out_mem, t_mem, A_n_rows );
     }
+  
+  if(B_n_rows > 0)
+    {
+    arrayops::copy( &(out_mem[row_num + N]), &(t_mem[row_num]), B_n_rows );
+    }
+  
+  arrayops::fill_zeros( &(out_mem[row_num]), N );
+  
+  Mat<eT>::steal_mem(out);
   }
 
 
@@ -1127,7 +1119,6 @@ Col<eT>::insert_rows(const uword row_num, const Base<eT,T1>& X)
 
 template<typename eT>
 arma_inline
-arma_warn_unused
 eT&
 Col<eT>::at(const uword i)
   {
@@ -1138,7 +1129,6 @@ Col<eT>::at(const uword i)
 
 template<typename eT>
 arma_inline
-arma_warn_unused
 const eT&
 Col<eT>::at(const uword i) const
   {
@@ -1149,7 +1139,6 @@ Col<eT>::at(const uword i) const
 
 template<typename eT>
 arma_inline
-arma_warn_unused
 eT&
 Col<eT>::at(const uword in_row, const uword)
   {
@@ -1160,7 +1149,6 @@ Col<eT>::at(const uword in_row, const uword)
 
 template<typename eT>
 arma_inline
-arma_warn_unused
 const eT&
 Col<eT>::at(const uword in_row, const uword) const
   {
@@ -1581,7 +1569,6 @@ Col<eT>::fixed<fixed_n_elem>::operator=(const fixed<fixed_n_elem>& X)
 template<typename eT>
 template<uword fixed_n_elem>
 arma_inline
-arma_warn_unused
 const Op< typename Col<eT>::template fixed<fixed_n_elem>::Col_fixed_type, op_htrans >
 Col<eT>::fixed<fixed_n_elem>::t() const
   {
@@ -1593,7 +1580,6 @@ Col<eT>::fixed<fixed_n_elem>::t() const
 template<typename eT>
 template<uword fixed_n_elem>
 arma_inline
-arma_warn_unused
 const Op< typename Col<eT>::template fixed<fixed_n_elem>::Col_fixed_type, op_htrans >
 Col<eT>::fixed<fixed_n_elem>::ht() const
   {
@@ -1605,7 +1591,6 @@ Col<eT>::fixed<fixed_n_elem>::ht() const
 template<typename eT>
 template<uword fixed_n_elem>
 arma_inline
-arma_warn_unused
 const Op< typename Col<eT>::template fixed<fixed_n_elem>::Col_fixed_type, op_strans >
 Col<eT>::fixed<fixed_n_elem>::st() const
   {
@@ -1617,7 +1602,6 @@ Col<eT>::fixed<fixed_n_elem>::st() const
 template<typename eT>
 template<uword fixed_n_elem>
 arma_inline
-arma_warn_unused
 const eT&
 Col<eT>::fixed<fixed_n_elem>::at_alt(const uword ii) const
   {
@@ -1639,7 +1623,6 @@ Col<eT>::fixed<fixed_n_elem>::at_alt(const uword ii) const
 template<typename eT>
 template<uword fixed_n_elem>
 arma_inline
-arma_warn_unused
 eT&
 Col<eT>::fixed<fixed_n_elem>::operator[] (const uword ii)
   {
@@ -1651,7 +1634,6 @@ Col<eT>::fixed<fixed_n_elem>::operator[] (const uword ii)
 template<typename eT>
 template<uword fixed_n_elem>
 arma_inline
-arma_warn_unused
 const eT&
 Col<eT>::fixed<fixed_n_elem>::operator[] (const uword ii) const
   {
@@ -1663,7 +1645,6 @@ Col<eT>::fixed<fixed_n_elem>::operator[] (const uword ii) const
 template<typename eT>
 template<uword fixed_n_elem>
 arma_inline
-arma_warn_unused
 eT&
 Col<eT>::fixed<fixed_n_elem>::at(const uword ii)
   {
@@ -1675,7 +1656,6 @@ Col<eT>::fixed<fixed_n_elem>::at(const uword ii)
 template<typename eT>
 template<uword fixed_n_elem>
 arma_inline
-arma_warn_unused
 const eT&
 Col<eT>::fixed<fixed_n_elem>::at(const uword ii) const
   {
@@ -1687,7 +1667,6 @@ Col<eT>::fixed<fixed_n_elem>::at(const uword ii) const
 template<typename eT>
 template<uword fixed_n_elem>
 arma_inline
-arma_warn_unused
 eT&
 Col<eT>::fixed<fixed_n_elem>::operator() (const uword ii)
   {
@@ -1701,7 +1680,6 @@ Col<eT>::fixed<fixed_n_elem>::operator() (const uword ii)
 template<typename eT>
 template<uword fixed_n_elem>
 arma_inline
-arma_warn_unused
 const eT&
 Col<eT>::fixed<fixed_n_elem>::operator() (const uword ii) const
   {
@@ -1715,7 +1693,6 @@ Col<eT>::fixed<fixed_n_elem>::operator() (const uword ii) const
 template<typename eT>
 template<uword fixed_n_elem>
 arma_inline
-arma_warn_unused
 eT&
 Col<eT>::fixed<fixed_n_elem>::at(const uword in_row, const uword)
   {
@@ -1727,7 +1704,6 @@ Col<eT>::fixed<fixed_n_elem>::at(const uword in_row, const uword)
 template<typename eT>
 template<uword fixed_n_elem>
 arma_inline
-arma_warn_unused
 const eT&
 Col<eT>::fixed<fixed_n_elem>::at(const uword in_row, const uword) const
   {
@@ -1739,7 +1715,6 @@ Col<eT>::fixed<fixed_n_elem>::at(const uword in_row, const uword) const
 template<typename eT>
 template<uword fixed_n_elem>
 arma_inline
-arma_warn_unused
 eT&
 Col<eT>::fixed<fixed_n_elem>::operator() (const uword in_row, const uword in_col)
   {
@@ -1753,7 +1728,6 @@ Col<eT>::fixed<fixed_n_elem>::operator() (const uword in_row, const uword in_col
 template<typename eT>
 template<uword fixed_n_elem>
 arma_inline
-arma_warn_unused
 const eT&
 Col<eT>::fixed<fixed_n_elem>::operator() (const uword in_row, const uword in_col) const
   {
@@ -1767,7 +1741,6 @@ Col<eT>::fixed<fixed_n_elem>::operator() (const uword in_row, const uword in_col
 template<typename eT>
 template<uword fixed_n_elem>
 arma_inline
-arma_warn_unused
 eT*
 Col<eT>::fixed<fixed_n_elem>::memptr()
   {
@@ -1779,7 +1752,6 @@ Col<eT>::fixed<fixed_n_elem>::memptr()
 template<typename eT>
 template<uword fixed_n_elem>
 arma_inline
-arma_warn_unused
 const eT*
 Col<eT>::fixed<fixed_n_elem>::memptr() const
   {
@@ -1790,7 +1762,6 @@ Col<eT>::fixed<fixed_n_elem>::memptr() const
 
 template<typename eT>
 template<uword fixed_n_elem>
-arma_hot
 inline
 const Col<eT>&
 Col<eT>::fixed<fixed_n_elem>::fill(const eT val)
@@ -1808,7 +1779,6 @@ Col<eT>::fixed<fixed_n_elem>::fill(const eT val)
 
 template<typename eT>
 template<uword fixed_n_elem>
-arma_hot
 inline
 const Col<eT>&
 Col<eT>::fixed<fixed_n_elem>::zeros()
@@ -1826,7 +1796,6 @@ Col<eT>::fixed<fixed_n_elem>::zeros()
 
 template<typename eT>
 template<uword fixed_n_elem>
-arma_hot
 inline
 const Col<eT>&
 Col<eT>::fixed<fixed_n_elem>::ones()

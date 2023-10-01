@@ -91,6 +91,10 @@ class op_diagmat;
 class op_trimat;
 class op_vectorise_row;
 class op_vectorise_col;
+
+class op_row_as_mat;
+class op_col_as_mat;
+
 class glue_times;
 class glue_times_diag;
 
@@ -346,6 +350,7 @@ struct arma_nozeros_indicator : public arma_initmode_indicator<false> {};
 
 template<typename Dummy = int> struct injector_end_of_row {};
 
+// DEPRECATED: DO NOT USE IN NEW CODE
 static const injector_end_of_row<> endr = injector_end_of_row<>();
 //!< endr indicates "end of row" when using the << operator;
 //!< similar conceptual meaning to std::endl

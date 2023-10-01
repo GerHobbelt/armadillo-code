@@ -9,6 +9,5 @@ Makefile
 CMakeFiles/
 InstallFiles/
 tmp/
-tests/main
-
-# TODO: examples/Makefile is overwritten by the cmake installer, but we need to keep track of the default version
+tests1/smoke_test
+tests2/main

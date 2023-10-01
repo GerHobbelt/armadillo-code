@@ -1,5 +1,7 @@
-// Copyright 2014 Conrad Sanderson (http://conradsanderson.id.au)
-// Copyright 2014 National ICT Australia (NICTA)
+// SPDX-License-Identifier: Apache-2.0
+// 
+// Copyright 2008-2016 Conrad Sanderson (http://conradsanderson.id.au)
+// Copyright 2008-2016 National ICT Australia (NICTA)
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,24 +16,18 @@
 // ------------------------------------------------------------------------
 
 
-// Demonstration of how to connect Armadillo with Matlab mex functions.
-// Version 0.5
+//! \addtogroup op_col_as_mat
+//! @{
 
 
-#include "armaMex.hpp"
-
-
-void
-mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
+class op_col_as_mat
+  : public traits_op_default
   {
-  // Read the matrix from the file inData.mat
-  mat fromFile = armaReadMatFromFile("inData.mat");
+  public:
   
-  fromFile.print();
-  
-  mat tmp(4,6);
-  tmp.randu();
-  
-  // Write the matrix tmp as outData in the file outData.mat
-  armaWriteMatToFile("outData.mat", tmp, "outData");
-  }
+  template<typename T1> inline static void apply(Mat<typename T1::elem_type>& out, const CubeToMatOp<T1, op_col_as_mat>& expr);
+  };
+
+
+
+//! @}
