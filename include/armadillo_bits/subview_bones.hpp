@@ -99,6 +99,8 @@ class subview : public Base<eT, subview<eT> >
   
   inline void replace(const eT old_val, const eT new_val);
   
+  inline void clean(const pod_type threshold);
+  
   inline void fill(const eT val);
   inline void zeros();
   inline void ones();
@@ -372,6 +374,8 @@ class subview_col : public subview<eT>
   arma_inline const Op<subview_col<eT>,op_htrans> ht() const;
   arma_inline const Op<subview_col<eT>,op_strans> st() const;
   
+  arma_inline const Op<subview_col<eT>,op_strans> as_row() const;
+  
   inline void fill(const eT val);
   inline void zeros();
   inline void ones();
@@ -460,6 +464,8 @@ class subview_row : public subview<eT>
   arma_inline const Op<subview_row<eT>,op_htrans>  t() const;
   arma_inline const Op<subview_row<eT>,op_htrans> ht() const;
   arma_inline const Op<subview_row<eT>,op_strans> st() const;
+  
+  arma_inline const Op<subview_row<eT>,op_strans> as_col() const;
   
   inline eT  at_alt    (const uword i) const;
   

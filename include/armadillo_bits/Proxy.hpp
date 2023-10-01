@@ -743,6 +743,158 @@ class Proxy< mtGlue<out_eT, T1, T2, glue_type> >
 
 
 
+template<typename T1, typename op_type>
+class Proxy< CubeToMatOp<T1, op_type> >
+  {
+  public:
+  
+  typedef typename T1::elem_type                   elem_type;
+  typedef typename get_pod_type<elem_type>::result pod_type;
+  typedef Mat<elem_type>                           stored_type;
+  typedef const elem_type*                         ea_type;
+  typedef const Mat<elem_type>&                    aligned_ea_type;
+  
+  static const bool use_at      = false;
+  static const bool use_mp      = false;
+  static const bool has_subview = false;
+  static const bool fake_mat    = false;
+  
+  static const bool is_row  = CubeToMatOp<T1, op_type>::is_row;
+  static const bool is_col  = CubeToMatOp<T1, op_type>::is_col;
+  static const bool is_xvec = CubeToMatOp<T1, op_type>::is_xvec;
+  
+  arma_aligned const Mat<elem_type> Q;
+  
+  inline explicit Proxy(const CubeToMatOp<T1, op_type>& A)
+    : Q(A)
+    {
+    arma_extra_debug_sigprint();
+    }
+  
+  arma_inline uword get_n_rows() const { return is_row ? 1 : Q.n_rows; }
+  arma_inline uword get_n_cols() const { return is_col ? 1 : Q.n_cols; }
+  arma_inline uword get_n_elem() const { return Q.n_elem;              }
+  
+  arma_inline elem_type operator[] (const uword i)                    const { return Q[i];           }
+  arma_inline elem_type at         (const uword row, const uword col) const { return Q.at(row, col); }
+  arma_inline elem_type at_alt     (const uword i)                    const { return Q.at_alt(i);    }
+  
+  arma_inline         ea_type         get_ea() const { return Q.memptr(); }
+  arma_inline aligned_ea_type get_aligned_ea() const { return Q;          }
+  
+  template<typename eT2>
+  arma_inline bool is_alias(const Mat<eT2>&) const { return false; }
+  
+  template<typename eT2>
+  arma_inline bool has_overlap(const subview<eT2>&) const { return false; }
+  
+  arma_inline bool is_aligned() const { return memory::is_aligned(Q.memptr()); }
+  };
+
+
+
+template<typename T1>
+class Proxy< CubeToMatOp<T1, op_vectorise_cube_col> >
+  {
+  public:
+  
+  typedef typename T1::elem_type                   elem_type;
+  typedef typename get_pod_type<elem_type>::result pod_type;
+  typedef Mat<elem_type>                           stored_type;
+  typedef const elem_type*                         ea_type;
+  typedef const Mat<elem_type>&                    aligned_ea_type;
+  
+  static const bool use_at      = false;
+  static const bool use_mp      = false;
+  static const bool has_subview = false;
+  static const bool fake_mat    = true;
+  
+  static const bool is_row  = false;
+  static const bool is_col  = true;
+  static const bool is_xvec = false;
+  
+  arma_aligned const unwrap_cube<T1> U;
+  arma_aligned const Mat<elem_type>  Q;
+  
+  inline explicit Proxy(const CubeToMatOp<T1, op_vectorise_cube_col>& A)
+    : U(A.m)
+    , Q(const_cast<elem_type*>(U.M.memptr()), U.M.n_elem, 1, false, true)
+    {
+    arma_extra_debug_sigprint();
+    }
+  
+  arma_inline uword get_n_rows() const { return Q.n_rows; }
+  arma_inline uword get_n_cols() const { return 1;        }
+  arma_inline uword get_n_elem() const { return Q.n_elem; }
+  
+  arma_inline elem_type operator[] (const uword i)                const { return Q[i];        }
+  arma_inline elem_type at         (const uword row, const uword) const { return Q[row];      }
+  arma_inline elem_type at_alt     (const uword i)                const { return Q.at_alt(i); }
+  
+  arma_inline         ea_type         get_ea() const { return Q.memptr(); }
+  arma_inline aligned_ea_type get_aligned_ea() const { return Q;          }
+  
+  template<typename eT2>
+  arma_inline bool is_alias(const Mat<eT2>&) const { return false; }
+  
+  template<typename eT2>
+  arma_inline bool has_overlap(const subview<eT2>&) const { return false; }
+  
+  arma_inline bool is_aligned() const { return memory::is_aligned(Q.memptr()); }
+  };
+
+
+
+template<typename T1, typename op_type>
+class Proxy< SpToDOp<T1, op_type> >
+  {
+  public:
+  
+  typedef typename T1::elem_type                   elem_type;
+  typedef typename get_pod_type<elem_type>::result pod_type;
+  typedef Mat<elem_type>                           stored_type;
+  typedef const elem_type*                         ea_type;
+  typedef const Mat<elem_type>&                    aligned_ea_type;
+  
+  static const bool use_at      = false;
+  static const bool use_mp      = false;
+  static const bool has_subview = false;
+  static const bool fake_mat    = false;
+  
+  static const bool is_row  = SpToDOp<T1, op_type>::is_row;
+  static const bool is_col  = SpToDOp<T1, op_type>::is_col;
+  static const bool is_xvec = SpToDOp<T1, op_type>::is_xvec;
+  
+  arma_aligned const Mat<elem_type> Q;
+  
+  inline explicit Proxy(const SpToDOp<T1, op_type>& A)
+    : Q(A)
+    {
+    arma_extra_debug_sigprint();
+    }
+  
+  arma_inline uword get_n_rows() const { return is_row ? 1 : Q.n_rows; }
+  arma_inline uword get_n_cols() const { return is_col ? 1 : Q.n_cols; }
+  arma_inline uword get_n_elem() const { return Q.n_elem;              }
+  
+  arma_inline elem_type operator[] (const uword i)                    const { return Q[i];           }
+  arma_inline elem_type at         (const uword row, const uword col) const { return Q.at(row, col); }
+  arma_inline elem_type at_alt     (const uword i)                    const { return Q.at_alt(i);    }
+  
+  arma_inline         ea_type         get_ea() const { return Q.memptr(); }
+  arma_inline aligned_ea_type get_aligned_ea() const { return Q;          }
+  
+  template<typename eT2>
+  arma_inline bool is_alias(const Mat<eT2>&) const { return false; }
+  
+  template<typename eT2>
+  arma_inline bool has_overlap(const subview<eT2>&) const { return false; }
+  
+  arma_inline bool is_aligned() const { return memory::is_aligned(Q.memptr()); }
+  };
+
+
+
 template<typename eT>
 class Proxy< subview<eT> >
   {
@@ -1402,7 +1554,7 @@ class Proxy< Op<T1, op_htrans> >
     Proxy_xtrans_redirect
       <
       Op<T1, op_htrans>,
-      ((is_complex<typename T1::elem_type>::value == false) && ((Op<T1, op_htrans>::is_row) || (Op<T1, op_htrans>::is_col)) )
+      ((is_cx<typename T1::elem_type>::no) && ((Op<T1, op_htrans>::is_row) || (Op<T1, op_htrans>::is_col)) )
       >::result
   {
   public:
@@ -1412,7 +1564,7 @@ class Proxy< Op<T1, op_htrans> >
   Proxy_xtrans_redirect
     <
     Op<T1, op_htrans>,
-    ((is_complex<typename T1::elem_type>::value == false) && ((Op<T1, op_htrans>::is_row) || (Op<T1, op_htrans>::is_col)) )
+    ((is_cx<typename T1::elem_type>::no) && ((Op<T1, op_htrans>::is_row) || (Op<T1, op_htrans>::is_col)) )
     >::result
   Proxy_xtrans;
   
@@ -1613,7 +1765,7 @@ class Proxy< Op<subview_row<eT>, op_htrans> >
     Proxy_subview_row_htrans_redirect
       <
       eT,
-      is_complex<eT>::value
+      is_cx<eT>::yes
       >::result
   {
   public:
@@ -1623,7 +1775,7 @@ class Proxy< Op<subview_row<eT>, op_htrans> >
   Proxy_subview_row_htrans_redirect
       <
       eT,
-      is_complex<eT>::value
+      is_cx<eT>::yes
       >::result
   Proxy_sv_row_ht;
   

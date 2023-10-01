@@ -25,7 +25,7 @@ inline
 typename
 enable_if2
   <
-  is_arma_type<T1>::value && (resolves_to_vector<T1>::value == true), 
+  is_arma_type<T1>::value && resolves_to_vector<T1>::yes,
   bool
   >::result
 any(const T1& X)
@@ -43,7 +43,7 @@ arma_inline
 typename
 enable_if2
   <
-  is_arma_type<T1>::value && (resolves_to_vector<T1>::value == false), 
+  is_arma_type<T1>::value && resolves_to_vector<T1>::no,
   const mtOp<uword, T1, op_any>
   >::result
 any(const T1& X)
@@ -69,6 +69,23 @@ any(const T1& X, const uword dim)
   arma_extra_debug_sigprint();
   
   return mtOp<uword, T1, op_any>(X, dim, 0);
+  }
+
+
+
+//! for compatibility purposes: allows compiling user code designed for earlier versions of Armadillo
+template<typename T>
+arma_warn_unused
+arma_inline
+typename
+enable_if2
+  <
+  is_supported_elem_type<T>::value,
+  bool
+  >::result
+any(const T& val)
+  {
+  return (val != T(0));
   }
 
 
