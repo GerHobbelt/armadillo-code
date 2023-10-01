@@ -144,6 +144,14 @@ class SpMat : public SpBase< eT, SpMat<eT> >
   inline SpMat& operator%=(const SpSubview<eT>& X);
   inline SpMat& operator/=(const SpSubview<eT>& X);
   
+  inline             SpMat(const spdiagview<eT>& X);
+  inline SpMat&  operator=(const spdiagview<eT>& X);
+  inline SpMat& operator+=(const spdiagview<eT>& X);
+  inline SpMat& operator-=(const spdiagview<eT>& X);
+  inline SpMat& operator*=(const spdiagview<eT>& X);
+  inline SpMat& operator%=(const spdiagview<eT>& X);
+  inline SpMat& operator/=(const spdiagview<eT>& X);
+  
   // delayed unary ops
   template<typename T1, typename spop_type> inline             SpMat(const SpOp<T1, spop_type>& X);
   template<typename T1, typename spop_type> inline SpMat&  operator=(const SpOp<T1, spop_type>& X);
@@ -357,7 +365,7 @@ class SpMat : public SpBase< eT, SpMat<eT> >
     inline iterator_base(const SpMat& in_M);
     inline iterator_base(const SpMat& in_M, const uword col, const uword pos);
     
-    inline arma_hot eT operator*() const;
+    arma_inline eT operator*() const;
     
     // don't hold location internally; call "dummy" methods to get that information
     arma_inline uword row() const { return M->row_indices[internal_pos]; }
@@ -608,8 +616,7 @@ class SpMat : public SpBase< eT, SpMat<eT> >
   arma_inline void sync_csc()   const;
   
   
-  // so that SpValProxy can call add_element() and delete_element()
-  friend class SpValProxy< SpMat<eT> >;
+  friend class SpValProxy< SpMat<eT> >;  // so that SpValProxy can call add_element() and delete_element()
   friend class SpSubview<eT>;
   friend class SpRow<eT>;
   friend class SpCol<eT>;
