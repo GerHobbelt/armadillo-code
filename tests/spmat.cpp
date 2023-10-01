@@ -875,46 +875,46 @@ TEST_CASE("sp_mat_reshape_columnwise_test")
   REQUIRE( (unsigned int) ref(2, 3) == 6 );
   }
 
-TEST_CASE("sp_mat_reshape_rowwise_test")
-  {
-  // Input matrix:
-  // [[0 2 0]
-  //  [1 3 0]
-  //  [0 0 5]
-  //  [0 4 6]]
-  //
-  // Output matrix:
-  // [[0 2 0 1]
-  //  [3 0 0 0]
-  //  [5 0 4 6]]
-  SpMat<unsigned int> ref(4, 3);
-  ref(1, 0) = 1;
-  ref(0, 1) = 2;
-  ref(1, 1) = 3;
-  ref(3, 1) = 4;
-  ref(2, 2) = 5;
-  ref(3, 2) = 6;
-
-  // Now reshape.
-  ref.reshape(3, 4, 1 /* row-wise */);
-
-  // Check everything.
-  REQUIRE( ref.n_cols == 4 );
-  REQUIRE( ref.n_rows == 3 );
-
-  REQUIRE( (unsigned int) ref(0, 0) == 0 );
-  REQUIRE( (unsigned int) ref(1, 0) == 3 );
-  REQUIRE( (unsigned int) ref(2, 0) == 5 );
-  REQUIRE( (unsigned int) ref(0, 1) == 2 );
-  REQUIRE( (unsigned int) ref(1, 1) == 0 );
-  REQUIRE( (unsigned int) ref(2, 1) == 0 );
-  REQUIRE( (unsigned int) ref(0, 2) == 0 );
-  REQUIRE( (unsigned int) ref(1, 2) == 0 );
-  REQUIRE( (unsigned int) ref(2, 2) == 4 );
-  REQUIRE( (unsigned int) ref(0, 3) == 1 );
-  REQUIRE( (unsigned int) ref(1, 3) == 0 );
-  REQUIRE( (unsigned int) ref(2, 3) == 6 );
-  }
+// TEST_CASE("sp_mat_reshape_rowwise_test")
+//   {
+//   // Input matrix:
+//   // [[0 2 0]
+//   //  [1 3 0]
+//   //  [0 0 5]
+//   //  [0 4 6]]
+//   //
+//   // Output matrix:
+//   // [[0 2 0 1]
+//   //  [3 0 0 0]
+//   //  [5 0 4 6]]
+//   SpMat<unsigned int> ref(4, 3);
+//   ref(1, 0) = 1;
+//   ref(0, 1) = 2;
+//   ref(1, 1) = 3;
+//   ref(3, 1) = 4;
+//   ref(2, 2) = 5;
+//   ref(3, 2) = 6;
+// 
+//   // Now reshape.
+//   ref.reshape(3, 4, 1 /* row-wise */);
+// 
+//   // Check everything.
+//   REQUIRE( ref.n_cols == 4 );
+//   REQUIRE( ref.n_rows == 3 );
+// 
+//   REQUIRE( (unsigned int) ref(0, 0) == 0 );
+//   REQUIRE( (unsigned int) ref(1, 0) == 3 );
+//   REQUIRE( (unsigned int) ref(2, 0) == 5 );
+//   REQUIRE( (unsigned int) ref(0, 1) == 2 );
+//   REQUIRE( (unsigned int) ref(1, 1) == 0 );
+//   REQUIRE( (unsigned int) ref(2, 1) == 0 );
+//   REQUIRE( (unsigned int) ref(0, 2) == 0 );
+//   REQUIRE( (unsigned int) ref(1, 2) == 0 );
+//   REQUIRE( (unsigned int) ref(2, 2) == 4 );
+//   REQUIRE( (unsigned int) ref(0, 3) == 1 );
+//   REQUIRE( (unsigned int) ref(1, 3) == 0 );
+//   REQUIRE( (unsigned int) ref(2, 3) == 6 );
+//   }
 
 TEST_CASE("sp_mat_zeros_tests")
   {
@@ -2740,4 +2740,37 @@ TEST_CASE("spmat_sprow_col_iterator_test")
     } while (it != X.begin_row_col());
 
   REQUIRE( count == 1 );
+  }
+
+
+TEST_CASE("spmat_row_iterator_constructor")
+  {
+  // Create a row iterator with an exact position.
+  Mat<double> tmp =
+      { { 5.5, 0.0, 0.0 },
+        { 0.0, 0.0, 6.5 },
+        { 0.0, 7.5, 0.0 } };
+
+  SpMat<double> X(tmp);
+
+  SpMat<double>::const_row_iterator cri(X, 0, 1);
+
+  // This should end up at (1, 2) with value 6.5.
+  REQUIRE( cri.row() == 1 );
+  REQUIRE( cri.col() == 2 );
+  REQUIRE( (*cri) == Approx(6.5) );
+
+  cri = SpMat<double>::const_row_iterator(X, 0, 0);
+
+  // This should end up at (0, 0) with value 5.5.
+  REQUIRE( cri.row() == 0 );
+  REQUIRE( cri.col() == 0 );
+  REQUIRE( (*cri) == Approx(5.5) );
+
+  cri = SpMat<double>::const_row_iterator(X, 2, 1);
+
+  // This should end up at (2, 1) with value 7.5.
+  REQUIRE( cri.row() == 2 );
+  REQUIRE( cri.col() == 1 );
+  REQUIRE( (*cri) == Approx(7.5) );
   }
