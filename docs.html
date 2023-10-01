@@ -149,7 +149,7 @@ hr.greyline
 <!--  -->
 <a class="noprint" style="display:scroll; position:fixed; bottom:5px; right:5px;" href="#top"><font size=-1>[top]</font></a>
 
-<big><b>API Documentation for Armadillo 8.290</b></big>
+<big><b>API Documentation for Armadillo 8.300</b></big>
 <br>
 <br>
 <br>
@@ -5901,7 +5901,7 @@ A.raw_print(cout, "A:");
 <br><b>.save(</b> stream<b>,</b> file_type <b>)</b>
 <br>
 <br><b>.save( hdf5_name(</b>filename<b>,</b> dataset<b>) )</b>
-<br><b>.save( hdf5_name(</b>filename<b>,</b> dataset<b>),</b> file_type <b>)</b>
+<br><b>.save( hdf5_name(</b>filename<b>,</b> dataset<b>,</b> settings<b>) )</b>
 </td>
 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 <td>
@@ -5912,7 +5912,7 @@ A.raw_print(cout, "A:");
 <br><b>.load(</b> stream<b>,</b> file_type <b>)</b>
 <br>
 <br><b>.load( hdf5_name(</b>filename<b>,</b> dataset<b>) )</b>
-<br><b>.load( hdf5_name(</b>filename<b>,</b> dataset<b>),</b> file_type <b>)</b>
+<br><b>.load( hdf5_name(</b>filename<b>,</b> dataset<b>,</b> settings<b>) )</b>
 </td>
 </tr>
 </tbody>
@@ -5921,33 +5921,11 @@ A.raw_print(cout, "A:");
 <ul>
 <li>Member functions of <i>Mat</i>, <i>Col</i>, <i>Row</i> and <i>Cube</i></li>
 <br>
-<li>
-Store/retrieve data in a file or stream
-<ul>
-<li><b>caveat:</b> the stream must be opened in binary mode</li>
-</ul>
-</li>
+<li>Store/retrieve data in a file or stream (<b>caveat:</b> the stream must be opened in binary mode)</li>
 <br>
-<li>
-The default <i>file_type</i> for <i>.save()</i> is <i>arma_binary</i> (see below) 
-</li>
+<li>On success, <i>.save()</i> and <i>.load()</i> return a <i>bool</i> set to <i>true</i></li>
 <br>
-<li>
-The default <i>file_type</i> for <i>.load()</i> is <i>auto_detect</i> (see below) 
-</li>
-<br>
-<li>On success, <i>.save()</i> and <i>.load()</i> will return a <i>bool</i> set to <i>true</i></li>
-<br>
-<li><i>.save()</i> will return a <i>bool</i> set to <i>false</i> if the saving process fails</li>
-<br>
-<li>
-<i>.load()</i> will return a <i>bool</i> set to <i>false</i> if the loading process fails;
-additionally, the object will be reset so it has no elements
-</li>
-<br>
-<li>
-Forms of <i>.save()</i> and <i>.load()</i> with the <i>hdf5_name()</i> argument allow explicit specification of the dataset name within a HDF5 file
-</li>
+<li>On failure, <i>.save()</i> and <i>.load()</i> return a <i>bool</i> set to <i>false</i>; additionally, <i>.load()</i> resets the object so that it has no elements</li>
 <br>
 <li>
 <i>file_type</i> can be one of the following:
@@ -5961,9 +5939,42 @@ Forms of <i>.save()</i> and <i>.load()</i> with the <i>hdf5_name()</i> argument 
                         <td style="vertical-align: top;"><br>
                         </td>
                         <td style="vertical-align: top;">
-Used by <i>.load()</i> only:
-try to automatically detect the file type as one of the formats described below.
-This is the default operation.
+Used only by <i>.load()</i> only: attempt to automatically detect the file type as one of the formats described below;
+<br>[&nbsp;default operation for <i>.load()</i>&nbsp;]<br><br>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style="vertical-align: top;"><b>arma_binary</b><br></td>
+                        <td style="vertical-align: top;"><br>
+                        </td>
+                        <td style="vertical-align: top;">
+Numerical data stored in machine dependent binary format, with a simple header to speed up loading.
+The header indicates the type and size of matrix/cube.
+<br>[&nbsp;default operation for <i>.save()</i>&nbsp;]
+<br>
+<br>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style="vertical-align: top;"><b>arma_ascii</b></td>
+                        <td style="vertical-align: top;"><br>
+                        </td>
+                        <td style="vertical-align: top;">
+Numerical data stored in human readable text format, with a simple header to speed up loading.
+The header indicates the type and size of matrix/cube.
+<br>
+<br>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style="vertical-align: top;"><b>raw_binary</b></td>
+                        <td style="vertical-align: top;"><br>
+                        </td>
+                        <td style="vertical-align: top;">
+Numerical data stored in machine dependent raw binary format, without a header.
+Matrices are loaded to have one column,
+while cubes are loaded to have one slice with one column.
+The <a href="#reshape_member">.reshape()</a> function can be used to alter the size of the loaded matrix/cube without losing data.
 <br>
 <br>
                         </td>
@@ -5984,89 +5995,12 @@ Complex numbers are stored in standard C++ notation, which is a tuple surrounded
                         </td>
                       </tr>
                       <tr>
-                        <td style="vertical-align: top;"><b>raw_binary</b></td>
-                        <td style="vertical-align: top;"><br>
-                        </td>
-                        <td style="vertical-align: top;">
-Numerical data stored in machine dependent raw binary format, without a header.
-Matrices are loaded to have one column,
-while cubes are loaded to have one slice with one column.
-The <a href="#reshape_member">.reshape()</a> function can be used to alter the size of the loaded matrix/cube without losing data.
-<br>
-<br>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td style="vertical-align: top;"><b>arma_ascii</b></td>
-                        <td style="vertical-align: top;"><br>
-                        </td>
-                        <td style="vertical-align: top;">
-Numerical data stored in human readable text format, with a simple header to speed up loading.
-The header indicates the type of matrix as well as the number of rows and columns.
-For cubes, the header additionally specifies the number of slices.
-<br>
-<br>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td style="vertical-align: top;"><b>arma_binary</b></td>
-                        <td style="vertical-align: top;"><br>
-                        </td>
-                        <td style="vertical-align: top;">
-Numerical data stored in machine dependent binary format, with a simple header to speed up loading.
-The header indicates the type of matrix as well as the number of rows and columns.
-For cubes, the header additionally specifies the number of slices.
-<i>arma_binary</i> is the default <i>file_type</i> for <i>.save()</i>
-<br>
-<br>
-                        </td>
-                      </tr>
-                      <tr>
                         <td style="vertical-align: top;"><b>csv_ascii</b></td>
                         <td style="vertical-align: top;"><br>
                         </td>
                         <td style="vertical-align: top;">
 Numerical data stored in comma separated value (CSV) text format, without a header.
 Applicable to <i>Mat</i> only.
-<br>
-<br>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td style="vertical-align: top;"><b>hdf5_binary</b></td>
-                        <td style="vertical-align: top;"><br>
-                        </td>
-                        <td style="vertical-align: top;">
-Numerical data stored in portable <a href="https://en.wikipedia.org/wiki/Hierarchical_Data_Format">HDF5</a> binary format.
-<ul>
-<li>
-For saving, the default dataset name within the HDF5 file is "dataset"
-unless explicitly specified via the <i>hdf5_name()</i> argument;
-an HDF5 dataset name (eg. <i>"dataset"</i>)
-or full path may be specified (eg. <i>"/group_name/dataset"</i>)
-</li>
-<li>
-For loading, if the dataset has not been specified via the <i>hdf5_name()</i> argument,
-the order of operations is:
-(1) try loading a dataset named "dataset",
-(2) try loading a dataset named "value",
-(3) try loading the first available dataset
-</li>
-<li>
-<b>Caveat</b>:
-support for HDF5 must be enabled within Armadillo's <a href="#config_hpp">configuration</a>;
-the <i>hdf5.h</i> header file must be available on your system and you will need to link with the hdf5 library (eg. <code><i>-lhdf5</i></code>)
-</li>
-</ul>
-<br>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td style="vertical-align: top;"><b>hdf5_binary_trans</b></td>
-                        <td style="vertical-align: top;"><br>
-                        </td>
-                        <td style="vertical-align: top;">
-As per <i>hdf5_binary</i>, but save/load the data with columns transposed to rows (and vice versa)
 <br>
 <br>
                         </td>
@@ -6104,6 +6038,30 @@ Image data stored in Portable Pixel Map (PPM) format.
 Applicable to <i>Cube</i> only.
 Saving <i>int</i>, <i>float</i> or <i>double</i> matrices is a lossy operation, as each element is copied and converted to an 8 bit representation.
 As such the cube/field should have values in the [0,255] interval, otherwise the resulting image may not display correctly.
+<br>
+<br>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style="vertical-align: top;"><b>hdf5_binary</b></td>
+                        <td style="vertical-align: top;"><br>
+                        </td>
+                        <td style="vertical-align: top;">
+Numerical data stored in portable <a href="https://en.wikipedia.org/wiki/Hierarchical_Data_Format">HDF5</a> binary format.
+<ul>
+<li>
+for saving, the default dataset name within the HDF5 file is "dataset"
+</li>
+<li>
+for loading, the order of operations is:
+(1) try loading a dataset named "dataset",
+(2) try loading a dataset named "value",
+(3) try loading the first available dataset
+</li>
+<li>
+to explicitly control the dataset name, specify it via the <b>hdf5_name()</b> argument (more details below)
+</li>
+</ul>
                         </td>
                       </tr>
                     </tbody>
@@ -6111,6 +6069,36 @@ As such the cube/field should have values in the [0,255] interval, otherwise the
 </ul>
 </li>
 <br>
+<li>
+By providing either <b>hdf5_name(</b>filename<b>,</b> dataset<b>)</b> or <b>hdf5_name(</b>filename<b>,</b> dataset<b>,</b> settings<b>)</b>, the <i>file_type</i> type is assumed to be <i>hdf5_binary</i>
+<br>
+<br>
+<ul>
+<li>
+the <i>dataset</i> argument specifies an HDF5 dataset name (eg. "my_dataset") that can include a full path (eg. "/group_name/my_dataset");
+if a blank dataset name is specified (ie. ""), it's assumed to be "dataset"
+<br>
+<br>
+</li>
+<li>the <i>settings</i> argument is optional; it is one of the following, or a combination thereof:
+<br>
+<br>
+<table>
+<tr style="vertical-align: top;"><td><code>hdf5_opts::trans  </code></td><td>&nbsp;&nbsp;&nbsp;</td><td>save/load the data with columns transposed to rows (and vice versa)</td></tr>
+<tr style="vertical-align: top;"><td><code>hdf5_opts::append </code></td><td>&nbsp;&nbsp;&nbsp;</td><td>instead of overwriting the file, append the specified dataset to the file;<br>the specified dataset must not already exist in the file</td></tr>
+<tr style="vertical-align: top;"><td><code>hdf5_opts::replace</code></td><td>&nbsp;&nbsp;&nbsp;</td><td>instead of overwriting the file, replace the specified dataset in the file<br><b>caveat:</b> HDF5 v1.8 may not automaticaly reclaim deleted space; use <a href="https://support.hdfgroup.org/HDF5/Tutor/cmdtooledit.html">h5repack</a> to clean HDF5 files</td></tr>
+</table>
+<br>
+the above settings can be combined using the <code>+</code> operator; for example: <code>hdf5_opts::trans&nbsp;+&nbsp;hdf5_opts::append</code>
+</li>
+</ul>
+</li>
+<br>
+<li>
+<b>Caveat</b>:
+for saving/loading HDF5 files, support for HDF5 must be enabled within Armadillo's <a href="#config_hpp">configuration</a>;
+the <i>hdf5.h</i> header file must be available on your system and you will need to link with the HDF5 library (eg. <code><i>-lhdf5</i></code>)
+</li>
 <br>
 <li>
 Examples:
@@ -6185,21 +6173,11 @@ if(ok == false)
 </table>
 <br>
 <ul>
-<li>
-Store/retrieve data in a file or stream
-<ul>
-<li><b>caveat:</b> the stream must be opened in binary mode</li>
-</ul>
-</li>
+<li>Store/retrieve data in a file or stream (<b>caveat:</b> the stream must be opened in binary mode)</li>
 <br>
-<li>On success, <i>.save()</i> and <i>.load()</i> will return a <i>bool</i> set to <i>true</i></li>
+<li>On success, <i>.save()</i> and <i>.load()</i> return a <i>bool</i> set to <i>true</i></li>
 <br>
-<li><i>.save()</i> will return a <i>bool</i> set to <i>false</i> if the saving process fails</li>
-<br>
-<li>
-<i>.load()</i> will return a <i>bool</i> set to <i>false</i> if the loading process fails;
-additionally, the field will be reset so it has no elements
-</li>
+<li>On failure, <i>.save()</i> and <i>.load()</i> return a <i>bool</i> set to <i>false</i>; additionally, <i>.load()</i> resets the object so that it has no elements</li>
 <br>
 <li>
 Fields with objects of type <i>std::string</i> are saved and loaded as raw text files.
@@ -6223,8 +6201,8 @@ Other than storing string fields as text files, the following file formats are s
                         <td style="vertical-align: top;">
 <br>
 <li>
-<i>.load()</i>: try to automatically detect the field format type as one of the formats described below;
-this is the default operation.
+<i>.load()</i>: attempt to automatically detect the field format type as one of the formats described below;
+this is the default operation
 </li>
 <br>
                         </td>
@@ -6236,12 +6214,12 @@ this is the default operation.
                         <td style="vertical-align: top;">
 <br>
 <li>
-Objects are stored in machine dependent binary format
+objects are stored in machine dependent binary format
 <li>
-Default type for fields of type <i>Mat</i>, <i>Col</i>, <i>Row</i> or <i>Cube</i>
+default type for fields of type <i>Mat</i>, <i>Col</i>, <i>Row</i> or <i>Cube</i>
 </li>
 <li>
-Only applicable to fields of type <i>Mat</i>, <i>Col</i>, <i>Row</i> or <i>Cube</i>
+only applicable to fields of type <i>Mat</i>, <i>Col</i>, <i>Row</i> or <i>Cube</i>
 </li>
 <br>
                         </td>
@@ -6253,10 +6231,10 @@ Only applicable to fields of type <i>Mat</i>, <i>Col</i>, <i>Row</i> or <i>Cube<
                         <td style="vertical-align: top;">
 <br>
 <li>
-Image data stored in Portable Pixmap Map (PPM) format.
+image data stored in Portable Pixmap Map (PPM) format
 </li>
 <li>
-Only applicable to fields of type <i>Mat</i>, <i>Col</i> or <i>Row</i>
+only applicable to fields of type <i>Mat</i>, <i>Col</i> or <i>Row</i>
 </li>
 <li>
 <i>.load()</i>: loads the specified image and stores the red, green and blue components as three separate matrices;
@@ -16790,6 +16768,7 @@ List of additions and changes for each version:
 <li>faster handling of band matrices by <a href="#chol">chol()</a></li>
 <li>faster <a href="#randg">randg()</a> when using OpenMP</li>
 <li>added <a href="#normpdf">normpdf()</a></li>
+<li>expanded <a href="#save_load_mat">.save()</a> to allow appending new datasets to existing HDF5 files
 </ul>
 </li>
 <br>
@@ -16933,7 +16912,6 @@ see the <a href="http://arma.sourceforge.net/faq.html#license">Questions page</a
 <li>added <a href="#regspace">regspace()</a> for generating vectors with regularly spaced elements</li>
 <li>added <a href="#logspace">logspace()</a> for generating vectors with logarithmically spaced elements</li>
 <li>added <a href="#approx_equal">approx_equal()</a> for determining approximate equality</li>
-<li>expanded <a href="#save_load_mat">.save()</a> and <a href="#save_load_mat">.load()</a> with <i>hdf5_binary_trans</i> file type, to save/load data with columns transposed to rows 
 </ul>
 </li>
 <br>
