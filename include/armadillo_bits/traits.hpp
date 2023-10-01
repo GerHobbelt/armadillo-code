@@ -1232,10 +1232,20 @@ struct force_different_type<T1,T1>
 
 
 template<typename T1>
-struct resolves_to_vector_default { static const bool value = false;                    };
+struct resolves_to_vector_default
+  {
+  static const bool value = false;
+  static const bool yes   = false;
+  static const bool no    = true;
+  };
 
 template<typename T1>
-struct resolves_to_vector_test    { static const bool value = T1::is_col || T1::is_row; };
+struct resolves_to_vector_test
+  {
+  static const bool value =  (T1::is_col || T1::is_row || T1::is_xvec);
+  static const bool yes   =  (T1::is_col || T1::is_row || T1::is_xvec);
+  static const bool no    = ((T1::is_col || T1::is_row || T1::is_xvec) == false);
+  };
 
 
 template<typename T1, bool condition>
@@ -1345,8 +1355,13 @@ template<>                 struct is_op_mixed_elem<op_rel_noteq>     { static co
 
 
 
-template<typename spop_type> struct is_spop_elem                    { static const bool value = false; };
-template<>                   struct is_spop_elem<spop_scalar_times> { static const bool value = true;  };
+template<typename spop_type> struct is_spop_elem                       { static const bool value = false; };
+template<>                   struct is_spop_elem<spop_scalar_times>    { static const bool value = true;  };
+template<>                   struct is_spop_elem<spop_cx_scalar_times> { static const bool value = true;  };
+template<>                   struct is_spop_elem<spop_real>            { static const bool value = true;  };
+template<>                   struct is_spop_elem<spop_imag>            { static const bool value = true;  };
+template<>                   struct is_spop_elem<spop_cx_abs>          { static const bool value = true;  };
+template<>                   struct is_spop_elem<spop_cx_arg>          { static const bool value = true;  };
 
 
 template<typename spglue_type> struct is_spglue_elem                { static const bool value = false; };

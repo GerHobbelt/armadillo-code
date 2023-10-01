@@ -71,6 +71,17 @@ class mtOp : public Base<out_eT, mtOp<out_eT, T1, op_type> >
       )
     );
   
+  static const bool is_xvec = \
+    (
+       (T1::is_xvec && is_op_mixed_elem<op_type>::value)
+    || (T1::is_xvec && is_same_type<op_type, op_clamp>::value)
+    || is_same_type<op_type, op_var>::value
+    || is_same_type<op_type, op_stddev>::value
+    || is_same_type<op_type, op_all>::value
+    || is_same_type<op_type, op_any>::value
+    || is_same_type<op_type, op_index_max>::value
+    || is_same_type<op_type, op_index_min>::value
+    );
   
   inline explicit mtOp(const T1& in_m);
   inline          mtOp(const T1& in_m, const in_eT in_aux);

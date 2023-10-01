@@ -55,14 +55,18 @@ class Op : public Base<typename T1::elem_type, Op<T1, op_type> >
     // operations which result in a row vector if the input is a row vector
     T1::is_row &&
       (
-         is_same_type<op_type, op_sort_default>::yes
+         is_same_type<op_type, op_sort>::yes
+      || is_same_type<op_type, op_sort_default>::yes
+      || is_same_type<op_type, op_shift>::yes
       || is_same_type<op_type, op_shift_default>::yes
+      || is_same_type<op_type, op_shuffle>::yes
       || is_same_type<op_type, op_shuffle_default>::yes
       || is_same_type<op_type, op_cumsum_default>::yes
       || is_same_type<op_type, op_cumprod_default>::yes
       || is_same_type<op_type, op_flipud>::yes
       || is_same_type<op_type, op_fliplr>::yes
-      || is_same_type<op_type, op_reverse_vec>::yes
+      || is_same_type<op_type, op_reverse>::yes
+      || is_same_type<op_type, op_reverse_default>::yes
       || is_same_type<op_type, op_unique>::yes
       || is_same_type<op_type, op_diff_default>::yes
       || is_same_type<op_type, op_normalise_vec>::yes
@@ -93,14 +97,18 @@ class Op : public Base<typename T1::elem_type, Op<T1, op_type> >
     // operations which result in a column vector if the input is a column vector
     T1::is_col &&
       (
-         is_same_type<op_type, op_sort_default>::yes
+         is_same_type<op_type, op_sort>::yes
+      || is_same_type<op_type, op_sort_default>::yes
+      || is_same_type<op_type, op_shift>::yes
       || is_same_type<op_type, op_shift_default>::yes
+      || is_same_type<op_type, op_shuffle>::yes
       || is_same_type<op_type, op_shuffle_default>::yes
       || is_same_type<op_type, op_cumsum_default>::yes
       || is_same_type<op_type, op_cumprod_default>::yes
       || is_same_type<op_type, op_flipud>::yes
       || is_same_type<op_type, op_fliplr>::yes
-      || is_same_type<op_type, op_reverse_vec>::yes
+      || is_same_type<op_type, op_reverse>::yes
+      || is_same_type<op_type, op_reverse_default>::yes
       || is_same_type<op_type, op_unique>::yes
       || is_same_type<op_type, op_diff_default>::yes
       || is_same_type<op_type, op_normalise_vec>::yes
@@ -118,6 +126,44 @@ class Op : public Base<typename T1::elem_type, Op<T1, op_type> >
       )
     )
     ;
+  
+  static const bool is_xvec = \
+    (
+    // operations which always result in an xvec
+       is_same_type<op_type, op_unique>::yes
+    || is_same_type<op_type, op_cumsum>::yes
+    || is_same_type<op_type, op_cumprod>::yes
+    || is_same_type<op_type, op_sum>::yes
+    || is_same_type<op_type, op_mean>::yes
+    || is_same_type<op_type, op_median>::yes
+    || is_same_type<op_type, op_vectorise_all>::yes
+    || is_same_type<op_type, op_min>::yes
+    || is_same_type<op_type, op_max>::yes
+    || is_same_type<op_type, op_prod>::yes
+    || is_same_type<op_type, op_range>::yes
+    )
+    ||
+    (
+    // operations which result in an xvec if the input is an xvec
+    T1::is_xvec &&
+      (
+         is_same_type<op_type, op_strans>::yes
+      || is_same_type<op_type, op_htrans>::yes
+      || is_same_type<op_type, op_reverse>::yes
+      || is_same_type<op_type, op_reverse_default>::yes
+      || is_same_type<op_type, op_fliplr>::yes
+      || is_same_type<op_type, op_flipud>::yes
+      || is_same_type<op_type, op_sort>::yes
+      || is_same_type<op_type, op_sort_default>::yes
+      || is_same_type<op_type, op_shift>::yes
+      || is_same_type<op_type, op_shift_default>::yes
+      || is_same_type<op_type, op_shuffle>::yes
+      || is_same_type<op_type, op_shuffle_default>::yes
+      || is_same_type<op_type, op_diff>::yes
+      || is_same_type<op_type, op_diff_default>::yes
+      || is_same_type<op_type, op_normalise_vec>::yes
+      )
+    );
   };
 
 

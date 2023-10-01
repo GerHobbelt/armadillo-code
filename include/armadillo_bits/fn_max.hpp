@@ -20,58 +20,11 @@
 
 template<typename T1>
 arma_warn_unused
-arma_inline
-const Op<T1, op_max>
-max
-  (
-  const T1& X,
-  const uword dim = 0,
-  const typename enable_if< is_arma_type<T1>::value       == true  >::result* junk1 = 0,
-  const typename enable_if< resolves_to_vector<T1>::value == false >::result* junk2 = 0
-  )
-  {
-  arma_extra_debug_sigprint();
-  arma_ignore(junk1);
-  arma_ignore(junk2);
-  
-  return Op<T1, op_max>(X, dim, 0);
-  }
-
-
-
-template<typename T1>
-arma_warn_unused
-arma_inline
-const Op<T1, op_max>
-max
-  (
-  const T1& X,
-  const uword dim,
-  const typename enable_if<resolves_to_vector<T1>::value == true>::result* junk = 0
-  )
-  {
-  arma_extra_debug_sigprint();
-  arma_ignore(junk);
-  
-  return Op<T1, op_max>(X, dim, 0);
-  }
-
-
-
-template<typename T1>
-arma_warn_unused
 inline
-typename T1::elem_type
-max
-  (
-  const T1& X,
-  const arma_empty_class junk1 = arma_empty_class(),
-  const typename enable_if<resolves_to_vector<T1>::value == true>::result* junk2 = 0
-  )
+typename enable_if2< is_arma_type<T1>::value && resolves_to_vector<T1>::yes, typename T1::elem_type >::result
+max(const T1& X)
   {
   arma_extra_debug_sigprint();
-  arma_ignore(junk1);
-  arma_ignore(junk2);
   
   return op_max::max(X);
   }
@@ -80,14 +33,13 @@ max
 
 template<typename T1>
 arma_warn_unused
-inline
-typename T1::elem_type
-max(const Op<T1, op_max>& in)
+arma_inline
+typename enable_if2< is_arma_type<T1>::value && resolves_to_vector<T1>::no, const Op<T1, op_max> >::result
+max(const T1& X)
   {
   arma_extra_debug_sigprint();
-  arma_extra_debug_print("max(): two consecutive max() calls detected");
   
-  return op_max::max(in.m);
+  return Op<T1, op_max>(X, 0, 0);
   }
 
 
@@ -95,12 +47,12 @@ max(const Op<T1, op_max>& in)
 template<typename T1>
 arma_warn_unused
 arma_inline
-const Op< Op<T1, op_max>, op_max>
-max(const Op<T1, op_max>& in, const uword dim)
+typename enable_if2< is_arma_type<T1>::value, const Op<T1, op_max> >::result
+max(const T1& X, const uword dim)
   {
   arma_extra_debug_sigprint();
   
-  return Op< Op<T1, op_max>, op_max>(in, dim, 0);
+  return Op<T1, op_max>(X, dim, 0);
   }
 
 
@@ -179,7 +131,7 @@ inline
 typename
 enable_if2
   <
-  (is_arma_sparse_type<T1>::value == true) && (resolves_to_sparse_vector<T1>::value == true),
+  is_arma_sparse_type<T1>::value && resolves_to_sparse_vector<T1>::yes,
   typename T1::elem_type
   >::result
 max(const T1& x)
@@ -197,41 +149,32 @@ inline
 typename
 enable_if2
   <
-  (is_arma_sparse_type<T1>::value == true) && (resolves_to_sparse_vector<T1>::value == false),
+  is_arma_sparse_type<T1>::value && resolves_to_sparse_vector<T1>::no,
   const SpOp<T1, spop_max>
   >::result
-max(const T1& X, const uword dim = 0)
+max(const T1& X)
+  {
+  arma_extra_debug_sigprint();
+  
+  return SpOp<T1, spop_max>(X, 0, 0);
+  }
+
+
+
+template<typename T1>
+arma_warn_unused
+inline
+typename
+enable_if2
+  <
+  is_arma_sparse_type<T1>::value,
+  const SpOp<T1, spop_max>
+  >::result
+max(const T1& X, const uword dim)
   {
   arma_extra_debug_sigprint();
   
   return SpOp<T1, spop_max>(X, dim, 0);
-  }
-
-
-
-template<typename T1>
-arma_warn_unused
-inline
-typename T1::elem_type
-max(const SpOp<T1, spop_max>& X)
-  {
-  arma_extra_debug_sigprint();
-  arma_extra_debug_print("max(): two consecutive max() calls detected");
-  
-  return spop_max::vector_max(X.m);
-  }
-
-
-
-template<typename T1>
-arma_warn_unused
-inline
-const SpOp< SpOp<T1, spop_max>, spop_max>
-max(const SpOp<T1, spop_max>& in, const uword dim)
-  {
-  arma_extra_debug_sigprint();
-  
-  return SpOp< SpOp<T1, spop_max>, spop_max>(in, dim, 0);
   }
 
 

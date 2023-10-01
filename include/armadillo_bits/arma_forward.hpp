@@ -75,21 +75,31 @@ class diskio;
 
 class op_min;
 class op_max;
+class op_index_min;
+class op_index_max;
 
 class op_strans;
 class op_htrans;
 class op_htrans2;
 class op_inv;
 class op_sum;
+class op_mean;
+class op_var;
+class op_stddev;
+class op_median;
 class op_abs;
 class op_arg;
 class op_diagmat;
 class op_trimat;
 class op_diagvec;
 class op_vectorise_col;
+class op_vectorise_all;
 class op_normalise_vec;
+class op_normalise_mat;
 class op_clamp;
+class op_cumsum;
 class op_cumsum_default;
+class op_cumprod;
 class op_cumprod_default;
 class op_shift;
 class op_shift_default;
@@ -102,8 +112,8 @@ class op_find_simple;
 class op_find_unique;
 class op_flipud;
 class op_fliplr;
-class op_reverse_vec;
-class op_reverse_mat;
+class op_reverse;
+class op_reverse_default;
 class op_real;
 class op_imag;
 class op_nonzeros;
@@ -111,10 +121,16 @@ class op_sort_index;
 class op_stable_sort_index;
 class op_unique;
 class op_unique_index;
+class op_diff;
 class op_diff_default;
 class op_hist;
 class op_chi2rnd;
 class op_roots;
+class op_prod;
+class op_range;
+class op_all;
+class op_any;
+
 
 class eop_conj;
 
@@ -219,9 +235,19 @@ template<typename T1> class ProxyCube;
 
 template<typename T1> class diagmat_proxy;
 
+class spop_sum;
+class spop_mean;
+class spop_var;
 class spop_strans;
 class spop_htrans;
 class spop_scalar_times;
+class spop_cx_scalar_times;
+class spop_real;
+class spop_imag;
+class spop_cx_abs;
+class spop_cx_arg;
+class spop_max;
+class spop_min;
 
 class spglue_plus;
 class spglue_minus;

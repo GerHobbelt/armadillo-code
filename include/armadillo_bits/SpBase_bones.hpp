@@ -79,6 +79,18 @@ struct SpBase
   
   inline arma_warn_unused uword index_min() const;
   inline arma_warn_unused uword index_max() const;
+  
+  inline arma_warn_unused bool is_finite() const;
+  
+  // TODO: is_empty()
+  // TODO: is_vec()
+  // TODO: is_rowvec()
+  // TODO: is_colvec()
+  // TODO: is_square()
+  // TODO: is_symmetric()
+  // TODO: is_hermitian()
+  // TODO: has_inf()
+  // TODO: has_nan()
   };
 
 

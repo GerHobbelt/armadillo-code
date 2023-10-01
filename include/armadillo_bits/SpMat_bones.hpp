@@ -27,8 +27,9 @@ class SpMat : public SpBase< eT, SpMat<eT> >
   typedef eT                                elem_type;  //!< the type of elements stored in the matrix
   typedef typename get_pod_type<eT>::result  pod_type;  //!< if eT is std::complex<T>, pod_type is T; otherwise pod_type is eT
   
-  static const bool is_row = false;
-  static const bool is_col = false;
+  static const bool is_row  = false;
+  static const bool is_col  = false;
+  static const bool is_xvec = false;
   
   const uword n_rows;    //!< number of rows             (read-only)
   const uword n_cols;    //!< number of columns          (read-only)
@@ -628,12 +629,18 @@ class SpMat : public SpBase< eT, SpMat<eT> >
   
   private:
   
+  inline arma_hot arma_warn_unused const eT* find_value_csc(const uword in_row, const uword in_col) const;
+  
   inline arma_hot arma_warn_unused eT get_value(const uword i                         ) const;
   inline arma_hot arma_warn_unused eT get_value(const uword in_row, const uword in_col) const;
   
   inline arma_hot arma_warn_unused eT get_value_csc(const uword i                         ) const;
   inline arma_hot arma_warn_unused eT get_value_csc(const uword in_row, const uword in_col) const;
   
+  inline arma_hot arma_warn_unused bool try_add_value_csc(const uword in_row, const uword in_col, const eT in_val);
+  inline arma_hot arma_warn_unused bool try_sub_value_csc(const uword in_row, const uword in_col, const eT in_val);
+  inline arma_hot arma_warn_unused bool try_mul_value_csc(const uword in_row, const uword in_col, const eT in_val);
+  inline arma_hot arma_warn_unused bool try_div_value_csc(const uword in_row, const uword in_col, const eT in_val);
   
   inline arma_warn_unused eT&  insert_element(const uword in_row, const uword in_col, const eT in_val = eT(0));
   inline                  void delete_element(const uword in_row, const uword in_col);

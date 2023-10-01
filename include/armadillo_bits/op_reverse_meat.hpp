@@ -22,7 +22,7 @@
 template<typename T1>
 inline
 void
-op_reverse_vec::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_reverse_vec>& in)
+op_reverse_default::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_reverse_default>& in)
   {
   arma_extra_debug_sigprint();
   
@@ -32,26 +32,24 @@ op_reverse_vec::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_reverse_v
     {
     const unwrap<typename Proxy<T1>::stored_type> U(P.Q);
     
-    if((T1::is_col) || (P.get_n_cols() == 1))
-      {
-      op_flipud::apply_direct(out, U.M);
-      }
-    else
     if((T1::is_row) || (P.get_n_rows() == 1))
       {
       op_fliplr::apply_direct(out, U.M);
       }
+    else
+      {
+      op_flipud::apply_direct(out, U.M);
+      }
     }
   else
     {
-    if((T1::is_col) || (P.get_n_cols() == 1))
-      {
-      op_flipud::apply_proxy_noalias(out, P);
-      }
-    else
     if((T1::is_row) || (P.get_n_rows() == 1))
       {
       op_fliplr::apply_proxy_noalias(out, P);
+      }
+    else
+      {
+      op_flipud::apply_proxy_noalias(out, P);
       }
     }
   }
@@ -61,7 +59,7 @@ op_reverse_vec::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_reverse_v
 template<typename T1>
 inline
 void
-op_reverse_mat::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_reverse_mat>& in)
+op_reverse::apply(Mat<typename T1::elem_type>& out, const Op<T1,op_reverse>& in)
   {
   arma_extra_debug_sigprint();
   
