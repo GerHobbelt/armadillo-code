@@ -463,7 +463,7 @@ Octave/Matlab with C++ code that uses Armadillo matrices.
 
 ### 16: Related Software Using Armadillo
 
-* ensmallen: C++ library for non-linear numerical optimisation  
+* ensmallen: C++ library for non-linear numerical optimisation (L-BFGS, SGD, CMA-ES, etc)  
   https://ensmallen.org/
 
 * Bandicoot: C++ library for accelerated linear algebra on GPUs  

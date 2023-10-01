@@ -285,8 +285,8 @@ Conrad Sanderson and Ryan Curtin.
 <tr><td><a href="#subfield">subfield&nbsp;views</a></td><td>&nbsp;</td><td>read/write access to contiguous subfields</td></tr>
 <tr><td><small><small>&nbsp;</small></small></td><td><small><small>&nbsp;</small></small></td><td><small><small>&nbsp;</small></small></td></tr>
 <tr><td><a href="#diag">.diag</a></td><td>&nbsp;</td><td>read/write access to matrix diagonals</td></tr>
-<tr><td><a href="#each_colrow">.each_col&nbsp;/&nbsp;.each_row</a></td><td>&nbsp;</td><td>repeated operations on each column or row of matrix (aka "broadcasting")</td></tr>
-<tr><td><a href="#each_slice">.each_slice</a></td><td>&nbsp;</td><td>repeated operations on each slice of cube (aka "broadcasting")</td></tr>
+<tr><td><a href="#each_colrow">.each_col&nbsp;/&nbsp;.each_row</a></td><td>&nbsp;</td><td>vector operations applied to each column/row of matrix (aka "broadcasting")</td></tr>
+<tr><td><a href="#each_slice">.each_slice</a></td><td>&nbsp;</td><td>matrix operations applied to each slice of cube (aka "broadcasting")</td></tr>
 <tr><td><small><small>&nbsp;</small></small></td><td><small><small>&nbsp;</small></small></td><td><small><small>&nbsp;</small></small></td></tr>
 <tr><td><a href="#set_imag">.set_imag&nbsp;/&nbsp;.set_real</a></td><td>&nbsp;</td><td>set imaginary/real part</td></tr>
 <tr><td><a href="#insert">.insert_rows&thinsp;/&thinsp;cols&thinsp;/&thinsp;slices</a></td><td>&nbsp;</td><td>insert vector/matrix/cube at specified row/column/slice</td></tr>
@@ -2374,7 +2374,7 @@ See also:
 <li><a href="#find">find()</a></li>
 <li><a href="#replace">.replace()</a></li>
 <li><a href="#transform">.transform()</a></li>
-<li><a href="#each_colrow">.each_col() &amp; .each_row()</a> &nbsp;&nbsp; (vector operations repeated on each column or row)</li>
+<li><a href="#each_colrow">.each_col() &amp; .each_row()</a> &nbsp;&nbsp; (vector operations applied to each column or row)</li>
 <li><a href="#misc_fns">miscellaneous element-wise functions</a> &nbsp; (exp, log, sqrt, square, round, ...)</li>
 <li><a href="https://en.wikipedia.org/wiki/Floating-point_arithmetic">floating point arithmetic in Wikipedia</a></li>
 <li><a href="https://mathworld.wolfram.com/Floating-PointRepresentation.html">floating point representation in MathWorld</a></li>
@@ -3937,7 +3937,7 @@ X.col(2).head(3) += 123;
 See also:
 <ul>
 <li><a href="#diag">diagonal views</a></li>
-<li><a href="#each_colrow">.each_col() &amp; .each_row()</a> &nbsp;&nbsp; (vector operations repeated on each column or row)</li>
+<li><a href="#each_colrow">.each_col() &amp; .each_row()</a> &nbsp;&nbsp; (vector operations applied to each column or row)</li>
 <li><a href="#colptr">.colptr()</a></li>
 <li><a href="#in_range">.in_range()</a></li>
 <li><a href="#find">find()</a></li>
@@ -4163,7 +4163,7 @@ See also:
 <div class="pagebreak"></div><div class="noprint"><hr class="greyline"><br></div>
 <a name="diag"></a>
 <b>.diag()</b>
-<br><b>.diag( k )</b>
+<br><b>.diag(</b> k <b>)</b>
 <ul>
 <li>
 Member function of <i>Mat</i> and <i>SpMat</i>
@@ -4173,11 +4173,16 @@ Member function of <i>Mat</i> and <i>SpMat</i>
 Read/write access to a diagonal in a matrix
 </li>
 <br>
-<li>The argument <i>k</i> is optional; by default the main diagonal is accessed (<i>k&thinsp;=&thinsp;0</i>)</li>
+<li>The argument <i>k</i> is optional; by default <i>k&thinsp;=&thinsp;0</i></li>
 <br>
-<li>For <i>k&thinsp;&gt;&thinsp;0</i>, the <i>k</i>-th super-diagonal is accessed (top-right corner)</li>
-<br>
-<li>For <i>k&thinsp;&lt;&thinsp;0</i>, the <i>k</i>-th sub-diagonal is accessed (bottom-left corner)</li>
+<li>
+The argument <i>k</i> specifies the diagonal to use:
+<ul>
+<li><i>k&thinsp;=&thinsp;0</i> indicates the main diagonal (default setting)</li>
+<li><i>k&thinsp;&lt;&thinsp;0</i> indicates the <i>k</i>-th sub-diagonal (below main diagonal, towards bottom-left corner)</li>
+<li><i>k&thinsp;&gt;&thinsp;0</i> indicates the <i>k</i>-th super-diagonal (above main diagonal, towards top-right corner)</li>
+</ul>
+</li>
 <br>
 <li>The diagonal is interpreted as a column vector within expressions</li>
 <br>
@@ -4223,19 +4228,11 @@ See also:
 
 <div class="pagebreak"></div><div class="noprint"><hr class="greyline"><br></div>
 <a name="each_colrow"></a>
-<b>.each_col()</b>
-<br>
-<b>.each_row()</b>
-<br>
-<br>
-<b>.each_col(</b>&nbsp;vector_of_indices&nbsp;<b>)</b>
-<br>
-<b>.each_row(</b>&nbsp;vector_of_indices&nbsp;<b>)</b>
-<br>
-<br>
-<b>.each_col(</b> lambda_function <b>)</b>&nbsp;&nbsp;&nbsp;
-<br>
-<b>.each_row(</b> lambda_function <b>)</b>&nbsp;&nbsp;&nbsp;
+<table>
+<tr><td><b>.each_col()</b></td>                                    <td>&nbsp;&nbsp;&nbsp;</td><td><b>.each_row()</b></td>                                    <td>&nbsp;&nbsp;&nbsp;</td><td>(form&nbsp;1)</td></tr>
+<tr><td><b>.each_col(</b>&nbsp;vector_of_indices&nbsp;<b>)</b></td><td>&nbsp;&nbsp;&nbsp;</td><td><b>.each_row(</b>&nbsp;vector_of_indices&nbsp;<b>)</b></td><td>&nbsp;&nbsp;&nbsp;</td><td>(form&nbsp;2)</td></tr>
+<tr><td><b>.each_col(</b> lambda_function <b>)</b></td>            <td>&nbsp;&nbsp;&nbsp;</td><td><b>.each_row(</b> lambda_function <b>)</b></td>            <td>&nbsp;&nbsp;&nbsp;</td><td>(form&nbsp;3)</td></tr>
+</table>
 <ul>
 <li>
 Member functions of <i>Mat</i>
@@ -4246,11 +4243,11 @@ Apply a vector operation to each column or row of a matrix
 </li>
 <br>
 <li>
-Similar to "broadcasting" in Matlab/Octave
+Similar to "broadcasting" in Matlab&thinsp;/&thinsp;Octave
 </li>
 <br>
 <li>
-Supported operations for <i>.each_col()&nbsp;/&nbsp;.each_row()</i> and <i>.each_col(vector_of_indices)&nbsp;/&nbsp;.each_row(vector_of_indices)</i> forms:
+Supported operations for forms 1 and 2:
 <br>
 <br>
 <ul>
@@ -4264,16 +4261,20 @@ Supported operations for <i>.each_col()&nbsp;/&nbsp;.each_row()</i> and <i>.each
 </ul>
 </li>
 <br>
-<li>The argument <i>vector_of_indices</i> is optional; by default all columns or rows are used</li>
-<br>
 <li>
-If the argument <i>vector_of_indices</i> is specified, it must evaluate to a vector of type <i><a href="#Col">uvec</a></i>;
-the vector contains a list of indices of the columns or rows to be used
+For form 2:
+<ul>
+<li>the argument <i>vector_of_indices</i> contains a list of indices of the columns/rows to be used; it must evaluate to a vector of type <i><a href="#Col">uvec</a></i></li>
+<li>arithmetic operations as per form 1 are supported</li>
+</ul>
 </li>
 <br>
 <li>
-If the <i>lambda_function</i> is specified,
-the function must accept a reference to a <a href="#Col">Col</a> or <a href="#Row">Row</a> object with the same element type as the underlying matrix
+For form 3:
+<ul>
+<li>apply the given <i>lambda_function</i> to each slice</li>
+<li>the function must accept a reference to a <a href="#Col">Col</a> or <a href="#Row">Row</a> object with the same element type as the underlying matrix</li>
+</ul>
 </li>
 <br>
 <li>
@@ -4339,7 +4340,7 @@ Apply a matrix operation to each slice of a cube, with each slice treated as a m
 </li>
 <br>
 <li>
-Similar to "broadcasting" in Matlab/Octave
+Similar to "broadcasting" in Matlab&thinsp;/&thinsp;Octave
 </li>
 <br>
 <li>
@@ -4369,7 +4370,8 @@ For form 2:
 <li>
 For form 3:
 <ul>
-<li>apply the given <i>lambda_function</i> to each slice; the function must accept a reference to a <a href="#Mat">Mat</a> object with the same element type as the underlying cube</li>
+<li>apply the given <i>lambda_function</i> to each slice</li>
+<li>the function must accept a reference to a <a href="#Mat">Mat</a> object with the same element type as the underlying cube</li>
 </ul>
 </li>
 <br>
@@ -4377,7 +4379,7 @@ For form 3:
 For form 4:
 <ul>
 <li>apply the given <i>lambda_function</i> to each slice, as per form 3</li>
-<li>the argument <i>use_mp</i> is a bool which enables the use of OpenMP for multi-threaded execution of <i>lambda_function</i> on multiple slices at the same time</li>
+<li>the argument <i>use_mp</i> is a bool to enable the use of OpenMP for multi-threaded execution of <i>lambda_function</i> on multiple slices at the same time</li>
 <li>the order of processing the slices is not deterministic (eg. slice&nbsp;2 can be processed before slice&nbsp;1)</li>
 <li><i>lambda_function</i> must be thread-safe, ie. it must not write to variables outside of its scope
 </li>
@@ -8777,11 +8779,13 @@ See also:
 <ul>
 <li>Return the condition number of matrix <i>A</i> (the ratio of the largest singular value to the smallest)</li>
 <br>
-<li>The ideal condition number is close to 1; large condition numbers suggest that matrix <i>A</i> is nearly singular</li>
+<li>Matrix <i>A</i> is well-conditioned when the condition number is close to 1</li>
+<br>
+<li>Matrix <i>A</i> is ill-conditioned (poorly conditioned) when the condition number is large</li>
 <br>
 <li>The computation is based on singular value decomposition</li>
 <br>
-<li><b>Caveat:</b> <a href="#rcond">rcond()</a> is considerably faster</li>
+<li><b>Caveat:</b> calculating the approximate reciprocal condition number via <a href="#rcond">rcond()</a> is considerably more efficient</li>
 <br>
 <li>
 Examples:
@@ -9067,27 +9071,29 @@ Generate a diagonal matrix from vector <i>V</i> or matrix <i>X</i>
 </li>
 <br>
 <li>
-Given vector <i>V</i>, generate a square matrix with the <i>k</i>-th diagonal containing a copy of the vector; all other elements are set to zero
+Given vector <i>V</i>:
+<ul>
+<li>generate a square matrix with the <i>k</i>-th diagonal containing a copy of the vector; all other elements are set to zero</li>
+</ul>
 </li>
 <br>
 <li>
-Given matrix <i>X</i>, generate a matrix with the <i>k</i>-th diagonal containing a copy of the <i>k</i>-th diagonal of <i>X</i>; all other elements are set to zero
+Given matrix <i>X</i>:
+<ul>
+<li>generate a matrix with the <i>k</i>-th diagonal containing a copy of the <i>k</i>-th diagonal of <i>X</i>; all other elements are set to zero</li>
+<li>if <i>X</i> is an expression, the evaluation of the expression aims to calculate only the diagonal elements</li>
+</ul>
 </li>
 <br>
-<li>
-The argument <i>k</i> is optional; by default the main diagonal is used (<i>k&thinsp;=&thinsp;0</i>)
-</li>
+<li>The argument <i>k</i> is optional; by default <i>k&thinsp;=&thinsp;0</i></li>
 <br>
 <li>
-For <i>k&thinsp;&gt;&thinsp;0</i>, the <i>k</i>-th super-diagonal is used (above main diagonal, towards top-right corner)
-</li>
-<br>
-<li>
-For <i>k&thinsp;&lt;&thinsp;0</i>, the <i>k</i>-th sub-diagonal is used (below main diagonal, towards bottom-left corner)
-</li>
-<br>
-<li>
-If <i>X</i> is an expression, the evaluation of the expression aims to calculate only the diagonal elements
+The argument <i>k</i> specifies the diagonal to use:
+<ul>
+<li><i>k&thinsp;=&thinsp;0</i> indicates the main diagonal (default setting)</li>
+<li><i>k&thinsp;&lt;&thinsp;0</i> indicates the <i>k</i>-th sub-diagonal (below main diagonal, towards bottom-left corner)</li>
+<li><i>k&thinsp;&gt;&thinsp;0</i> indicates the <i>k</i>-th super-diagonal (above main diagonal, towards top-right corner)</li>
+</ul>
 </li>
 <br>
 <li>
@@ -9132,13 +9138,16 @@ See also:
 Extract the <i>k</i>-th diagonal from matrix <i>X</i>
 </li>
 <br>
+<li>The argument <i>k</i> is optional; by default <i>k&thinsp;=&thinsp;0</i></li>
+<br>
 <li>
-The argument <i>k</i> is optional; by default the main diagonal is extracted (<i>k&thinsp;=&thinsp;0</i>)
+The argument <i>k</i> specifies the diagonal to extract:
+<ul>
+<li><i>k&thinsp;=&thinsp;0</i> indicates the main diagonal (default setting)</li>
+<li><i>k&thinsp;&lt;&thinsp;0</i> indicates the <i>k</i>-th sub-diagonal (below main diagonal, towards bottom-left corner)</li>
+<li><i>k&thinsp;&gt;&thinsp;0</i> indicates the <i>k</i>-th super-diagonal (above main diagonal, towards top-right corner)</li>
+</ul>
 </li>
-<br>
-<li>For <i>k&thinsp;&gt;&thinsp;0</i>, the <i>k</i>-th super-diagonal is extracted (top-right corner)</li>
-<br>
-<li>For <i>k&thinsp;&lt;&thinsp;0</i>, the <i>k</i>-th sub-diagonal is extracted (bottom-left corner)</li>
 <br>
 <li>
 The extracted diagonal is interpreted as a column vector
@@ -9198,9 +9207,9 @@ The number of columns in given matrix <i>V</i> must match the number of elements
 <li>
 Each element in vector <i>D</i> specifies diagonal <i>k</i>, where:
 <ul>
-<li><i>k&thinsp;=&thinsp;0</i> indicates the main diagonal
-<li><i>k&thinsp;&lt;&thinsp;0</i> indicates the <i>k</i>-th sub-diagonal (below main diagonal, towards bottom-left corner)
-<li><i>k&thinsp;&gt;&thinsp;0</i> indicates the <i>k</i>-th super-diagonal (above main diagonal, towards top-right corner)
+<li><i>k&thinsp;=&thinsp;0</i> indicates the main diagonal</li>
+<li><i>k&thinsp;&lt;&thinsp;0</i> indicates the <i>k</i>-th sub-diagonal (below main diagonal, towards bottom-left corner)</li>
+<li><i>k&thinsp;&gt;&thinsp;0</i> indicates the <i>k</i>-th super-diagonal (above main diagonal, towards top-right corner)</li>
 </ul>
 </li>
 <br>
@@ -16129,6 +16138,10 @@ Generate a random matrix sampled from the Wishart distribution with parameters <
 </li>
 <br>
 <li>
+<b>Caveat:</b> for the inverse (inverted) Wishart distribution, use <a href="#iwishrnd">iwishrnd()</a>
+</li>
+<br>
+<li>
 Examples:
 <ul>
 <pre>
@@ -16169,7 +16182,7 @@ See also:
 <b>iwishrnd( W, T, df, Dinv )</b>
 <ul>
 <li>
-Generate a random matrix sampled from the inverse Wishart distribution with parameters <i>T</i> and <i>df</i>:
+Generate a random matrix sampled from the <b>inverse</b> Wishart distribution with parameters <i>T</i> and <i>df</i>:
 <ul>
 <li><i>T</i> is a symmetric positive definite matrix</li>
 <li><i>df</i> is a scalar specifying the degrees of freedom; it can be a non-integer value</li>
@@ -16186,6 +16199,10 @@ Generate a random matrix sampled from the inverse Wishart distribution with para
 <li><i>W = iwishrnd(T, df)</i> and <i>W = iwishrnd(T, df, Dinv)</i> reset <i>W</i> and throw a <i>std::runtime_error</i> exception</li>
 <li><i>iwishrnd(W, T, df)</i> and <i>iwishrnd(W, T, df, Dinv)</i> reset <i>W</i> and return a bool set to <i>false</i> (exception is not thrown)</li>
 </ul>
+</li>
+<br>
+<li>
+<b>Caveat:</b> for the plain (non-inverse) Wishart distribution, use <a href="#wishrnd">wishrnd()</a>
 </li>
 <br>
 <li>
@@ -20739,7 +20756,7 @@ see the <a href="http://arma.sourceforge.net/faq.html#license">Questions page</a
 <a name="version_5600"></a>
 <li>Version 5.600:
 <ul>
-<li>added <a href="#each_slice">.each_slice()</a> for repeated matrix operations on each slice of a cube</li>
+<li>added <a href="#each_slice">.each_slice()</a> for matrix operations applied to each slice of a cube</li>
 <li>expanded <a href="#each_colrow">.each_col()</a> and <a href="#each_colrow">.each_row()</a> to handle out-of-place operations</li>
 </ul>
 </li>
@@ -21028,7 +21045,7 @@ eg. <i>mat&nbsp;X(4,&nbsp;5,&nbsp;fill::zeros)</i></li>
 <li>Version 3.4:
 <ul>
 <li>added economical QR decomposition: <a href="#qr_econ">qr_econ()</a></li>
-<li>added <a href="#each_colrow">.each_col() &amp; .each_row()</a> for vector operations repeated on each column or row of a matrix</li>
+<li>added <a href="#each_colrow">.each_col() &amp; .each_row()</a> for vector operations applied to each column or row of a matrix</li>
 <li>added preliminary support for <a href="#SpMat">sparse matrices</a></li>
 <li>added ability to <a href="#save_load_mat">save and load</a> matrices in HDF5 format</li>
 <li>faster <a href="#svd">singular value decomposition</a> via optional use of divide-and-conquer algorithm</li>
