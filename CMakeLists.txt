@@ -16,7 +16,7 @@
 
 
 
-cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
+cmake_minimum_required(VERSION 2.8.12 FATAL_ERROR)
 
 project(armadillo CXX C)
 include(CheckIncludeFileCXX)
@@ -357,6 +357,7 @@ message(STATUS "CMAKE_REQUIRED_INCLUDES   = ${CMAKE_REQUIRED_INCLUDES}"  )
 
 add_library( armadillo ${PROJECT_SOURCE_DIR}/src/wrapper.cpp )
 target_link_libraries( armadillo ${ARMA_LIBS} )
+target_include_directories(armadillo INTERFACE $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:include>)
 set_target_properties(armadillo PROPERTIES VERSION ${ARMA_VERSION_MAJOR}.${ARMA_VERSION_MINOR_ALT}.${ARMA_VERSION_PATCH} SOVERSION ${ARMA_VERSION_MAJOR})
 
 
