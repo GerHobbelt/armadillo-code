@@ -235,8 +235,6 @@
     #define ARMA_HAVE_ISNAN
   #endif
   
-  #undef ARMA_GCC_VERSION
-  
 #endif
 
 
@@ -454,31 +452,53 @@
 #endif
 
 
+#if ( defined(ARMA_USE_OPENMP) && (!defined(_OPENMP) || (defined(_OPENMP) && (_OPENMP < 200805))) )
+  // we require OpenMP 3.0 to enable parallelisation of for loops with unsigned integers;
+  // earlier versions of OpenMP can only handle signed integers
+  #undef  ARMA_USE_OPENMP
+  #undef  ARMA_PRINT_OPENMP_WARNING
+  #define ARMA_PRINT_OPENMP_WARNING
+#endif
+
+
+#if ( (defined(_OPENMP) && (_OPENMP < 200805)) && !defined(ARMA_DONT_USE_OPENMP) )
+  // if the compiler has an ancient version of OpenMP and use of OpenMP hasn't been explicitly disabled,
+  // print a warning to ensure there is no confusion about OpenMP support
+  #undef  ARMA_USE_OPENMP
+  #undef  ARMA_PRINT_OPENMP_WARNING
+  #define ARMA_PRINT_OPENMP_WARNING
+#endif
+
+
+#if defined(ARMA_PRINT_OPENMP_WARNING) && !defined(ARMA_DONT_PRINT_OPENMP_WARNING)
+  #pragma message ("WARNING: use of OpenMP disabled; this compiler doesn't support OpenMP 3.0+")
+#endif
+
+
+#if defined(ARMA_USE_OPENMP) && !defined(ARMA_USE_CXX11)
+  #if (defined(ARMA_GCC_VERSION) && (ARMA_GCC_VERSION >= 40803)) || (defined(__clang__) && !defined(ARMA_FAKE_CLANG))
+    #undef  ARMA_PRINT_OPENMP_CXX11_WARNING
+    #define ARMA_PRINT_OPENMP_CXX11_WARNING
+  #endif
+#endif
+
+
+#if defined(ARMA_PRINT_OPENMP_CXX11_WARNING) && !defined(ARMA_DONT_PRINT_OPENMP_WARNING)
+  #pragma message ("WARNING: support for OpenMP requires C++11/C++14; add -std=c++11 or -std=c++14 to compiler flags")
+#endif
+
+
+
+// cleanup
+
+#undef ARMA_FAKE_GCC
+#undef ARMA_FAKE_CLANG
+#undef ARMA_GCC_VERSION
 #undef ARMA_PRINT_CXX98_WARNING
 #undef ARMA_PRINT_CXX11_WARNING
+#undef ARMA_PRINT_OPENMP_WARNING
+#undef ARMA_PRINT_OPENMP_CXX11_WARNING
 
-
-#if defined(ARMA_USE_OPENMP)
-  
-  #if !defined(_OPENMP)
-    #undef ARMA_USE_OPENMP
-    #if !defined(ARMA_DONT_PRINT_OPENMP_WARNING)
-      #pragma message ("WARNING: use of OpenMP has been forcefully enabled,")
-      #pragma message ("WARNING: but no support for OpenMP has been detected")
-    #endif
-  #endif
-  
-  #if (defined(_OPENMP) && (_OPENMP < 200805))
-    // we require OpenMP 3.0 to enable parallelisation of for loops with unsigned integers;
-    // earlier versions of OpenMP can only handle signed integers
-    #undef ARMA_USE_OPENMP
-    #if !defined(ARMA_DONT_PRINT_OPENMP_WARNING)
-      #pragma message ("WARNING: use of OpenMP has been forcefully enabled,")
-      #pragma message ("WARNING: but this compiler doesn't support OpenMP 3.0")
-    #endif
-  #endif
-  
-#endif
 
 
 #if defined(log2)

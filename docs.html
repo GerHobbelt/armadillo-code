@@ -149,7 +149,7 @@ hr.greyline
 <!--  -->
 <a class="noprint" style="display:scroll; position:fixed; bottom:5px; right:5px;" href="#top"><font size=-1>[top]</font></a>
 
-<big><b>API Documentation for Armadillo 7.900</b></big>
+<big><b>API Documentation for Armadillo 7.960</b></big>
 <br>
 <br>
 <br>
@@ -173,7 +173,7 @@ First time users: please see the short <a href="#example_prog">example program</
 </li>
 <br>
 <li>
-If you discover any bugs or regressions, please <a href="http://arma.sourceforge.net/support.html">report them</a>
+If you discover any bugs or regressions, please <a href="http://arma.sourceforge.net/faq.html">report them</a>
 </li>
 <br>
 <li>
@@ -491,7 +491,7 @@ Conrad Sanderson and Ryan Curtin.
 <tr style="background-color: #F5F5F5;"><td><a href="#running_stat">running_stat</a></td><td>&nbsp;</td><td>running statistics of one dimensional process/signal</td></tr>
 <tr style="background-color: #F5F5F5;"><td><a href="#running_stat_vec">running_stat_vec</a></td><td>&nbsp;</td><td>running statistics of multi-dimensional process/signal</td></tr>
 <tr><td><a href="#kmeans">kmeans</a></td><td>&nbsp;</td><td>cluster data into disjoint sets</td></tr>
-<tr><td><a href="#gmm_diag">gmm_diag</a></td><td>&nbsp;</td><td>model data as a Gaussian Mixture Model (GMM)</td></tr>
+<tr><td><a href="#gmm_diag">gmm_diag/gmm_full</a></td><td>&nbsp;</td><td>model and evaluate data using Gaussian Mixture Models (GMMs)</td></tr>
 </tbody>
 </table>
 </ul>
@@ -3858,11 +3858,12 @@ See also:
 
 <div class="pagebreak"></div><div class="noprint"><hr class="greyline"><br></div>
 <a name="each_slice"></a>
-<b>.each_slice()</b>
-<br>
-<b>.each_slice(</b>&nbsp;vector_of_indices&nbsp;<b>)</b>
-<br>
-<b>.each_slice(</b>&nbsp;lambda_function&nbsp;<b>)</b>&nbsp;&nbsp;&nbsp;<i>(C++11 only)</i>
+<table>
+<tr><td><b>.each_slice()</b></td><td>&nbsp;&nbsp;&nbsp;</td><td>(form 1)</td><td>&nbsp;</td></tr>
+<tr><td><b>.each_slice(</b>&nbsp;vector_of_indices&nbsp;<b>)</b></td><td>&nbsp;&nbsp;&nbsp;</td><td>(form 2)</td><td>&nbsp;</td></tr>
+<tr><td><b>.each_slice(</b>&nbsp;lambda_function&nbsp;<b>)</b></td><td>&nbsp;&nbsp;&nbsp;</td><td>(form 3)</td><td>&nbsp;&nbsp;&nbsp;<i>(C++11 only)</i></td></tr>
+<tr><td><b>.each_slice(</b>&nbsp;lambda_function, use_mp&nbsp;<b>)</b></td><td>&nbsp;&nbsp;&nbsp;</td><td>(form 4)</td><td>&nbsp;&nbsp;&nbsp;<i>(C++11 only)</i></td></tr>
+</table>
 <ul>
 <li>
 Member function of <i>Cube</i>
@@ -3873,7 +3874,7 @@ Repeat a matrix operation on each slice of a cube, with each slice treated as a 
 </li>
 <br>
 <li>
-Supported operations for the <i>.each_slice()</i> form:
+Supported operations for form 1:
 <br>
 <br>
 <ul>
@@ -3889,19 +3890,29 @@ Supported operations for the <i>.each_slice()</i> form:
 </li>
 <br>
 <li>
-The <i>.each_slice(vector_of_indices)</i> form also supports the above operations, except for <code><b>*</b></code> and <code><b>*=</b></code> (ie. matrix multiplication)
-</li>
-<br>
-<li>The argument <i>vector_of_indices</i> is optional; by default all slices are used</li>
-<br>
-<li>
-If the argument <i>vector_of_indices</i> is specified, it must evaluate to a vector of type <i><a href="#Col">uvec</a></i>;
-the vector contains a list of indices of the slices to be used
+For form 2:
+<ul>
+<li>the argument <i>vector_of_indices</i> contains a list of indices of the slices to be used; it must evaluate to a vector of type <i><a href="#Col">uvec</a></i></li>
+<li>arithemtic operations as per form 1 are supported, except for <code><b>*</b></code> and <code><b>*=</b></code> (ie. matrix multiplication)</li>
+</ul>
 </li>
 <br>
 <li>
-If the <i>lambda_function</i> is specified,
-the function must accept a reference to a <a href="#Mat">Mat</a> object with the same element type as the underlying cube
+For form 3:
+<ul>
+<li>apply the given <i>lambda_function</i> to each slice; the function must accept a reference to a <a href="#Mat">Mat</a> object with the same element type as the underlying cube</li>
+</ul>
+</li>
+<br>
+<li>
+For form 4:
+<ul>
+<li>apply the given <i>lambda_function</i> to each slice, as per form 3</li>
+<li>the argument <i>use_mp</i> is a bool which enables the use of OpenMP for multi-threaded execution of <i>lambda_function</i> on multiple slices at the same time</li>
+<li>the order of processing the slices is not deterministic (eg. slice&nbsp;2 can be processed before slice&nbsp;1)</li>
+<li><i>lambda_function</i> must be thread-safe, ie. it must not write to variables outside of its scope
+</li>
+</ul>
 </li>
 <br>
 <li>
@@ -3938,6 +3949,7 @@ See also:
 <li><a href="#subcube">subcube views</a></li>
 <li><a href="#for_each">.for_each()</a></li>
 <li><a href="#each_colrow">.each_col() &amp; .each_row()</a> &nbsp;</li>
+<li><a href="http://www.cprogramming.com/c++11/c++11-lambda-closures.html">lambda function</a> at cprogramming.com</li>
 </ul>
 </li>
 <br>
@@ -4438,7 +4450,8 @@ Iterators for dense matrices and vectors traverse over all elements
 </li>
 <br>
 <li>
-Iterators for sparse matrices traverse over non-zero elements
+Iterators for sparse matrices traverse over non-zero elements;
+<br><b>caveat:</b> writing a zero value into a sparse matrix through an iterator will invalidate all current iterators associated with the sparse matrix
 </li>
 <br>
 <li>
@@ -5131,7 +5144,8 @@ Explicitly forces the evaluation of a delayed expression and outputs a matrix
 </li>
 <br>
 <li>
-This function should be used sparingly and only in cases where it is absolutely necessary; indiscriminate use can cause slow downs
+This function should be used sparingly and only in cases where it is absolutely necessary;
+indiscriminate use can cause performance degradations
 </li>
 <br>
 <li>
@@ -7525,11 +7539,11 @@ The argument <i>k</i> is optional; by default the main diagonal is used (<i>k=0<
 </li>
 <br>
 <li>
-For <i>k &gt; 0</i>, the <i>k</i>-th super-diagonal is used (top-right corner)
+For <i>k &gt; 0</i>, the <i>k</i>-th super-diagonal is used (above main diagonal, towards top-right corner)
 </li>
 <br>
 <li>
-For <i>k &lt; 0</i>, the <i>k</i>-th sub-diagonal is used (bottom-left corner)
+For <i>k &lt; 0</i>, the <i>k</i>-th sub-diagonal is used (below main diagonal, towards bottom-left corner)
 </li>
 <br>
 <li>
@@ -7882,6 +7896,7 @@ See also:
 <li><a href="#nonzeros">nonzeros()</a></li>
 <li><a href="#unique">unique()</a></li>
 <li><a href="#sort_index">sort_index()</a></li>
+<li><a href="#ind2sub">ind2sub()</a></li>
 <li><a href="#index_min_and_index_max_member">.index_min() &amp; .index_max()</a></li>
 <li><a href="#submat">submatrix views</a></li>
 <li><a href="#subcube">subcube views</a></li>
@@ -8766,6 +8781,7 @@ See also:
 <ul>
 <li><a href="#find">find()</a>
 <li><a href="#unique">unique()</a></li>
+<li><a href="#vectorise">vectorise()</a>
 </ul>
 </li>
 <br>
@@ -9795,7 +9811,10 @@ mat Z = trapz(X,Y);
 <div class="pagebreak"></div><div class="noprint"><hr class="greyline"><br></div>
 <a name="trimat"></a>
 <b>trimatu( A )</b>
+<br><b>trimatu( A, k )</b>
+<br>
 <br><b>trimatl( A )</b>
+<br><b>trimatl( A, k )</b>
 <ul>
 <li>
 Create a new matrix by copying either the upper or lower triangular part from square matrix <i>A</i>, and setting the remaining elements to zero
@@ -9803,6 +9822,22 @@ Create a new matrix by copying either the upper or lower triangular part from sq
 <li><i>trimatu()</i> copies the upper triangular part</li>
 <li><i>trimatl()</i> copies the lower triangular part</li>
 </ul>
+</li>
+<br>
+<li>
+The argument <i>k</i> specifies the diagonal which inclusively delineates the boundary of the triangular part
+<ul>
+<li>
+for <i>k &gt; 0</i>, the <i>k</i>-th super-diagonal is used (above main diagonal, towards top-right corner)
+</li>
+<li>
+for <i>k &lt; 0</i>, the <i>k</i>-th sub-diagonal is used (below main diagonal, towards bottom-left corner)
+</li>
+</ul>
+</li>
+<br>
+<li>
+The argument <i>k</i> is optional; by default the main diagonal is used (<i>k=0</i>)
 </li>
 <br>
 <li>
@@ -9815,8 +9850,11 @@ Examples:
 <pre>
 mat A = randu&lt;mat&gt;(5,5);
 
-mat U = trimatu(A);
-mat L = trimatl(A);
+mat U  = trimatu(A);
+mat L  = trimatl(A);
+
+mat UU = trimatu(A,  1);  // omit the main diagonal
+mat LL = trimatl(A, -1);  // omit the main diagonal
 </pre>
 </ul>
 </li>
@@ -9825,6 +9863,7 @@ mat L = trimatl(A);
 <ul>
 <li><a href="#symmat">symmatu() / symmatl()</a></li>
 <li><a href="#diagmat">diagmat()</a></li>
+<li><a href="#nonzeros">nonzeros()</a></li>
 <li><a href="http://mathworld.wolfram.com/TriangularMatrix.html">Triangular matrix in MathWorld</a></li>
 <li><a href="http://en.wikipedia.org/wiki/Triangular_matrix">Triangular matrix in Wikipedia</a></li>
 </ul>
@@ -9909,10 +9948,11 @@ vec v = vectorise(X);
 <li>
 See also:
 <ul>
+<li><a href="#nonzeros">nonzeros()</a></li>
 <li><a href="#reshape">reshape()</a></li>
 <li><a href="#resize">resize()</a></li>
-<li><a href="#as_scalar">as_scalar()</a></li>
 <li><a href="#diagvec">diagvec()</a></li>
+<li><a href="#as_scalar">as_scalar()</a></li>
 </ul>
 </li>
 <br>
@@ -11419,7 +11459,7 @@ See also:
 <table>
 <tbody>
 <tr><td><code>"lm"</code></td><td>&nbsp;=&nbsp;</td><td>obtain eigenvalues with largest magnitude (default operation)</td></tr>
-<tr><td><code>"sm"</code></td><td>&nbsp;=&nbsp;</td><td>obtain eigenvalues with smallest magnitude</td></tr>
+<tr><td><code>"sm"</code></td><td>&nbsp;=&nbsp;</td><td>obtain eigenvalues with smallest magnitude (see caveat below)</td></tr>
 <tr><td><code>"la"</code></td><td>&nbsp;=&nbsp;</td><td>obtain eigenvalues with largest algebraic value</td></tr>
 <tr><td><code>"sa"</code></td><td>&nbsp;=&nbsp;</td><td>obtain eigenvalues with smallest algebraic value</td></tr>
 </tbody>
@@ -11443,7 +11483,15 @@ The argument <i>tol</i> is optional; it specifies the tolerance for convergence
 </ul>
 </li>
 <br>
-<li><b>Caveat:</b> there is currently no check whether <i>X</i> is symmetric</li>
+<li><b>Caveats:</b>
+<ul>
+<li>there is currently no check whether <i>X</i> is symmetric</li>
+<li>
+it's more difficult to compute the smallest eigenvalues than the largest eigenvalues;
+<br>if the decomposition fails, try increasing <i>k</i> (number of eigenvalues) and/or the tolerance
+</li>
+</ul>
+</li>
 <br>
 <li>
 Examples:
@@ -11501,7 +11549,7 @@ Obtain a limited number of eigenvalues and eigenvectors of <b>sparse</b> general
 <table>
 <tbody>
 <tr><td><code>"lm"</code></td><td>&nbsp;=&nbsp;</td><td>obtain eigenvalues with largest magnitude (default operation)</td></tr>
-<tr><td><code>"sm"</code></td><td>&nbsp;=&nbsp;</td><td>obtain eigenvalues with smallest magnitude</td></tr>
+<tr><td><code>"sm"</code></td><td>&nbsp;=&nbsp;</td><td>obtain eigenvalues with smallest magnitude (see caveat below)</td></tr>
 <tr><td><code>"lr"</code></td><td>&nbsp;=&nbsp;</td><td>obtain eigenvalues with largest real part</td></tr>
 <tr><td><code>"sr"</code></td><td>&nbsp;=&nbsp;</td><td>obtain eigenvalues with smallest real part</td></tr>
 <tr><td><code>"li"</code></td><td>&nbsp;=&nbsp;</td><td>obtain eigenvalues with largest imaginary part</td></tr>
@@ -11529,6 +11577,10 @@ If <i>X</i> is not square sized, a <i>std::logic_error</i> exception is thrown
 <li><i>eigs_gen(eigval,X,k)</i> resets <i>eigval</i> and returns a bool set to <i>false</i> (exception is not thrown)</li>
 <li><i>eigs_gen(eigval,eigvec,X,k)</i> resets <i>eigval</i> &amp; <i>eigvec</i> and returns a bool set to <i>false</i> (exception is not thrown)</li>
 </ul>
+</li>
+<br>
+<li><b>Caveat:</b> it's more difficult to compute the smallest eigenvalues than the largest eigenvalues;
+<br>if the decomposition fails, try increasing <i>k</i> (number of eigenvalues) and/or the tolerance
 </li>
 <br>
 <li>
@@ -13044,7 +13096,8 @@ The <i>data</i> parameter is the input data matrix, with each sample stored as a
 </li>
 <br>
 <li>
-The <i>k</i> parameter indicates the number of centroids
+The <i>k</i> parameter indicates the number of centroids;
+the number of samples in the <i>data</i> matrix should be much larger than <i>k</i>
 </li>
 <br>
 <li>
@@ -13059,11 +13112,14 @@ The <i>seed_mode</i> parameter specifies how the initial centroids are seeded; i
   <tr><td><code>random_spread</code></td><td>&nbsp;&nbsp;&nbsp;</td><td>use a maximally spread subset of data vectors (random start)</td></tr>
   </tbody>
 </table>
+<br>
+<b>caveat:</b> seeding the initial centroids with <code>static_spread</code> and <code>random_spread</code>
+can be much more time consuming than with <code>static_subset</code> and <code>random_subset</code>
 </ul>
 </li>
 <br>
 <li>
-The <i>n_iter</i> parameter specifies the number of clustering iterations; about 10 is typically sufficient
+The <i>n_iter</i> parameter specifies the number of clustering iterations; this is data dependent, but about 10 is typically sufficient
 </li>
 <br>
 <li>
@@ -13075,26 +13131,9 @@ If the clustering fails, the <i>means</i> matrix is reset and a bool set to <i>f
 </li>
 <br>
 <li>
-The clustering will run faster on multi-core machines when OpenMP is enabled in your compiler (eg. <i>-fopenmp</i> in GCC)
+The clustering will run faster on multi-core machines when OpenMP is enabled in your compiler (eg. <i>-fopenmp</i> in GCC and clang)
 </li>
 <br>
-<li>
-<b>Caveats</b>:
-<ul>
-<br>
-<li>
-the number of data vectors (number of columns in the <i>data</i> matrix) should be much larger than <i>k</i>&nbsp; (number of centroids)
-</li>
-<br>
-<li>
-seeding the initial centroids with <code>static_spread</code> and <code>random_spread</code>
-can be much more time consuming than with <code>static_subset</code> and <code>random_subset</code>
-</li>
-</ul>
-</li>
-<br>
-
-
 <li>
 Examples:
 <ul>
@@ -13133,22 +13172,16 @@ means.print("means:");
 
 <div class="pagebreak"></div><div class="noprint"><hr class="greyline"><br></div>
 <a name="gmm_diag"></a>
+<a name="gmm_full"></a>
 <b>gmm_diag</b>
+<br><b>gmm_full</b>
 <ul>
 <li>
-Class for modelling data as a Gaussian Mixture Model (GMM), under the assumption of diagonal covariance matrices
+Classes for multivariate data modelling and evaluation via Gaussian Mixture Models (GMMs)
 </li>
 <br>
 <li>
-Can also be used for clustering and vector quantisation (VQ)
-</li>
-<br>
-<li>
-Provides associated parameter estimation algorithms: k-means clustering and Expectation-Maximisation (EM)
-</li>
-<br>
-<li>
-The k-means and EM algorithms are parallelised (multi-threaded) when compiling with OpenMP enabled (eg. the <i>-fopenmp</i> option in gcc)
+Can also be used for probabilistic clustering and vector quantisation (VQ)
 </li>
 <br>
 <li>
@@ -13173,16 +13206,35 @@ where:
 <li>N(<small>&nbsp;</small><i>x</i><small>&nbsp;</small>|<small>&nbsp;</small><i>m<sub>g</sub></i><small>&nbsp;</small>,&nbsp;<i>C<sub>g</sub></i><small>&nbsp;</small>) represents a Gaussian (normal) distribution</li>
 <li>for each Gaussian <i>g</i>:
 <ul>
-<li><i>h<sub>g</sub></i> is the heft (weight), with <i>h<sub>g</sub></i> &ge; 0 and &sum;<i>h<sub>g</sub></i> = 1</li>
+<li><i>h<sub>g</sub></i> is the heft (weight), with constraints <i>h<sub>g</sub></i> &ge; 0 and &sum;<i>h<sub>g</sub></i> = 1</li>
 <li><i>m<sub>g</sub></i> is the mean (centroid) vector with dimensionality <i>n_dims</i></li>
-<li><i>C<sub>g</sub></i> is the diagonal covariance matrix</li>
+<li><i>C<sub>g</sub></i> is the covariance matrix (either diagonal or full)</li>
 </ul>
 </li>
 </ul>
 </li>
 <br>
 <li>
-For an instance of <i>gmm_diag</i> named as <i>M</i>, the member functions and variables are:
+The <i>gmm_diag</i> class is tailored for diagonal covariance matrices (ie. in each covariance matrix, all entries outside the main diagonal are assumed to be zero)
+</li>
+<br>
+<li>
+The <i>gmm_full</i> class is tailored for full covariance matrices
+</li>
+<br>
+<li>
+The <i>gmm_diag</i> class is typically much faster to train and use than the <i>gmm_full</i> class,
+at the potential cost of some reduction in modelling accuracy
+</li>
+<br>
+<li>
+The classes include parameter estimation (training) algorithms: k-means clustering and Expectation-Maximisation (EM);
+the training algorithms will run much quicker on multi-core machines when OpenMP is enabled in your compiler (eg. <i>-fopenmp</i> in GCC and clang);
+see the associated <a href="armadillo_mtgmm_2017.pdf">technical report</a> for the underlying mathematical details
+</li>
+<br>
+<li>
+For an instance of <i>gmm_diag</i> or <i>gmm_full</i> named as <i>M</i>, the member functions and variables are:
 <br>
 <br>
 <ul>
@@ -13195,7 +13247,7 @@ For an instance of <i>gmm_diag</i> named as <i>M</i>, the member functions and v
       <td style="vertical-align: top;">&nbsp;<br>
       </td>
       <td style="vertical-align: top;">
-      return a scalar representing the log-likelihood of vector <i>V</i>
+      return a scalar representing the log-likelihood of vector <i>V</i> (of type <i>vec</i>)
       </td>
     </tr>
     <tr>
@@ -13205,7 +13257,7 @@ For an instance of <i>gmm_diag</i> named as <i>M</i>, the member functions and v
       <td style="vertical-align: top;">&nbsp;<br>
       </td>
       <td style="vertical-align: top;">
-      return a scalar representing the log-likelihood of vector <i>V</i>, according to Gaussian <i>g</i>
+      return a scalar representing the log-likelihood of vector <i>V</i> (of type <i>vec</i>), according to Gaussian with index&nbsp;<i>g</i>
       </td>
     </tr>
     <tr>
@@ -13220,7 +13272,7 @@ For an instance of <i>gmm_diag</i> named as <i>M</i>, the member functions and v
       <td style="vertical-align: top;">&nbsp;<br>
       </td>
       <td style="vertical-align: top;">
-      return a row vector (of type <code>rowvec</code>) containing log-likelihoods of each column vector in matrix <i>X</i>
+      return a row vector (of type <code>rowvec</code>) containing log-likelihoods of each column vector in matrix <i>X</i> (of type <i>mat</i>)
       </td>
     </tr>
     <tr>
@@ -13230,7 +13282,32 @@ For an instance of <i>gmm_diag</i> named as <i>M</i>, the member functions and v
       <td style="vertical-align: top;">&nbsp;<br>
       </td>
       <td style="vertical-align: top;">
-      return a row vector (of type <code>rowvec</code>) containing log-likelihoods of each column vector in matrix <i>X</i>, according to Gaussian <i>g</i>
+      return a row vector (of type <code>rowvec</code>) containing log-likelihoods of each column vector in matrix <i>X</i> (of type <i>mat</i>), according to Gaussian with index&nbsp;<i>g</i>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">&nbsp;<br></td>
+      <td style="vertical-align: top;">&nbsp;<br></td>
+      <td style="vertical-align: top;">&nbsp;<br></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      <b>M.sum_log_p(</b>X<b>)</b>
+      </td>
+      <td style="vertical-align: top;">&nbsp;<br>
+      </td>
+      <td style="vertical-align: top;">
+      return a scalar representing the sum of log-likelihoods for all column vectors in matrix <i>X</i> (of type <i>mat</i>)
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      <b>M.sum_log_p(</b>X, g<b>)</b>
+      </td>
+      <td style="vertical-align: top;">&nbsp;<br>
+      </td>
+      <td style="vertical-align: top;">
+      return a scalar representing the sum of log-likelihoods for all column vectors in matrix <i>X</i> (of type <i>mat</i>), according to Gaussian with index&nbsp;<i>g</i>
       </td>
     </tr>
     <tr>
@@ -13245,7 +13322,7 @@ For an instance of <i>gmm_diag</i> named as <i>M</i>, the member functions and v
       <td style="vertical-align: top;">&nbsp;<br>
       </td>
       <td style="vertical-align: top;">
-      return a scalar representing the average log-likelihood of all column vectors in matrix <i>X</i>
+      return a scalar representing the average log-likelihood of all column vectors in matrix <i>X</i> (of type <i>mat</i>)
       </td>
     </tr>
     <tr>
@@ -13255,7 +13332,7 @@ For an instance of <i>gmm_diag</i> named as <i>M</i>, the member functions and v
       <td style="vertical-align: top;">&nbsp;<br>
       </td>
       <td style="vertical-align: top;">
-      return a scalar representing the average log-likelihood of all column vectors in matrix <i>X</i>, according to Gaussian <i>g</i>
+      return a scalar representing the average log-likelihood of all column vectors in matrix <i>X</i> (of type <i>mat</i>), according to Gaussian with index&nbsp;<i>g</i>
       </td>
     </tr>
     <tr>
@@ -13270,8 +13347,8 @@ For an instance of <i>gmm_diag</i> named as <i>M</i>, the member functions and v
       <td style="vertical-align: top;">&nbsp;<br>
       </td>
       <td style="vertical-align: top;">
-      return the index of the closest mean (or Gaussian) to vector <i>V</i>;<br>
-      <i>dist_mode</i> is one of:
+      return the index of the closest mean (or Gaussian) to vector <i>V</i> (of type <i>vec</i>);<br>
+      parameter <i>dist_mode</i> is one of:
       <table style="text-align: left;" border="0" cellpadding="2" cellspacing="2">
         <tbody>
         <tr><td style="vertical-align: top;"><code>eucl_dist</code></td><td>&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top;">Euclidean distance (takes only means into account)</td></tr>
@@ -13287,7 +13364,8 @@ For an instance of <i>gmm_diag</i> named as <i>M</i>, the member functions and v
       <td style="vertical-align: top;">&nbsp;<br>
       </td>
       <td style="vertical-align: top;">
-      return a row vector containing the indices of the closest means (or Gaussians) to each column vector in matrix <i>X</i>
+      return a row vector (of type <i>urowvec</i>) containing the indices of the closest means (or Gaussians) to each column vector in matrix <i>X</i> (of type <i>mat</i>);<br>
+      parameter <i>dist_mode</i> is either <code>eucl_dist</code> or <code>prob_dist</code> (as per the <b>.assign()</b> function above)
       </td>
     </tr>
     <tr>
@@ -13304,8 +13382,8 @@ For an instance of <i>gmm_diag</i> named as <i>M</i>, the member functions and v
       <td style="vertical-align: top;">
       return a row vector (of type <code>urowvec</code>) representing the raw histogram of counts;
       each entry is the number of counts corresponding to a Gaussian;
-      each count is the number times the corresponding Gaussian was the closest to each column vector in matrix <i>X</i>;
-      parameter <i>dist_mode</i> is either <code>eucl_dist</code> or <code>prob_dist</code> (as per the <i>.assign()</i> function above)
+      each count is the number times the corresponding Gaussian was the closest to each column vector in matrix <i>X</i>;<br>
+      parameter <i>dist_mode</i> is either <code>eucl_dist</code> or <code>prob_dist</code> (as per the <b>.assign()</b> function above)
       </td>
     </tr>
     <tr>
@@ -13315,8 +13393,10 @@ For an instance of <i>gmm_diag</i> named as <i>M</i>, the member functions and v
       <td style="vertical-align: top;">&nbsp;<br>
       </td>
       <td style="vertical-align: top;">
+      similar to the <b>.raw_hist()</b> function above;
       return a row vector (of type <code>rowvec</code>) containing normalised counts;
-      the vector sums to one
+      the vector sums to one;<br>
+      parameter <i>dist_mode</i> is either <code>eucl_dist</code> or <code>prob_dist</code> (as per the <b>.assign()</b> function above)
       </td>
     </tr>
     <tr>
@@ -13331,7 +13411,7 @@ For an instance of <i>gmm_diag</i> named as <i>M</i>, the member functions and v
       <td style="vertical-align: top;">&nbsp;<br>
       </td>
       <td style="vertical-align: top;">
-      return a column vector representing a random sample generated according to the model's parameters
+      return a column vector (of type <i>vec</i>) representing a random sample generated according to the model's parameters
       </td>
     </tr>
     <tr>
@@ -13341,7 +13421,7 @@ For an instance of <i>gmm_diag</i> named as <i>M</i>, the member functions and v
       <td style="vertical-align: top;">&nbsp;<br>
       </td>
       <td style="vertical-align: top;">
-      return a matrix containing <i>N</i> column vectors, with each vector representing a random sample generated according to the model's parameters
+      return a matrix (of type <i>mat</i>) containing <i>N</i> column vectors, with each vector representing a random sample generated according to the model's parameters
       </td>
     </tr>
     <tr>
@@ -13356,7 +13436,7 @@ For an instance of <i>gmm_diag</i> named as <i>M</i>, the member functions and v
       <td style="vertical-align: top;">&nbsp;<br>
       </td>
       <td style="vertical-align: top;">
-      save the model to the given <i>filename</i>
+      save the model to a file and return a <i>bool</i> indicating either success (<i>true</i>) or failure (<i>false</i>) 
       </td>
     </tr>
     <tr>
@@ -13366,7 +13446,7 @@ For an instance of <i>gmm_diag</i> named as <i>M</i>, the member functions and v
       <td style="vertical-align: top;">&nbsp;<br>
       </td>
       <td style="vertical-align: top;">
-      load the model from the given <i>filename</i>
+      load the model from a file and return a <i>bool</i> indicating either success (<i>true</i>) or failure (<i>false</i>) 
       </td>
     </tr>
     <tr>
@@ -13407,34 +13487,13 @@ For an instance of <i>gmm_diag</i> named as <i>M</i>, the member functions and v
       </td>
       <td style="vertical-align: top;">
       set the model to have dimensionality <i>n_dims</i>, with <i>n_gaus</i> number of Gaussians;<br>
-      all the means are set to zero, all diagonal covariances are set to one, and all the hefts (weights) are set to be uniform
+      all the means are set to zero, all covariance matrix representations are equivalent to the identity matrix, and all the hefts (weights) are set to be uniform
       </td>
     </tr>
     <tr>
       <td style="vertical-align: top;">&nbsp;<br></td>
       <td style="vertical-align: top;">&nbsp;<br></td>
       <td style="vertical-align: top;">&nbsp;<br></td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;">
-      <b>M.means</b>
-      </td>
-      <td style="vertical-align: top;">&nbsp;<br>
-      </td>
-      <td style="vertical-align: top;">
-      read-only matrix containing the means (centroids), stored as column vectors
-      </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;">
-      <b>M.dcovs</b>
-      </td>
-      <td style="vertical-align: top;">&nbsp;<br>
-      </td>
-      <td style="vertical-align: top;">
-      read-only matrix containing the diagonal covariance matrices,
-      stored as column vectors
-      </td>
     </tr>
     <tr>
       <td style="vertical-align: top;">
@@ -13443,35 +13502,59 @@ For an instance of <i>gmm_diag</i> named as <i>M</i>, the member functions and v
       <td style="vertical-align: top;">&nbsp;<br>
       </td>
       <td style="vertical-align: top;">
-      read-only row vector containing the hefts (weights)
+      read-only row vector (of type <i>rowvec</i>) containing the hefts (weights)
       </td>
     </tr>
     <tr>
-      <td style="vertical-align: top;">&nbsp;<br></td>
-      <td style="vertical-align: top;">&nbsp;<br></td>
-      <td style="vertical-align: top;">&nbsp;<br></td>
-    </tr>
-    <tr>
       <td style="vertical-align: top;">
-      <b>M.set_means(</b>X<b>)</b>
+      <b>M.means</b>
       </td>
       <td style="vertical-align: top;">&nbsp;<br>
       </td>
       <td style="vertical-align: top;">
-      set the means to be as specified in matrix <i>X</i>;<br>
-      the number of means and their dimensionality must match the existing model
+      read-only matrix (of type <i>mat</i>) containing the means (centroids), stored as column vectors
       </td>
     </tr>
     <tr>
+      <td style="vertical-align: top;">&nbsp;<br></td>
+      <td style="vertical-align: top;">&nbsp;<br></td>
+      <td style="vertical-align: top;">&nbsp;<br></td>
+    </tr>
+    <tr>
       <td style="vertical-align: top;">
-      <b>M.set_dcovs(</b>X<b>)</b>
+      <b>M.dcovs</b>
+      <br><i>[only&nbsp;in&nbsp;gmm_diag]</i>
       </td>
       <td style="vertical-align: top;">&nbsp;<br>
       </td>
       <td style="vertical-align: top;">
-      set the diagonal covariances matrices to be as specified in matrix <i>X</i>;<br>
-      the number of diagonal covariance matrices and their dimensionality must match the existing model
+      read-only matrix (of type <i>mat</i>) containing the representation of diagonal covariance matrices,
+      with the set of diagonal covariances for each Gaussian stored as a column vector;
+      applicable only to the <i>gmm_diag</i> class
       </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">&nbsp;<br></td>
+      <td style="vertical-align: top;">&nbsp;<br></td>
+      <td style="vertical-align: top;">&nbsp;<br></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      <b>M.fcovs</b>
+      <br><i>[only&nbsp;in&nbsp;gmm_full]</i>
+      </td>
+      <td style="vertical-align: top;">&nbsp;<br>
+      </td>
+      <td style="vertical-align: top;">
+      read-only <a href="#Cube">cube</a> containing the full covariance matrices,
+      with each covariance matrix stored as a slice within the cube;
+      applicable only to the <i>gmm_full</i> class
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">&nbsp;<br></td>
+      <td style="vertical-align: top;">&nbsp;<br></td>
+      <td style="vertical-align: top;">&nbsp;<br></td>
     </tr>
     <tr>
       <td style="vertical-align: top;">
@@ -13480,23 +13563,73 @@ For an instance of <i>gmm_diag</i> named as <i>M</i>, the member functions and v
       <td style="vertical-align: top;">&nbsp;<br>
       </td>
       <td style="vertical-align: top;">
-      set the hefts (weights) of the model to be as specified in row vector <i>V</i>;<br>
+      set the hefts (weights) of the model to be as specified in row vector <i>V</i> (of type <i>rowvec</i>);
       the number of hefts must match the existing model
       </td>
     </tr>
     <tr>
+      <td style="vertical-align: top;">
+      <b>M.set_means(</b>X<b>)</b>
+      </td>
+      <td style="vertical-align: top;">&nbsp;<br>
+      </td>
+      <td style="vertical-align: top;">
+      set the means to be as specified in matrix <i>X</i> (of type <i>mat</i>);
+      the number of means and their dimensionality must match the existing model
+      </td>
+    </tr>
+    <tr>
       <td style="vertical-align: top;">&nbsp;<br></td>
       <td style="vertical-align: top;">&nbsp;<br></td>
       <td style="vertical-align: top;">&nbsp;<br></td>
     </tr>
     <tr>
       <td style="vertical-align: top;">
-      <b>M.set_params(</b><small>means</small>,&nbsp;<small>dcovs</small>,&nbsp;<small>hefts</small><b>)</b>
+      <b>M.set_dcovs(</b>X<b>)</b>
+      <br><i>[only&nbsp;in&nbsp;gmm_diag]</i>
       </td>
       <td style="vertical-align: top;">&nbsp;<br>
       </td>
       <td style="vertical-align: top;">
-      set all the parameters in one hit;<br>
+      set the diagonal covariances matrices to be as specified in matrix <i>X</i> (of type <i>mat</i>),
+      with the set of diagonal covariances for each Gaussian stored as a column vector;
+      the number of covariance matrices and their dimensionality must match the existing model;
+      applicable only to the <i>gmm_diag</i> class
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">&nbsp;<br></td>
+      <td style="vertical-align: top;">&nbsp;<br></td>
+      <td style="vertical-align: top;">&nbsp;<br></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      <b>M.set_fcovs(</b>X<b>)</b>
+      <br><i>[only&nbsp;in&nbsp;gmm_full]</i>
+      </td>
+      <td style="vertical-align: top;">&nbsp;<br>
+      </td>
+      <td style="vertical-align: top;">
+      set the full covariances matrices to be as specified in cube <i>X</i>,
+      with each covariance matrix stored as a slice within the cube;
+      the number of covariance matrices and their dimensionality must match the existing model;
+      applicable only to the <i>gmm_full</i> class
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">&nbsp;<br></td>
+      <td style="vertical-align: top;">&nbsp;<br></td>
+      <td style="vertical-align: top;">&nbsp;<br></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      <b>M.set_params(</b><small>means</small>,&nbsp;<small>covs</small>,&nbsp;<small>hefts</small><b>)</b>
+      </td>
+      <td style="vertical-align: top;">&nbsp;<br>
+      </td>
+      <td style="vertical-align: top;">
+      set all the parameters at the same time;
+      the type and layout of the parameters is as per the <b>.set_hefts()</b>, <b>.set_means()</b>, <b>.set_dcovs()</b> and <b>.set_fcovs()</b> functions above;
       the number of Gaussians and dimensionality can be different from the existing model
       </td>
     </tr>
@@ -13507,27 +13640,12 @@ For an instance of <i>gmm_diag</i> named as <i>M</i>, the member functions and v
     </tr>
     <tr>
       <td style="vertical-align: top;" colspan=3>
-      <b>M.learn(</b>data,&nbsp;n_gaus,&nbsp;dist_mode,&nbsp;seed_mode,&nbsp;km_iter,&nbsp;em_iter,&nbsp;var_floor,&nbsp;print_mode<b>)</b>
+      <b>M.learn(</b>data,&nbsp;n_gaus,&nbsp;dist_mode,&nbsp;seed_mode,&nbsp;km_iter,&nbsp;em_iter,&nbsp;var_floor,&nbsp;print_mode<b>)</b><br>
+      learn the model parameters via multi-threaded k-means and/or EM algorithms;
+      return a <code>bool</code> value, with <i>true</i> indicating success, and <i>false</i> indicating failure;
+      the parameters have the following meanings:
       </td>
     </tr>
-    <tr>
-      <td style="vertical-align: top;">&nbsp;<br></td>
-      <td style="vertical-align: top;">&nbsp;<br></td>
-      <td style="vertical-align: top;">
-      learn the model parameters via the k-means and/or EM algorithms,
-      <br>and return a <code>bool</code> variable, with <i>true</i> indicating success, and <i>false</i> indicating failure
-      </td>
-    </tr>
-  </tbody>
-</table>
-</ul>
-</li>
-<br>
-<li>
-Parameters for the <code>.learn()</code> member function:
-<ul>
-<table style="text-align: left;" border="0" cellpadding="2" cellspacing="2">
-  <tbody>
     <tr>
       <td style="vertical-align: top;">&nbsp;</td>
       <td style="vertical-align: top;">&nbsp;</td>
@@ -13537,7 +13655,7 @@ Parameters for the <code>.learn()</code> member function:
       <td style="vertical-align: top;"><i>data</i></td>
       <td style="vertical-align: top;">&nbsp;</td>
       <td style="vertical-align: top;">
-      matrix containing training samples; each sample is stored as a column vector
+      matrix (of type <i>mat</i>) containing training samples; each sample is stored as a column vector
       </td>
     </tr>
     <tr>
@@ -13549,7 +13667,8 @@ Parameters for the <code>.learn()</code> member function:
       <td style="vertical-align: top;"><i>n_gaus</i></td>
       <td style="vertical-align: top;">&nbsp;</td>
       <td style="vertical-align: top;">
-      set the number of Gaussians to <i>n_gaus</i>
+      set the number of Gaussians to <i>n_gaus</i>;
+      to help convergence, it is recommended that the given <i>data</i> matrix (above) contains at least 10 samples for each Gaussian
       </td>
     </tr>
     <tr>
@@ -13565,7 +13684,7 @@ Parameters for the <code>.learn()</code> member function:
       <table style="text-align: left;" border="0" cellpadding="2" cellspacing="2">
         <tbody>
         <tr><td><code>eucl_dist</code></td><td>&nbsp;&nbsp;&nbsp;</td><td>Euclidean distance</td></tr>
-        <tr><td><code>maha_dist</code></td><td>&nbsp;&nbsp;&nbsp;</td><td>Mahalanobis distance, which uses a global diagonal covariance matrix estimated from the training samples</td></tr>
+        <tr><td><code>maha_dist</code></td><td>&nbsp;&nbsp;&nbsp;</td><td>Mahalanobis distance, which uses a global diagonal covariance matrix estimated from the training samples; this is recommended for probabilistic applications</td></tr>
         </tbody>
       </table>
       </td>
@@ -13589,6 +13708,9 @@ Parameters for the <code>.learn()</code> member function:
         <tr><td><code>random_spread</code></td><td>&nbsp;&nbsp;&nbsp;</td><td>a maximally spread subset of training samples (random start)</td></tr>
         </tbody>
       </table>
+      <br>
+      <b>caveat:</b> seeding the initial means with <code>static_spread</code> and <code>random_spread</code>
+      can be much more time consuming than with <code>static_subset</code> and <code>random_subset</code>
       </td>
     </tr>
     <tr>
@@ -13600,7 +13722,8 @@ Parameters for the <code>.learn()</code> member function:
       <td style="vertical-align: top;"><i>km_iter</i></td>
       <td style="vertical-align: top;">&nbsp;</td>
       <td style="vertical-align: top;">
-      the number of iterations of the k-means algorithm
+      the number of iterations of the k-means algorithm;
+      this is data dependent, but typically 10 iterations are sufficient
       </td>
     </tr>
     <tr>
@@ -13612,7 +13735,8 @@ Parameters for the <code>.learn()</code> member function:
       <td style="vertical-align: top;"><i>em_iter</i></td>
       <td style="vertical-align: top;">&nbsp;</td>
       <td style="vertical-align: top;">
-      the number of iterations of the EM algorithm
+      the number of iterations of the EM algorithm;
+      this is data dependent, but typically 5 to 10 iterations are sufficient
       </td>
     </tr>
     <tr>
@@ -13624,7 +13748,8 @@ Parameters for the <code>.learn()</code> member function:
       <td style="vertical-align: top;"><i>var_floor</i></td>
       <td style="vertical-align: top;">&nbsp;</td>
       <td style="vertical-align: top;">
-      the variance floor (smallest allowed value) for the diagonal covariances
+      the variance floor (smallest allowed value) for the diagonal covariances;
+      setting this to a small non-zero value can help with convergence and/or better quality parameter estimates
       </td>
     </tr>
     <tr>
@@ -13645,40 +13770,6 @@ Parameters for the <code>.learn()</code> member function:
 </ul>
 </li>
 <br>
-<br>
-<li>
-<b>Notes</b>:
-<ul>
-<br>
-<li>
-for probabilistic applications,
-better model parameters are typically learned with <i>dist_mode</i> set to <code>maha_dist</code>
-</li>
-<br>
-<li>
-for vector quantisation applications, 
-model parameters should be learned with <i>dist_mode</i> set to <code>eucl_dist</code>,
-and the number of EM iterations set to zero
-</li>
-<br>
-<li>
-in general, a sufficient number of k-means and EM iterations is typically about 10
-</li>
-<br>
-<li>
-the number of training samples should be much larger than the number of Gaussians
-</li>
-<br>
-<li>
-seeding the initial means with <code>static_spread</code> and <code>random_spread</code>
-can be much more time consuming than with <code>static_subset</code> and <code>random_subset</code>
-</li>
-<br>
-<li>
-the k-means and EM algorithms will run faster on multi-core machines when OpenMP is enabled in your compiler (eg. <i>-fopenmp</i> in GCC)
-</li>
-</ul>
-</li>
 <br>
 <li>
 Examples:
@@ -13704,7 +13795,7 @@ while(i &lt; N)
   }
 
 
-// model the data as a GMM with 2 Gaussians
+// model the data as a diagonal GMM with 2 Gaussians
 
 gmm_diag model;
 
@@ -13738,7 +13829,9 @@ model.save("my_model.gmm");
 <li><a href="#stats_fns">statistics functions</a></li>
 <li><a href="#running_stat_vec">running_stat_vec</a></li>
 <li><a href="#kmeans">kmeans()</a></li>
-<li><a href="#diagmat">diagmat()</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Diagonal_matrix">diagonal matrix in Wikipedia</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Covariance_matrix">covariance matrix in Wikipedia</a></li>
+<li><a href="http://mathworld.wolfram.com/CovarianceMatrix.html">covariance matrix in MathWorld</a></li>
 <li><a href="http://en.wikipedia.org/wiki/Mahalanobis_distance">Mahalanobis distance in Wikipedia</a></li>
 <li><a href="http://en.wikipedia.org/wiki/Normal_distribution">normal distribution in Wikipedia</a></li>
 <li><a href="http://en.wikipedia.org/wiki/Mixture_model">mixture model in Wikipedia</a></li>
@@ -15790,7 +15883,29 @@ Disable use of OpenMP for parallelisation of element-wise operations. Overrides 
       &nbsp;
     </td>
     <td style="vertical-align: top;">
-The minimum number of elements in a matrix to allow the use of OpenMP for parallelisation; default value is 384
+The minimum number of elements in a matrix to enable OpenMP based parallelisation of computationally expensive element-wise functions; default value is 384
+    </td>
+  </tr>
+  <tr>
+    <td style="vertical-align: top;">
+      &nbsp;
+    </td>
+    <td style="vertical-align: top;">
+      &nbsp;
+    </td>
+    <td style="vertical-align: top;">
+      &nbsp;
+    </td>
+  </tr>
+  <tr>
+    <td style="vertical-align: top;">
+<code>ARMA_OPENMP_THREADS</code>
+    </td>
+    <td style="vertical-align: top;">
+      &nbsp;
+    </td>
+    <td style="vertical-align: top;">
+The maximum number of threads for OpenMP based parallelisation of computationally expensive element-wise functions; default value is 10
     </td>
   </tr>
   <tr>
@@ -16244,6 +16359,25 @@ List of additions and changes for each version:
 
 
 
+<a name="version_7960"></a>
+<li>Version 7.960:
+<ul>
+<li>faster <a href="#randu_randn_standalone">randn()</a> when using OpenMP</li>
+<li>faster <a href="#gmm_diag">gmm_diag</a> class, for Gaussian mixture models with diagonal covariance matrices</li>
+<li>added <i>.sum_log_p()</i> to the <a href="#gmm_diag">gmm_diag</a> class</li>
+<li>added <a href="#gmm_full">gmm_full</a> class, for Gaussian mixture models with full covariance matrices</li>
+<li>expanded <a href="#each_slice">.each_slice()</a> to optionally use OpenMP for multi-threaded execution</li>
+</ul>
+</li>
+<br>
+<a name="version_7950"></a>
+<li>Version 7.950:
+<ul>
+<li>expanded <a href="#accu">accu()</a> and <a href="#sum">sum()</a> to use OpenMP for processing expressions with computationally expensive element-wise functions</li>
+<li>expanded <a href="#trimat">trimatu()</a> and <a href="#trimat">trimatl()</a> to allow specification of the diagonal which delineates the boundary of the triangular part</li>
+</ul>
+</li>
+<br>
 <a name="version_7900"></a>
 <li>Version 7.900:
 <ul>
