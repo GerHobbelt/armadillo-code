@@ -55,6 +55,54 @@ sp_auxlib::interpret_form_str(const char* form_str)
 
 
 
+template<typename eT>
+inline
+void
+sp_auxlib::fill_rand(podarray<eT>& X, const uword N)
+  {
+  arma_extra_debug_sigprint();
+  
+  std::mt19937_64 local_rng;
+  
+  std::uniform_real_distribution<double> dist(-1.0, +1.0);
+  
+  X.set_size(N);
+  
+  eT* X_mem = X.memptr();
+  
+  for(uword i=0; i < N; ++i)  { X_mem[i] = eT(dist(local_rng)); }
+  }
+
+
+
+template<typename T>
+inline
+void
+sp_auxlib::fill_rand(podarray< std::complex<T> >& X, const uword N)
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename std::complex<T> eT;
+  
+  std::mt19937_64 local_rng;
+  
+  std::uniform_real_distribution<double> dist(-1.0, +1.0);
+  
+  X.set_size(N);
+  
+  eT* X_mem = X.memptr();
+  
+  for(uword i=0; i < N; ++i)
+    {
+    eT& X_mem_i = X_mem[i];
+    
+    X_mem_i.real( T(dist(local_rng)) );
+    X_mem_i.imag( T(dist(local_rng)) );
+    }
+  }
+
+
+
 //! immediate eigendecomposition of symmetric real sparse object
 template<typename eT, typename T1>
 inline
@@ -1921,7 +1969,8 @@ sp_auxlib::run_aupd_plain
     n = X.n_rows; // The size of the matrix (should already be set outside).
     blas_int nev = n_eigvals;
     
-    resid.zeros(n);  // TODO: fill resid with deterministic random values and set info to 1
+    // resid.zeros(n);
+    fill_rand(resid, n);  // use deterministic starting point
     
     // Two contraints on NCV: (NCV > NEV) for sym problems or
     // (NCV > NEV + 2) for gen problems and (NCV <= N)
@@ -1956,7 +2005,8 @@ sp_auxlib::run_aupd_plain
     // Real work array of length lworkl.
     workl.zeros(lworkl);
     
-    info = 0; // Set to 0 initially to use random initial vector.
+    // info = 0; // resid to be filled with random values by ARPACK (non-deterministic)
+    info = 1; // resid is already filled with random values (deterministic)
     
     // All the parameters have been set or created.  Time to loop a lot.
     while(ido != 99)
@@ -2109,7 +2159,8 @@ sp_auxlib::run_aupd_shiftinvert
     n = X.n_rows; // The size of the matrix (should already be set outside).
     blas_int nev = n_eigvals;
     
-    resid.zeros(n);  // TODO: fill resid with deterministic random values and set info to 1
+    // resid.zeros(n);
+    fill_rand(resid, n);  // use deterministic starting point
     
     // Two contraints on NCV: (NCV > NEV) for sym problems or
     // (NCV > NEV + 2) for gen problems and (NCV <= N)
@@ -2147,7 +2198,8 @@ sp_auxlib::run_aupd_shiftinvert
     // Real work array of length lworkl.
     workl.zeros(lworkl);
     
-    info = 0; // Set to 0 initially to use random initial vector.
+    // info = 0; // resid to be filled with random values by ARPACK (non-deterministic)
+    info = 1; // resid is already filled with random values (deterministic)
     
     superlu_opts superlu_opts_default;
     superlu::superlu_options_t options;
