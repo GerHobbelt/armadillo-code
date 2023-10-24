@@ -33,12 +33,6 @@ class sp_auxlib
   inline static form_type interpret_form_str(const char* form_str);
   
   //
-  // rng related for eigs_sym() and eigs_gen()
-  
-  template<typename eT> inline static void fill_rand(podarray<             eT  >& X, const uword N);
-  template<typename  T> inline static void fill_rand(podarray< std::complex<T> >& X, const uword N);
-  
-  //
   // eigs_sym() for real matrices
   
   template<typename eT, typename T1>
@@ -160,6 +154,31 @@ class sp_auxlib
   
   template<typename T>
   inline static bool rudimentary_sym_check(const SpMat< std::complex<T> >& X);
+  };
+
+
+
+template<typename eT>
+struct eigs_randu_filler
+  {
+  std::mt19937_64                    local_engine;
+  std::uniform_real_distribution<eT> local_u_distr;
+  
+  inline eigs_randu_filler();
+  
+  inline void fill(podarray<eT>& X, const uword N);
+  };
+
+
+template<typename T>
+struct eigs_randu_filler< std::complex<T> >
+  {
+  std::mt19937_64                   local_engine;
+  std::uniform_real_distribution<T> local_u_distr;
+  
+  inline eigs_randu_filler();
+  
+  inline void fill(podarray< std::complex<T> >& X, const uword N);
   };
 
 

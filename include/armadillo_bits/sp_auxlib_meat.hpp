@@ -55,54 +55,6 @@ sp_auxlib::interpret_form_str(const char* form_str)
 
 
 
-template<typename eT>
-inline
-void
-sp_auxlib::fill_rand(podarray<eT>& X, const uword N)
-  {
-  arma_extra_debug_sigprint();
-  
-  std::mt19937_64 local_rng;
-  
-  std::uniform_real_distribution<double> dist(-1.0, +1.0);
-  
-  X.set_size(N);
-  
-  eT* X_mem = X.memptr();
-  
-  for(uword i=0; i < N; ++i)  { X_mem[i] = eT(dist(local_rng)); }
-  }
-
-
-
-template<typename T>
-inline
-void
-sp_auxlib::fill_rand(podarray< std::complex<T> >& X, const uword N)
-  {
-  arma_extra_debug_sigprint();
-  
-  typedef typename std::complex<T> eT;
-  
-  std::mt19937_64 local_rng;
-  
-  std::uniform_real_distribution<double> dist(-1.0, +1.0);
-  
-  X.set_size(N);
-  
-  eT* X_mem = X.memptr();
-  
-  for(uword i=0; i < N; ++i)
-    {
-    eT& X_mem_i = X_mem[i];
-    
-    X_mem_i.real( T(dist(local_rng)) );
-    X_mem_i.imag( T(dist(local_rng)) );
-    }
-  }
-
-
-
 //! immediate eigendecomposition of symmetric real sparse object
 template<typename eT, typename T1>
 inline
@@ -1970,7 +1922,8 @@ sp_auxlib::run_aupd_plain
     blas_int nev = n_eigvals;
     
     // resid.zeros(n);
-    fill_rand(resid, n);  // use deterministic starting point
+    eigs_randu_filler<T> randu_filler;
+    randu_filler.fill(resid, n);  // use deterministic starting point
     
     // Two contraints on NCV: (NCV > NEV) for sym problems or
     // (NCV > NEV + 2) for gen problems and (NCV <= N)
@@ -2160,7 +2113,8 @@ sp_auxlib::run_aupd_shiftinvert
     blas_int nev = n_eigvals;
     
     // resid.zeros(n);
-    fill_rand(resid, n);  // use deterministic starting point
+    eigs_randu_filler<T> randu_filler;
+    randu_filler.fill(resid, n);  // use deterministic starting point
     
     // Two contraints on NCV: (NCV > NEV) for sym problems or
     // (NCV > NEV + 2) for gen problems and (NCV <= N)
@@ -2488,6 +2442,85 @@ sp_auxlib::rudimentary_sym_check(const SpMat< std::complex<T> >& X)
   
   return true;
   }
+
+
+
+//
+
+
+
+template<typename eT>
+inline
+eigs_randu_filler<eT>::eigs_randu_filler()
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename std::mt19937_64::result_type local_seed_type;
+  
+  local_engine.seed(local_seed_type(123));
+  
+  typedef typename std::uniform_real_distribution<eT>::param_type local_param_type;
+  
+  local_u_distr.param(local_param_type(-1.0, +1.0));
+  }
+
+
+template<typename eT>
+inline
+void
+eigs_randu_filler<eT>::fill(podarray<eT>& X, const uword N)
+  {
+  arma_extra_debug_sigprint();
+  
+  X.set_size(N);
+  
+  eT* X_mem = X.memptr();
+  
+  for(uword i=0; i<N; ++i)  { X_mem[i] = eT( local_u_distr(local_engine) ); }
+  }
+
+
+template<typename T>
+inline
+eigs_randu_filler< std::complex<T> >::eigs_randu_filler()
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename std::mt19937_64::result_type local_seed_type;
+  
+  local_engine.seed(local_seed_type(123));
+  
+  typedef typename std::uniform_real_distribution<T>::param_type local_param_type;
+  
+  local_u_distr.param(local_param_type(-1.0, +1.0));
+  }
+
+
+template<typename T>
+inline
+void
+eigs_randu_filler< std::complex<T> >::fill(podarray< std::complex<T> >& X, const uword N)
+  {
+  arma_extra_debug_sigprint();
+  
+  typedef typename std::complex<T> eT;
+  
+  X.set_size(N);
+  
+  eT* X_mem = X.memptr();
+  
+  for(uword i=0; i<N; ++i)
+    {
+    eT& X_mem_i = X_mem[i];
+    
+    X_mem_i.real( T(local_u_distr(local_engine)) );
+    X_mem_i.imag( T(local_u_distr(local_engine)) );
+    }
+  }
+
+
+
+//
 
 
 
