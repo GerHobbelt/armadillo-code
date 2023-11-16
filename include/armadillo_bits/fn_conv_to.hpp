@@ -231,20 +231,21 @@ conv_to< Mat<out_eT> >::from(const SpBase<in_eT, T1>& in, const typename enable_
   {
   arma_extra_debug_sigprint();
   arma_ignore(junk);
-
+  
   const unwrap_spmat<T1> U(in.get_ref());
   const SpMat<in_eT>&    x = U.M;
-
+  
   Mat<out_eT> out(x.n_rows, x.n_cols, fill::zeros);
-
+  
   // Iterate over nonzero elements and set values appropriately.
-  typename SpMat<in_eT>::const_iterator it = U.M.begin();
-  while (it != U.M.end())
+  typename SpMat<in_eT>::const_iterator it     = x.begin();
+  typename SpMat<in_eT>::const_iterator it_end = x.end();
+  
+  for(; it != it_end; ++it)
     {
-    out(it.row(), it.col()) = (out_eT) (*it);
-    ++it;
+    out.at(it.row(), it.col()) = out_eT( (*it) );
     }
-
+  
   return out;
   }
 
