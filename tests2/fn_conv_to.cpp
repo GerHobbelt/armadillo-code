@@ -83,3 +83,35 @@ TEST_CASE("fn_conv_to4")
   }
 
 
+TEST_CASE("fn_conv_to_spmat_mat_different_eT")
+  {
+  sp_fmat A;
+  A.sprandu(10, 10, 0.3);
+
+  mat B = conv_to<mat>::from(A);
+
+  REQUIRE( B.n_rows == 10 );
+  REQUIRE( B.n_cols == 10 );
+  for (size_t c = 0; c < 10; ++c)
+    {
+    for (size_t r = 0; r < 10; ++r)
+      {
+      REQUIRE( (double) B(r, c) == Approx((double) A(r, c)).margin(1e-5) );
+      }
+    }
+
+  // And the other way...
+  B.randu(8, 8);
+  B(3, 3) = 0.0;
+  A = conv_to<sp_fmat>::from(B);
+
+  REQUIRE( A.n_rows == 8 );
+  REQUIRE( A.n_cols == 8 );
+  for (size_t c = 0; c < 8; ++c)
+    {
+    for (size_t r = 0; r < 8; ++r)
+      {
+      REQUIRE( (double) A(r, c) == Approx((double) B(r, c)).margin(1e-5) );
+      }
+    }
+  }
