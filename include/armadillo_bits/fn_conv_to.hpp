@@ -243,7 +243,7 @@ conv_to< Mat<out_eT> >::from(const SpBase<in_eT, T1>& in, const typename enable_
   
   for(; it != it_end; ++it)
     {
-    out.at(it.row(), it.col()) = out_eT( (*it) );
+    out.at(it.row(), it.col()) = out_eT(*it);
     }
   
   return out;
@@ -640,9 +640,9 @@ conv_to< SpMat<out_eT> >::from(const Base<in_eT, T1>& in, const typename enable_
   
   const in_eT* x_mem = x.memptr();
   
-  for(uword i = 0; i < x.n_elem; ++i)
+  for(uword i=0; i < x.n_elem; ++i)
     {
-    n += (((out_eT) x_mem[i]) != out_eT(0)) ? uword(1) : uword(0);
+    n += (out_eT(x_mem[i]) != out_eT(0)) ? uword(1) : uword(0);
     }
   
   if(n > 0)
@@ -651,10 +651,12 @@ conv_to< SpMat<out_eT> >::from(const Base<in_eT, T1>& in, const typename enable_
     
     // Now set all nonzero elements.
     n = 0;
-    for(uword c = 0; c < x.n_cols; ++c)
-    for(uword r = 0; r < x.n_rows; ++r)
+    
+    for(uword c=0; c < x.n_cols; ++c)
+    for(uword r=0; r < x.n_rows; ++r)
       {
-      const out_eT val = (out_eT) x.at(r, c);
+      const out_eT val = out_eT(x.at(r, c));
+      
       if(val != out_eT(0))
         {
         access::rw(out.values[n]) = val;
