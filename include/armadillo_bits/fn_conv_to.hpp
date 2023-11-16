@@ -633,33 +633,35 @@ conv_to< SpMat<out_eT> >::from(const Base<in_eT, T1>& in, const typename enable_
   const quasi_unwrap<T1> U(in.get_ref());
   const Mat<in_eT>&      x = U.M;
   
-  SpMat<out_eT> out(x.n_rows, x.n_cols);
+  const uword x_n_rows = x.n_rows;
+  const uword x_n_cols = x.n_cols;
+  const uword x_n_elem = x.n_elem;
   
   // Count number of nonzero elements in base object.
   uword n = 0;
   
   const in_eT* x_mem = x.memptr();
   
-  for(uword i=0; i < x.n_elem; ++i)
+  for(uword i=0; i < x_n_elem; ++i)
     {
     n += (out_eT(x_mem[i]) != out_eT(0)) ? uword(1) : uword(0);
     }
   
+  SpMat<out_eT> out(arma_reserve_indicator(), x_n_rows, x_n_cols, n);
+  
   if(n > 0)
     {
-    out.mem_resize(n);
-    
     // Now set all nonzero elements.
     n = 0;
     
-    for(uword c=0; c < x.n_cols; ++c)
-    for(uword r=0; r < x.n_rows; ++r)
+    for(uword c=0; c < x_n_cols; ++c)
+    for(uword r=0; r < x_n_rows; ++r)
       {
-      const out_eT val = out_eT(x.at(r, c));
+      const out_eT val = out_eT(*x_mem);  x_mem++;
       
       if(val != out_eT(0))
         {
-        access::rw(out.values[n]) = val;
+        access::rw(out.values[n])      = val;
         access::rw(out.row_indices[n]) = r;
         access::rw(out.col_ptrs[c + 1])++;
         ++n;
