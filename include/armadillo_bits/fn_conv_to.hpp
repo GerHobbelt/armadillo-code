@@ -628,37 +628,33 @@ conv_to< SpMat<out_eT> >::from(const Base<in_eT, T1>& in, const typename enable_
   {
   arma_extra_debug_sigprint();
   arma_ignore(junk);
-
+  
   const quasi_unwrap<T1> U(in.get_ref());
   const Mat<in_eT>&      x = U.M;
-
+  
   SpMat<out_eT> out(x.n_rows, x.n_cols);
-
+  
   // Count number of nonzero elements in base object.
   uword n = 0;
-
+  
   const in_eT* x_mem = x.memptr();
-
+  
   for(uword i = 0; i < x.n_elem; ++i)
     {
     n += (((out_eT) x_mem[i]) != out_eT(0)) ? uword(1) : uword(0);
     }
-
-  if(n == 0)
+  
+  if(n > 0)
     {
-    return out;
-    }
-
-  out.mem_resize(n);
-
-  // Now set all nonzero elements.
-  n = 0;
-  for (uword c = 0; c < x.n_cols; ++c)
-    {
-    for (uword r = 0; r < x.n_rows; ++r)
+    out.mem_resize(n);
+    
+    // Now set all nonzero elements.
+    n = 0;
+    for(uword c = 0; c < x.n_cols; ++c)
+    for(uword r = 0; r < x.n_rows; ++r)
       {
       const out_eT val = (out_eT) x.at(r, c);
-      if (val != out_eT(0))
+      if(val != out_eT(0))
         {
         access::rw(out.values[n]) = val;
         access::rw(out.row_indices[n]) = r;
@@ -666,14 +662,14 @@ conv_to< SpMat<out_eT> >::from(const Base<in_eT, T1>& in, const typename enable_
         ++n;
         }
       }
+    
+    // Sum column counts to be column pointers.
+    for(uword c = 1; c <= out.n_cols; ++c)
+      {
+      access::rw(out.col_ptrs[c]) += out.col_ptrs[c - 1];
+      }
     }
-
-  // Sum column counts to be column pointers.
-  for(uword c = 1; c <= out.n_cols; ++c)
-    {
-    access::rw(out.col_ptrs[c]) += out.col_ptrs[c - 1];
-    }
-
+  
   return out;
   }
 
