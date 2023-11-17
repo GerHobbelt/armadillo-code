@@ -1921,7 +1921,7 @@ sp_auxlib::run_aupd_plain
     n = X.n_rows; // The size of the matrix (should already be set outside).
     blas_int nev = n_eigvals;
     
-    resid.zeros(n);
+    resid.zeros(n);  // TODO: fill resid with deterministic random values and set info to 1
     
     // Two contraints on NCV: (NCV > NEV) for sym problems or
     // (NCV > NEV + 2) for gen problems and (NCV <= N)
@@ -2109,7 +2109,7 @@ sp_auxlib::run_aupd_shiftinvert
     n = X.n_rows; // The size of the matrix (should already be set outside).
     blas_int nev = n_eigvals;
     
-    resid.zeros(n);
+    resid.zeros(n);  // TODO: fill resid with deterministic random values and set info to 1
     
     // Two contraints on NCV: (NCV > NEV) for sym problems or
     // (NCV > NEV + 2) for gen problems and (NCV <= N)
