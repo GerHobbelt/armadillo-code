@@ -15807,13 +15807,13 @@ For each scalar <i>x</i> in <i>X</i>, compute its probability density function a
 <table style="text-align: left;" border="0" cellpadding="0" cellspacing="0">
   <tbody>
     <tr>
-      <td>&nbsp;</td><td>&nbsp;&nbsp;&nbsp;1</td><td>&nbsp;</td><td>&#9127;</td><td>&nbsp;</td><td>(x-m)<sup>2</sup></td><td>&#9131;</td>
+      <td>&nbsp;</td><td>&nbsp;&nbsp;1&nbsp;</td><td>&nbsp;</td><td>&#9127;</td><td>&nbsp;</td><td>(x-m)<sup>2</sup></td><td>&#9131;</td>
     </tr>
     <tr>
-      <td>y&nbsp;=&nbsp;</td><td>&#8210;&#8210;&#8210;&#8210;&#8210;&#8210;&#8210;</td><td>&nbsp;exp</td><td>&#9130;</td><td>&minus;0.5&nbsp;</td><td>&#8210;&#8210;&#8210;&#8210;&#8210;&#8210;&nbsp;</td><td>&#9130;</td>
+      <td>y&nbsp;=&nbsp;</td><td>&#8210;&#8210;&#8210;&#8210;</td><td>&nbsp;exp</td><td>&#9130;</td><td>&minus;0.5&nbsp;</td><td>&#8210;&#8210;&#8210;&#8210;&#8210;&#8210;&nbsp;</td><td>&#9130;</td>
     </tr>
     <tr>
-      <td>&nbsp;</td><td>s&nbsp;&radic;(2&pi;)</td><td>&nbsp;</td><td>&#9129;</td><td>&nbsp;</td><td>&nbsp;&nbsp;s<sup>2</sup></td><td>&#9133;</td>
+      <td>&nbsp;</td><td>s&middot;&radic;&tau;</td><td>&nbsp;</td><td>&#9129;</td><td>&nbsp;</td><td>&nbsp;&nbsp;s<sup>2</sup></td><td>&#9133;</td>
     </tr>
   </tbody>
 </table>
@@ -15875,13 +15875,13 @@ For each scalar <i>x</i> in <i>X</i>, compute the logarithm version of probabili
 <table style="text-align: left;" border="0" cellpadding="0" cellspacing="0">
   <tbody>
     <tr>
-      <td>&nbsp;</td><td>&nbsp;</td><td>&#9127;</td><td>&nbsp;&nbsp;&nbsp;1</td><td>&nbsp;</td><td>&#9127;</td><td>&nbsp;</td><td>(x-m)<sup>2</sup></td><td>&#9131;</td><td>&#9131;</td>
+      <td>&nbsp;</td><td>&nbsp;</td><td>&#9127;</td><td>&nbsp;&nbsp;1&nbsp;</td><td>&nbsp;</td><td>&#9127;</td><td>&nbsp;</td><td>(x-m)<sup>2</sup></td><td>&#9131;</td><td>&#9131;</td>
     </tr>
     <tr>
-      <td>y&nbsp;=&nbsp;</td><td>log</td><td>&#9130;</td><td>&#8210;&#8210;&#8210;&#8210;&#8210;&#8210;&#8210;</td><td>&nbsp;exp</td><td>&#9130;</td><td>&minus;0.5&nbsp;</td><td>&#8210;&#8210;&#8210;&#8210;&#8210;&#8210;&nbsp;</td><td>&#9130;</td><td>&#9130;</td>
+      <td>y&nbsp;=&nbsp;</td><td>log</td><td>&#9130;</td><td>&#8210;&#8210;&#8210;&#8210;</td><td>&nbsp;exp</td><td>&#9130;</td><td>&minus;0.5&nbsp;</td><td>&#8210;&#8210;&#8210;&#8210;&#8210;&#8210;&nbsp;</td><td>&#9130;</td><td>&#9130;</td>
     </tr>
     <tr>
-      <td>&nbsp;</td><td>&nbsp;</td><td>&#9129;</td><td>s&nbsp;&radic;(2&pi;)</td><td>&nbsp;</td><td>&#9129;</td><td>&nbsp;</td><td>&nbsp;&nbsp;s<sup>2</sup></td><td>&#9133;</td><td>&#9133;</td>
+      <td>&nbsp;</td><td>&nbsp;</td><td>&#9129;</td><td>s&middot;&radic;&tau;</td><td>&nbsp;</td><td>&#9129;</td><td>&nbsp;</td><td>&nbsp;&nbsp;s<sup>2</sup></td><td>&#9133;</td><td>&#9133;</td>
     </tr>
   </tbody>
 </table>
@@ -15892,7 +15892,7 @@ For each scalar <i>x</i> in <i>X</i>, compute the logarithm version of probabili
       <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&#9127;</td><td>&nbsp;</td><td>(x-m)<sup>2</sup></td><td>&#9131;</td>
     </tr>
     <tr>
-      <td>&nbsp;&nbsp;=&nbsp;</td><td>&minus;log(s&nbsp;&radic;(2&pi;))</td><td>&nbsp;&plus;&nbsp;</td><td>&#9130;</td><td>&minus;0.5&nbsp;</td><td>&#8210;&#8210;&#8210;&#8210;&#8210;&#8210;&nbsp;</td><td>&#9130;</td>
+      <td>&nbsp;&nbsp;=&nbsp;</td><td>&minus;log(s&middot;&radic;&tau;)</td><td>&nbsp;&plus;&nbsp;</td><td>&#9130;</td><td>&minus;0.5&nbsp;</td><td>&#8210;&#8210;&#8210;&#8210;&#8210;&#8210;&nbsp;</td><td>&#9130;</td>
     </tr>
     <tr>
       <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&#9129;</td><td>&nbsp;</td><td>&nbsp;&nbsp;s<sup>2</sup></td><td>&#9133;</td>
@@ -17408,17 +17408,6 @@ model.save("my_model.gmm");
 <tbody>
   <tr>
     <td style="vertical-align: top;">
-      <code>datum::pi</code>
-    </td>
-    <td style="vertical-align: top;">
-      &nbsp;
-    </td>
-    <td style="vertical-align: top;">
-      &pi;, the ratio of any circle's circumference to its diameter
-    </td>
-  </tr>
-  <tr>
-    <td style="vertical-align: top;">
       <code>datum::tau</code>
     </td>
     <td style="vertical-align: top;">
@@ -17426,6 +17415,17 @@ model.save("my_model.gmm");
     </td>
     <td style="vertical-align: top;">
       &tau;, the ratio of any circle's circumference to its radius; equivalent to 2&pi;
+    </td>
+  </tr>
+  <tr>
+    <td style="vertical-align: top;">
+      <code>datum::pi</code>
+    </td>
+    <td style="vertical-align: top;">
+      &nbsp;
+    </td>
+    <td style="vertical-align: top;">
+      &pi;, the ratio of any circle's circumference to its diameter
     </td>
   </tr>
   <tr>
